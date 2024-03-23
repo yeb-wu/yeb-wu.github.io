@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="框架SpringSpring 基础什么是 Spring?spring是一个开源的轻量级 Java 开发框架，它是很多模块的集合， Spring 支持IOC和AOP可以很方便的整合其它组件，组合成为复杂的应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023-03-10-Spring框架">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/11c0.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="框架SpringSpring 基础什么是 Spring?spring是一个开源的轻量级 Java 开发框架，它是很多模块的集合， Spring 支持IOC和AOP可以很方便的整合其它组件，组合成为复杂的应用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323162336204.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/abde7edc90734009864eee7e12aa986dtplv-k3u1fbpfcp-zoom-in-crop-mark1512000.webp">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/72677c123f5e41b3b8498654acac8fe0tplv-k3u1fbpfcp-zoom-in-crop-mark1512000.webp">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230510105735600.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323164538682.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903153012812.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903153021993.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/282b3b76f4f24bd4901391b2be94eec6.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20211214151515385-16800070196876.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106203143316.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825203754885.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825203818500.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825203846479.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825204945709.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106204404474.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106205853135.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106205907874.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106205915656.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825204043005.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903171637722.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903171657800.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903171037189.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903171731107.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231103099.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231252649.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231257598.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231438292.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231448289.png">
+<meta property="article:published_time" content="2023-03-10T06:25:54.000Z">
+<meta property="article:modified_time" content="2024-03-21T09:31:05.453Z">
+<meta property="article:author" content="yebin">
+<meta property="article:tag" content="Java Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323162336204.png">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/11c0.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2023-03-10-Spring框架 | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/11c0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023-03-10-Spring框架
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-10 14:25:54" itemprop="dateCreated datePublished" datetime="2023-03-10T14:25:54+08:00">2023-03-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 17:31:05" itemprop="dateModified" datetime="2024-03-21T17:31:05+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Web/" itemprop="url" rel="index"><span itemprop="name">Java Web</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>27k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>24 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h1><h2 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h2><h3 id="Spring-基础"><a href="#Spring-基础" class="headerlink" title="Spring 基础"></a>Spring 基础</h3><h4 id="什么是-Spring"><a href="#什么是-Spring" class="headerlink" title="什么是 Spring?"></a>什么是 Spring?</h4><p>spring是一个开源的轻量级 Java 开发框架，它是很多模块的集合， Spring 支持IOC和AOP可以很方便的整合其它组件，组合成为复杂的应用。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323162336204.png" alt="image-20230323162336204" style="zoom:80%;" />
+
+ <span id="more"></span>
+
+<p>DATA ACCESS 数据库相关	WEB 跟开发WEB应用相关	 Core Container提供IOC依赖注入功能 	AOP 提供了面向切面的编程实现。</p>
+<h5 id="Core-Container"><a href="#Core-Container" class="headerlink" title="Core Container"></a>Core Container</h5><p>Spring 框架的核心模块，也可以说是基础模块，主要提供 IoC 依赖注入功能的支持。Spring 其他所有的功能基本都需要依赖于该模块，我们从上面那张 Spring 各个模块的依赖关系图就可以看出来。</p>
+<ul>
+<li><p><strong>spring-core</strong> ：Spring 框架基本的核心工具类。</p>
+</li>
+<li><p><strong>spring-beans</strong> ：提供对 bean 的创建、配置和管理等功能的支持。</p>
+</li>
+<li><p><strong>spring-expression</strong> ：提供对表达式语言（Spring Expression Language） SpEL 的支持</p>
+</li>
+</ul>
+<h5 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h5><ul>
+<li><strong>spring-aspects</strong> ：该模块为与 AspectJ 的集成提供支持。</li>
+<li><strong>spring-aop</strong> ：提供了面向切面的编程实现。</li>
+</ul>
+<h5 id="Data-Access"><a href="#Data-Access" class="headerlink" title="Data Access"></a>Data Access</h5><ul>
+<li><strong>spring-jdbc</strong> ：提供了对数据库访问的抽象 JDBC。不同的数据库都有自己独立的 API 用于操作数据库，而 Java 程序只需要和 JDBC API 交互，这样就屏蔽了数据库的影响。</li>
+<li><strong>spring-tx</strong> ：提供对事务的支持。</li>
+<li><strong>spring-orm</strong> ： 提供对 Hibernate、JPA 、iBatis 等 ORM 框架的支持。</li>
+</ul>
+<h5 id="Spring-Web"><a href="#Spring-Web" class="headerlink" title="Spring Web"></a>Spring Web</h5><ul>
+<li><strong>spring-web</strong> ：对 Web 功能的实现提供一些最基础的支持。</li>
+<li><strong>spring-webmvc</strong> ： 提供对 Spring MVC 的实现。</li>
+</ul>
+<h5 id="Spring-Test"><a href="#Spring-Test" class="headerlink" title="Spring Test"></a>Spring Test</h5><h4 id="spring-cloud基础组件"><a href="#spring-cloud基础组件" class="headerlink" title="spring cloud基础组件"></a>spring cloud基础组件</h4><p>注册中心：微服务系统中服务注册与发现</p>
+<p>负载均衡：主要提供客户侧的软件负载均衡算法。</p>
+<p>服务网关：后端服务不直接开放给调用端，而是通过一个API网关根据请求的url，路由到相应的服务，类似nginx反向代理的功能</p>
+<p>分布式配置：进行配置管理</p>
+<p>断路器：防止一个应用程序多次试图执行一个失败的操作</p>
+<h4 id="Spring-Spring-MVC-Spring-Boot-，spring-cloud之间什么关系"><a href="#Spring-Spring-MVC-Spring-Boot-，spring-cloud之间什么关系" class="headerlink" title="Spring,Spring MVC,Spring Boot ，spring cloud之间什么关系?"></a>Spring,Spring MVC,Spring Boot ，spring cloud之间什么关系?</h4><p>spring是一个开源的轻量级 Java 开发框架，它是很多模块的集合， Spring 支持IOC和AOP可以很方便的整合其它组件，组合成为复杂的应用。</p>
+<p>Spring MVC 是 Spring 框架 提供的 一款 MVC 框架，可以帮助我们进行更简洁的 Web 层的开发。</p>
+<p>传统的基于servlet开发需要实现，而且还要在servlet的xml文件中手动配置uri和服务的映射信。</p>
+<p>spring mvc使用DispatcherServlet前端控制器来统一处理请求和响应，程序员只需要关心业务的逻辑。Spring MVC 下我们一般把后端项目分为 Service 层（处理业务）、Dao 层（数据库操作）、Entity 层（实体类）、Controller 层(控制层，返回数据给前台页面)。</p>
+<p>SpringBoot本质也是Spring</p>
+<p>Spring Boot 简化了配置。相比使用spring+springmvc框架进行开发的时候，如果需要引入mybatis框架，那么需要在xml中定义需要的bean对象，这个过程很明显是很麻烦的，springboot中通过引入了starter包实现了自动配置，因此可以可以直接引入mybatis的starter包。</p>
+<p>Spring Boot使用了嵌入式Web容器，可以将应用程序打包成一个可执行的JAR文件并直接运行，避免了繁琐的部署过程。使用SSM开发，需要打包成war包然后放到Tomcat容器中才能部署。</p>
+<h4 id="Spring-Boot-，spring-cloud的区别"><a href="#Spring-Boot-，spring-cloud的区别" class="headerlink" title="Spring Boot ，spring cloud的区别"></a>Spring Boot ，spring cloud的区别</h4><p>1.概念上，spring boot是building anything ，spring cloud是coordinate anything</p>
+<p>2.作用上，Spring Boot 简化了传统MVC的XML配置,实现了自动配置的功能。spring cloud一整套基于Spring Boot的微服务解决方案，它包括注册中心，负载均衡，服务网关，分布式配置，断路器五大组件，通过这些组件实现对springboot开发的各个微服务的整合和治理。</p>
+<p>3.关系上，springboot可以独立使用开发项目，而spring cloud不能离开spring boot开发。</p>
+<h4 id="SpringBoot的启动流程"><a href="#SpringBoot的启动流程" class="headerlink" title="SpringBoot的启动流程"></a>SpringBoot的启动流程</h4><p>1.在main方法中调用SpringApplication的run方法。</p>
+<p>2.IOC容器的执行流程：IOC容器的初始化阶段，bean的初始化。</p>
+<h4 id="starter自动配置"><a href="#starter自动配置" class="headerlink" title="starter自动配置?"></a>starter自动配置?</h4><p>spring启动时通过@EnableAutoConfiguration注解在starter包的META-NF&#x2F;spring.factories文件中找到所有对应的配置类，然后将这些配置类中的bean加载到spring容器中。配置类指那些使用@Configuration修饰的类，配置类中通常会在方法上使用@Bean返回配置好的bean对象。</p>
+<h4 id="什么是-Spring-Bean？"><a href="#什么是-Spring-Bean？" class="headerlink" title="什么是 Spring Bean？"></a>什么是 Spring Bean？</h4><p>Bean 代指的就是那些被 IoC 容器所管理的对象。</p>
+<h4 id="哪些Bean的会被实例化"><a href="#哪些Bean的会被实例化" class="headerlink" title="哪些Bean的会被实例化"></a>哪些Bean的会被实例化</h4><p>@ComponentScan组件扫描，扫描run方法所在类下带有@Component注解的类并为其创建bean。</p>
+<p>@Configuration下的@Bean方法（注：@Configuration继承@Component）</p>
+<h4 id="Spring-框架中用到了哪些设计模式？"><a href="#Spring-框架中用到了哪些设计模式？" class="headerlink" title="Spring 框架中用到了哪些设计模式？"></a>Spring 框架中用到了哪些设计模式？</h4><p>工厂模式：Spring 使用工厂模式通过 <code>BeanFactory</code>、<code>ApplicationContext</code> 创建 bean 对象。</p>
+<p>单例模式：Spring 中的 Bean 默认都是单例的。</p>
+<p>模板模式：Spring 中 <code>jdbcTemplate</code>、<code>RedisTemplate</code> 等以 Template 结尾的对数据库操作的类，它们就使用到了模板模式。</p>
+<p>Spring MVC 中的适配器模式：</p>
+<p>HandlerAdapter是适配器期望接口，它的子类才是具体的适配器，专门适配某一类Handler，Handler是适配者。这样的好处是，DispatchServlet获得Handler对象之后直接丢给HandlerAdapter去处理，不需要自己操作handler对象，因为不同handler对象有不同的handle方法。DispatchServlet只需要根据handler对象获取具体的HandlerAdapter对象，然后调用HandlerAdapter.handle(handler)方法就可以了</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/guorui_java/article/details/106584559">https://blog.csdn.net/guorui_java/article/details/106584559</a></p>
+<p>代理模式：Spring AOP 功能的实现。</p>
+<h3 id="Spring-IoC（重要）"><a href="#Spring-IoC（重要）" class="headerlink" title="Spring IoC（重要）"></a>Spring IoC（重要）</h3><h4 id="什么是IOC"><a href="#什么是IOC" class="headerlink" title="什么是IOC"></a>什么是IOC</h4><p>spring IOC包含3个层面的内容</p>
+<h5 id="IOC容器"><a href="#IOC容器" class="headerlink" title="IOC容器"></a>IOC容器</h5><p>spring提供了两种容器类型BeanFactory 和 ApplicationContext。， IoC 容器实际上就是个 Map（key（bean的名称），value（对象））,Map 中存放的是各种对象，在spring中称为bean。</p>
+<p><strong>BeanFactory和ApplicationContext的区别</strong></p>
+<p>Bean创建的主要逻辑和功能都被封装在BeanFactory中，<code>ApplicationContext不仅继承了BeanFactory，而且ApplicationContext内部还维护着BeanFactory的引用</code>，ApplicationContext在BeanFactory基础上对功能进行了扩展</p>
+<p>Bean的初始化时机不同，<code>原始BeanFactory是在首次调用getBean时才进行Bean的创建，而ApplicationContext则是配置文件加载</code>，容器一创建就将Bean都实例化并初始化好。</p>
+<h5 id="控制反转-IOC-依赖注入-DI"><a href="#控制反转-IOC-依赖注入-DI" class="headerlink" title="控制反转(IOC)&#x2F;依赖注入(DI)"></a>控制反转(IOC)&#x2F;依赖注入(DI)</h5><p>控制反转是一种设计思想或者说是某种模式。这个设计思想就是将原本在程序中手动创建对象的控制权，交由 Spring IOC容器来管理，使得对象之间的耦合度或者说依赖程度降低；</p>
+<p>依赖注入是IOC的一种实现方式。一个对象如果需要依赖另一个对象，不需要自己创建，而是由spring容器注入，如果这两个对象都是spring管理的对象，那么这一过程将由spring容器自动完成。</p>
+<h4 id="IOC的执行流程"><a href="#IOC的执行流程" class="headerlink" title="IOC的执行流程"></a>IOC的执行流程</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/abde7edc90734009864eee7e12aa986dtplv-k3u1fbpfcp-zoom-in-crop-mark1512000.webp" alt="img" style="zoom:80%;" />
+
+<h5 id="springIOC的工作流程"><a href="#springIOC的工作流程" class="headerlink" title="springIOC的工作流程"></a>springIOC的工作流程</h5><p>1.IOC容器的初始化阶段</p>
+<p>在这个阶段主要是根据程序里面定义的XML或者注解等Bean的声明方式，通过解析和加载后生成BeanDefinition，然后把BeanDefinition保存到IOC容器里面，BeanDefinition中包含bean的定义和基本属性，从而完成IOC容器的初始化。</p>
+<p>2.完成bean的实例化-依赖注入-初始化（Bean的生命周期）</p>
+<p>通过反射调用类的无参数构造函数来完成对单例bean进行实例化，然后完成bean属性的依赖注入，然后再调用自定义的初始化方法比如@PostConstruct和初始化的前后处理器来进行一些定制化的设置。</p>
+<p>3.Bean的使用（Bean的生命周期）</p>
+<p>通过@Autowire注解或者BeanFactory.getBean()从容器中获取实例，针对非单例bean的实例化，是在每一次获取bean对象的时候调用bean的初始化方法来完成实例化，而且IOC容器不会管理这些bean。</p>
+<p>4.Bean的销毁（Bean的生命周期）</p>
+<p>被spring容器管理的bean在销毁时会执行destroy方法。</p>
+<h4 id="Spring-Bean的生命周期0"><a href="#Spring-Bean的生命周期0" class="headerlink" title="Spring Bean的生命周期0"></a>Spring Bean的生命周期0</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/72677c123f5e41b3b8498654acac8fe0tplv-k3u1fbpfcp-zoom-in-crop-mark1512000.webp" alt="img"  />
+
+<h5 id="Spring中Bean的实例化和初始化有什么区别"><a href="#Spring中Bean的实例化和初始化有什么区别" class="headerlink" title="Spring中Bean的实例化和初始化有什么区别"></a>Spring中Bean的实例化和初始化有什么区别</h5><p><strong>「实例化」</strong>：实例化是创建类的实例的过程。在Spring中，当一个Bean被定义在配置文件中（或者通过其他方式如注解或Java配置），Spring IoC容器就会实例化这个Bean。实例化通常通过调用类的无参数构造函数来完成。这个步骤产生了一个Bean的实例，但是这个实例的属性尚未被设置。</p>
+<p><strong>「初始化」</strong>：初始化是在Bean实例化后、使用前的一个阶段，主要是对Bean进行一些定制化的设置，比如设置属性的值、执行某些方法等。在Spring中，你可以通过实现<code>InitializingBean</code>接口，或者使用<code>@PostConstruct</code>注解，或者在XML配置中定义<code>&lt;bean init-method=&quot;&quot;&gt;</code>，来定义Bean的初始化逻辑。</p>
+<ul>
+<li><p>BeanPostProcessor也称为Bean后置处理器，它是Spring中定义的接口，在Spring容器的创建过程中（具体为Bean初始化前后）会回调BeanPostProcessor中定义的两个方法。BeanPostProcessor的源码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">BeanPostProcessor</span> &#123;</span><br><span class="line">    Object <span class="title function_">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException;</span><br><span class="line">    Object <span class="title function_">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>其中postProcessBeforeInitialization方法会在每一个bean对象的初始化方法调用之前回调；postProcessAfterInitialization方法会在每个bean对象的初始化方法调用之后被回调。</p>
+</li>
+</ul>
+<h5 id="单例-Bean-的线程安全问题了解吗？"><a href="#单例-Bean-的线程安全问题了解吗？" class="headerlink" title="单例 Bean 的线程安全问题了解吗？"></a>单例 Bean 的线程安全问题了解吗？</h5><p>单例 Bean 存在线程问题，主要是因为当多个线程操作同一个对象的时候是存在资源竞争的。</p>
+<p>解决方法</p>
+<ol>
+<li>在 Bean 中尽量避免定义可变的成员变量，无状态bean。</li>
+<li>在类中定义一个 <code>ThreadLocal</code> 成员变量，将需要的可变成员变量保存在 <code>ThreadLocal</code> 中（推荐的一种方式）。</li>
+</ol>
+<h5 id="spring容器中的bean是否允许被回收"><a href="#spring容器中的bean是否允许被回收" class="headerlink" title="spring容器中的bean是否允许被回收"></a>spring容器中的bean是否允许被回收</h5><ul>
+<li>singleton 类型的Bean不会被GC，当然，前提是Spring容器处于运行中，如果Spring容器被关闭，那么相关Bean也会被回收；</li>
+<li>prototype 类型的Bean会被GC，这种类型的Bean与程序中new关键字生成的对象类似，每次使用都new一个，使用完就回被回收；</li>
+</ul>
+<h3 id="Spring-AoP（重要）"><a href="#Spring-AoP（重要）" class="headerlink" title="Spring AoP（重要）"></a>Spring AoP（重要）</h3><h4 id="什么是AOP"><a href="#什么是AOP" class="headerlink" title="什么是AOP"></a>什么是AOP</h4><p>AOP指面向切面编程。</p>
+<p><strong>切</strong> ：指的是横切逻辑，横切逻辑区别于业务逻辑，是对业务逻辑的增强部分代码；而OOP通过继承增加功能的方式，就是纵切逻辑。</p>
+<p><strong>面</strong> ：横切逻辑代码往往要添加到很多个方法上，每个方法如同一个点，多个点构成一个面。</p>
+<p>通过面向切面编程</p>
+<h4 id="AOP-解决了什么问题"><a href="#AOP-解决了什么问题" class="headerlink" title="AOP 解决了什么问题"></a>AOP 解决了什么问题</h4><ul>
+<li>弥补OOP的代码重复问题</li>
+<li>横切逻辑代码和业务代码解耦合，解决横切逻辑代码重复问题。</li>
+<li>典型的应用就是给方法加上日志打印功能。</li>
+</ul>
+<h4 id="spring如何实现aop"><a href="#spring如何实现aop" class="headerlink" title="spring如何实现aop"></a>spring如何实现aop</h4><p>spring通过动态代理模式实现AOP。如果要代理的对象，实现了某个接口，那么 Spring AOP 会使用 <strong>JDK Proxy</strong>，去创建代理对象；对于没有实现接口的对象，Spring AOP 会使用 <strong>Cglib</strong> 生成一个被代理对象的子类来作为代理</p>
+<p>具体见java代理模式</p>
+<h4 id="AOP-切面编程的术语："><a href="#AOP-切面编程的术语：" class="headerlink" title="AOP 切面编程的术语："></a>AOP 切面编程的术语：</h4><p>切入点(Pointcut)：被增强的连接点方法</p>
+<p>通知(Advice)：增强的逻辑代码</p>
+<p>切面(Aspect)：切入点(Pointcut)+通知(Advice)</p>
+<p>代理(Proxy)：向目标对象应用通知之后创建的代理对象</p>
+<h4 id="Spring-AOP-和-AspectJ-AOP-有什么区别？"><a href="#Spring-AOP-和-AspectJ-AOP-有什么区别？" class="headerlink" title="Spring AOP 和 AspectJ AOP 有什么区别？"></a>Spring AOP 和 AspectJ AOP 有什么区别？</h4><ul>
+<li><strong>Spring AOP 属于运行时增强，而 AspectJ 是编译时增强。</strong> Spring AOP 基于代理(Proxying)，纯java实现，而 AspectJ 基于字节码操作(Bytecode Manipulation)。AspectJ 与Spring AOP不同，它不需要任何设计模式。通过引入了AspectJ编译器（ajc）编译器，将代码的各个方面编织起来</li>
+<li>Spring AOP是动态代理， AspectJ是静态代理</li>
+<li>AspectJ 相比于 Spring AOP 功能更加强大，但是 Spring AOP 相对来说更简单</li>
+<li>当切面太多的话，最好选择 AspectJ ，它比 Spring AOP 快很多</li>
+</ul>
+<h4 id="AspectJ-定义的通知类型有哪些？"><a href="#AspectJ-定义的通知类型有哪些？" class="headerlink" title="AspectJ 定义的通知类型有哪些？"></a>AspectJ 定义的通知类型有哪些？</h4><ul>
+<li><p>Before（前置通知）：目标对象的方法调用之前触发</p>
+</li>
+<li><p>After （后置通知）：目标对象的方法调用之后触发</p>
+</li>
+<li><p>AfterReturning（返回通知）：目标对象的方法调用完成，在返回结果值之后触发</p>
+</li>
+<li><p>AfterThrowing（异常通知） ：目标对象的方法运行中抛出 &#x2F; 触发异常后触发。AfterReturning 和 AfterThrowing 两者互斥。如果方法调用成功无异常，则会有返回值；如果方法抛出了异常，则不会有返回值</p>
+</li>
+<li><p><strong>@Around</strong>：环绕通知，围绕着目标方法执行。环绕通知是所有通知类型中可操作范围最大的一种，因为它可以直接拿到目标对象，以及要执行的方法。理论上，可以使用环绕通知实现其他的通知。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Around(&quot;pt()&quot;)</span></span><br><span class="line"> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">around</span><span class="params">(ProceedingJoinPoint pjp)</span>&#123;</span><br><span class="line">     System.out.println(<span class="string">&quot;目标方法前&quot;</span>);</span><br><span class="line">     <span class="keyword">try</span> &#123;</span><br><span class="line">         pjp.proceed();<span class="comment">//目标方法执行</span></span><br><span class="line">         System.out.println(<span class="string">&quot;目标方法后&quot;</span>);</span><br><span class="line">     &#125; <span class="keyword">catch</span> (Throwable throwable) &#123;</span><br><span class="line">         throwable.printStackTrace();</span><br><span class="line">         System.out.println(<span class="string">&quot;目标方法出现异常&quot;</span>);</span><br><span class="line">     &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">         System.out.println(<span class="string">&quot;finally中进行增强&quot;</span>);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="代理对象"><a href="#代理对象" class="headerlink" title="代理对象"></a>代理对象</h4><p>如果bean上加了AOP注解，那么用户通过@Autowired、@Resource等注解定义bean后，spring执行过程获取的是对应真实实例的代理对象。</p>
+<p>使用getBean方法获取的也是代理对象</p>
+<h4 id="循环依赖"><a href="#循环依赖" class="headerlink" title="循环依赖"></a>循环依赖</h4><p>事实上，spring创建一个普通的bean并不会使用到三级缓存，循环依赖的处理方式相当于一个扩展点，在创建bean时会收集信息，如果发现有循环依赖就会触发这个扩展点。</p>
+<p><strong>什么是循环依赖</strong></p>
+<p>A对象依赖B对象，B对象有依赖A对象。</p>
+<p>满足A.b.a.b……a &#x3D; A,；A.b.a.b…..b &#x3D; B </p>
+<p><strong>什么是三级缓存</strong></p>
+<ul>
+<li>singletonObjects：第一级缓存，里面存放的都是初始化好的成品Bean。</li>
+<li>earlySingletonObjects : 第二级缓存，里面存放的都是半成品的Bean，这两个缓存存的都是Bean对象引用。</li>
+<li>singletonFactories ：第三级缓存， 不同于前两个存的是 Bean对象引用，此缓存存的bean 工厂对象，也就存的是 专门创建Bean的一个工厂对象。此缓存用于解决循环依赖</li>
+</ul>
+<p><strong>如何解决</strong></p>
+<p>二级缓存（简化）</p>
+<ul>
+<li>A引用创建后，提前暴露到半成品缓存中</li>
+<li>依赖B，创建B ，B填充属性时发现依赖A， 先从成品缓存查找，没有,再从半成品缓存查找 取到A的早期引用。</li>
+<li>B顺利走完创建过程, 将B的早期引用从半成品缓存移动到成品缓存</li>
+<li>B创建完成，A获取到B的引用，继续创建。</li>
+<li>A创建完成，将A的早期引用从半成品缓存移动到成品缓存</li>
+</ul>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230510105735600.png" alt="image-20230510105735600" style="zoom:80%;" />
+
+<p><strong>三级缓存(真正)</strong></p>
+<ul>
+<li>创建bean过程中发现循环依赖</li>
+<li>创建A对象，把A的工厂对象放入三级缓存</li>
+<li>给A对象填充属性</li>
+<li>发现A的属性是B对象的引用，而此时Spring容器中并没有ClassB对象</li>
+<li>所以就会先去创建B，这个时候也会把创建B的工厂对象放入三级缓存</li>
+<li>给B的属性填充值，此时就会从三级缓存中把A的工厂对象拿出来并执行，实例化A的对象引用并加入到二级缓存中。把B的三级缓存也删除，加入到二级缓存中</li>
+<li>完成B的初始化，并把B对象加入到一级缓存，二级缓存删除</li>
+<li>A此时就可以正常的填充属性值了，因为B已经初始化完成</li>
+<li>A初始化完成并把A添加到一级缓存中，删除二级缓存</li>
+</ul>
+<h5 id="为什么使用三级缓存"><a href="#为什么使用三级缓存" class="headerlink" title="为什么使用三级缓存"></a>为什么使用三级缓存</h5><p>当依赖的对象是代理对象时。由于在设置属性的时候就需要把半成品的对象设置进去，此时还没有到初始化阶段，半成品的对象就不能像流程一那样走到动态代理逻辑，这样就会导致成品工厂里的是代理对象，而内部返回的是原始对象。</p>
+<p>调用对象工厂的getObject方法 ，执行扩展逻辑，可能返回的代理引用，也可能返回原始引用。</p>
+<h5 id="循环依赖失效的场景"><a href="#循环依赖失效的场景" class="headerlink" title="循环依赖失效的场景"></a>循环依赖失效的场景</h5><ol>
+<li>prototype 类型的循环依赖。prototype在容器中，调用几次，就被实例化几次，每次得到的都是不同的对象</li>
+<li>constructor 注入的循环依赖。构造器注入会在实例化是填充属性，此时三级缓存中还没有对于的工厂对象</li>
+</ol>
+<p>这些解决不了的场景都可以通过 @Lazy 来解决掉。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0OD75CzV5uTW69Y9zOEhtA">https://mp.weixin.qq.com/s/0OD75CzV5uTW69Y9zOEhtA</a></p>
+<h2 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h2><h3 id="什么是SpringMVC"><a href="#什么是SpringMVC" class="headerlink" title="什么是SpringMVC"></a>什么是SpringMVC</h3><p>首先MVC 是一种设计模式，包括模型(Model)、视图(View)、控制器(Controller)，通过将业务逻辑、数据、显示代码分离可以提高项目的开发效率。</p>
+<p>Spring MVC 是 Spring 框架 提供的 一款 MVC 框架，可以帮助我们进行更简洁的 Web 层的开发。传统的基于servlet开发需要实现，而且还要在servlet的xml文件中手动配置uri和服务的映射信息，而spring mvc使用DispatcherServlet前端控制器来统一处理请求和响应，程序员只需要关心业务的逻辑。</p>
+<p>Spring MVC 下我们一般把后端项目分为 Service 层（处理业务）、Dao 层（数据库操作）、Entity 层（实体类）、Controller 层(控制层，返回数据给前台页面)。</p>
+<h3 id="SpringMVC常用组件"><a href="#SpringMVC常用组件" class="headerlink" title="SpringMVC常用组件"></a>SpringMVC常用组件</h3><ul>
+<li>DispatcherServlet：<strong>前端控制器</strong>，不需要工程师开发，由框架提供</li>
+</ul>
+<p>作用：<strong>统一处理请求和响应</strong>，整个流程控制的中心，由它调用其它组件处理用户的请求</p>
+<ul>
+<li>HandlerMapping：<strong>处理器映射器</strong>，不需要工程师开发，由框架提供（requestMapping）</li>
+</ul>
+<p>作用：根据请求的url、method等信息查找Handler，即控制器方法</p>
+<ul>
+<li>Handler：<strong>处理器</strong>，需要工程师开发（Controller）</li>
+</ul>
+<p>作用：在DispatcherServlet的控制下Handler对具体的用户请求进行处理</p>
+<ul>
+<li>HandlerAdapter：<strong>处理器适配器</strong>，不需要工程师开发，由框架提供</li>
+</ul>
+<p>作用：用于找到处理器方法，并调用处理器方法。通过HandlerAdapter对处理器（控制器方法）进行执行</p>
+<ul>
+<li>ViewResolver：<strong>视图解析器</strong>，不需要工程师开发，由框架提供</li>
+</ul>
+<p>作用：进行视图解析，得到相应的视图，例如：ThymeleafView（无前缀）、InternalResourceView（forward）、RedirectView（redirect）</p>
+<ul>
+<li>View：<strong>视图</strong></li>
+</ul>
+<p>作用：将模型数据通过页面展示给用户</p>
+<h3 id="SpringMVC执行流程"><a href="#SpringMVC执行流程" class="headerlink" title="SpringMVC执行流程"></a>SpringMVC执行流程</h3><p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323164538682.png" alt="image-20230323164538682"></p>
+<p>注：中央处理器的作用就是作为中间部分，方便调用各个部分，所以每个部分处理完后都会返回数据给前端控制器</p>
+<p>1.用户发起请求被DispatchServlet所处理</p>
+<p>2.DispatchServlet根据请求信息调用HandlerMapping。HandlerMapping根据根据 uri 去匹配查找能处理的 Handler。<strong>（HandlerMapping主要是处理请求和Handler方法的映射关系的，Handler就是Controller控制器）</strong></p>
+<p>3.HandlerMapping返回一个能够处理请求的执行链给DispatchServlet，这个链中除了包含Handler对象也包含拦截器。</p>
+<p>45.<code>DispatcherServlet</code> 调用 <code>HandlerAdapter</code>适配器执行 <code>Handler</code> 。把数据处理转换成合适的类型然后作为方法参数传入 <strong>（HandlerAdater主要进行Handler方法参数和返回值的处理。）</strong></p>
+<p>6.Handler方法执行完后的返回值会被HandlerAdapter转换成ModelAndView类型。</p>
+<p>7.返回ModelAndView给DispatchServlet.</p>
+<p>8.如果对于的ModelAndView对象不为null，则DispatchServlet把ModelAndView交给 ViewResolver 也就是视图解析器解析。</p>
+<p>9.ViewResolver 也就是视图解析器把ModelAndView中的viewName转换成对应的View对象返回给DispatchServlet。<strong>（ViewResolver 主要负责把String类型的viewName转换成对应的View对象）</strong></p>
+<p>10.DispatchServlet使用View对象进行页面的展示。</p>
+<h3 id="过滤器和拦截器的区别"><a href="#过滤器和拦截器的区别" class="headerlink" title="过滤器和拦截器的区别"></a>过滤器和拦截器的区别</h3><p>1.配置文件不同</p>
+<p>过滤器是Servlet规范中定义的，在web.xml配置文件中配置；而拦截器是在spring中定义的，在spring配置文件中配置</p>
+<p>2.运行顺序不同</p>
+<p>过滤器是在请求进入容器后，但是在请求进入servlet之前执行的；而拦截器是在请求进入servlet之后，但是在执行controller之前执行的。也就是说过滤器会比拦截器先执行</p>
+<p>3.使用的资源不同</p>
+<p>过滤器只能对request和response进行操作，而拦截器可以对request和response，handler，modelAndView，Exception进行操作，即：拦截器可以获取IOC容器中的各个bean</p>
+<p>而过滤器就不行，例如，在拦截器里注入一个service，可以调用业务逻辑。</p>
+<p>4.实现不同</p>
+<p>拦截器是基于spring aop的，而过滤器是基于函数回调的。</p>
+<p>Filter常用于设置字符编码，压缩响应信息等</p>
+<p>intercept常用于性能监控</p>
+<h2 id="SpringBoot"><a href="#SpringBoot" class="headerlink" title="SpringBoot"></a>SpringBoot</h2><p><a target="_blank" rel="noopener" href="https://www.yuque.com/snailclimb/mf2z3k/vqe4gz#UEo3m">https://www.yuque.com/snailclimb/mf2z3k/vqe4gz#UEo3m</a></p>
+<h2 id="Spring-事务"><a href="#Spring-事务" class="headerlink" title="Spring 事务"></a>Spring 事务</h2><h3 id="Spring-管理事务的方式有几种？"><a href="#Spring-管理事务的方式有几种？" class="headerlink" title="Spring 管理事务的方式有几种？"></a>Spring 管理事务的方式有几种？</h3><ul>
+<li><strong>编程式事务</strong> ： 在代码中硬编码(不推荐使用) : 通过JDBC中的 <code>TransactionTemplate</code>或者 <code>TransactionManager</code> 手动管理事务，实际应用中很少使用，但是对于你理解 Spring 事务管理原理有帮助。</li>
+<li><strong>声明式事务</strong> ： 在 XML 配置文件中配置或者直接基于注解（推荐使用） : 实际是通过 AOP 实现（基于<code>@Transactional</code> 的全注解方式使用最多）</li>
+</ul>
+<h3 id="事务的属性"><a href="#事务的属性" class="headerlink" title="事务的属性"></a>事务的属性</h3><ul>
+<li>隔离级别</li>
+<li>传播行为</li>
+<li>回滚规则</li>
+<li>是否只读</li>
+<li>事务超时</li>
+</ul>
+<h4 id="Spring-事务中的隔离级别有哪几种"><a href="#Spring-事务中的隔离级别有哪几种" class="headerlink" title="Spring 事务中的隔离级别有哪几种?"></a>Spring 事务中的隔离级别有哪几种?</h4><p><strong><code>ISOLATION_DEFAULT</code><strong>，</strong><code>ISOLATION_READ_UNCOMMITTED</code><strong>，</strong><code>ISOLATION_READ_COMMITTED</code></strong></p>
+<p>，**<code>ISOLATION_REPEATABLE_READ</code><strong>，</strong><code>ISOLATION_SERIALIZABLE</code>**</p>
+<h4 id="Spring-事务传播行为"><a href="#Spring-事务传播行为" class="headerlink" title="Spring 事务传播行为"></a>Spring 事务传播行为</h4><h5 id="什么是事务的传播行为"><a href="#什么是事务的传播行为" class="headerlink" title="什么是事务的传播行为"></a>什么是事务的传播行为</h5><p>事务的传播行为是针对不同类的方法相互嵌套而制定的运行规则。比如，一个service层的方法调用另一个service层的方法，但是两个方法都开启了事务，所以需要指定这两个嵌套事务的运行规则。</p>
+<h5 id="同对象的内部方法互相调用"><a href="#同对象的内部方法互相调用" class="headerlink" title="同对象的内部方法互相调用"></a>同对象的内部方法互相调用</h5><p>当互相调用的方法是属于同一个类时如果是同一个类的方法调用，则回不回滚主要取决于主方法是否有required事务注解，不涉及传播行为。这里的主方法指外部调用的方法，有事务注解说明主方法被代理增强了，同理，如果主方法没有事务增强，主方法调用的其他方法有事务增强，外部调用主方法也不能触发其他方法的事务。</p>
+<p>所以事务传播行为生效必须是不同类的方法之间的调用</p>
+<h5 id="事务传播行为有几种"><a href="#事务传播行为有几种" class="headerlink" title="事务传播行为有几种"></a>事务传播行为有几种</h5><p>我只记得有7种，具体只记得有required，requires_new，NESTED 因为在7种方法中对于单一的方法，只有这三种才能开启事务。</p>
+<p><strong>required</strong>：</p>
+<p>在外围方法未开启事务的情况下<code>Propagation.REQUIRED</code>修饰的内部方法会新开启自己的事务，且开启的事务相互独立，互不干扰。<br>在外围方法开启事务的情况下<code>Propagation.REQUIRED</code>修饰的内部方法会加入到外围方法的事务中，所有<code>Propagation.REQUIRED</code>修饰的内部方法和外围方法均属于同一事务，只要一个方法回滚，整个事务均回滚。</p>
+<p><strong>requires_new</strong>：</p>
+<p>在外围方法未开启事务的情况下<code>Propagation.REQUIRES_NEW</code>修饰的内部方法会新开启自己的事务，且开启的事务相互独立，互不干扰。</p>
+<p>在外围方法开启事务的情况下<code>Propagation.REQUIRES_NEW</code>修饰的内部方法依然会单独开启独立事务，且与外部方法事务也独立，内部方法之间、内部方法和外部方法事务均相互独立，互不干扰。</p>
+<p><strong>NESTED</strong>：</p>
+<p>在外围方法未开启事务的情况下<code>Propagation.NESTED</code>和<code>Propagation.REQUIRED</code>作用相同，修饰的内部方法都会新开启自己的事务，且开启的事务相互独立，互不干扰。</p>
+<p>在外围方法开启事务的情况下<code>Propagation.NESTED</code>修饰的内部方法属于外部事务的子事务，外围主事务回滚，子事务一定回滚，而内部子事务可以单独回滚而不影响外围主事务和其他子事务</p>
+<h4 id="事务超时属性"><a href="#事务超时属性" class="headerlink" title="事务超时属性"></a>事务超时属性</h4><p>所谓事务超时，就是指一个事务所允许执行的最长时间，如果超过该时间限制但事务还没有完成，则自动回滚事务。</p>
+<h4 id="事务回滚规则"><a href="#事务回滚规则" class="headerlink" title="事务回滚规则"></a>事务回滚规则</h4><p>默认情况下，事务只有遇到运行期异常（<code>RuntimeException</code> 的子类）时才会回滚，<code>Error</code> 也会导致事务回滚，但是，在遇到编译时异常时不会回滚。也可以自定义异常类型回滚</p>
+<h3 id="Transactional-事务注解原理"><a href="#Transactional-事务注解原理" class="headerlink" title="@Transactional 事务注解原理"></a><code>@Transactional</code> 事务注解原理</h3><p><code>@Transactional</code> 的工作机制是基于 AOP 实现的，目标对象实现了接口就是用JDK代理，没有实现接口就使用CGLIB 动态代理。</p>
+<p>如果一个类或者一个类中的 public 方法上被标注<code>@Transactional</code> 注解的话，Spring 容器就会在启动的时候为其创建一个代理类，在调用被<code>@Transactional</code> 注解的 public 方法的时候，实际调用的是，<code>TransactionInterceptor</code> 类中的 <code>invoke()</code>方法。这个方法的作用就是在目标方法之前开启事务，方法执行过程中如果遇到异常的时候回滚事务，方法调用完成之后提交事务。</p>
+<h3 id="事务失效的场景"><a href="#事务失效的场景" class="headerlink" title="事务失效的场景"></a>事务失效的场景</h3><p>1.数据库引擎不支持事务；2.方法不是 public 的；</p>
+<p>3.自身调用问题：自身无事务的方法调用有事务的方法，有事务的方法会失效</p>
+<p>4.数据源没有配置事务管理器</p>
+<p>5.异常被处理了：当业务方法抛出异常，spring感知到异常的时候，才会做事务回滚的操作</p>
+<h2 id="Spring-Spring-boot-常用注解"><a href="#Spring-Spring-boot-常用注解" class="headerlink" title="Spring&amp;Spring boot 常用注解"></a>Spring&amp;Spring boot 常用注解</h2><p><a target="_blank" rel="noopener" href="https://javaguide.cn/system-design/framework/spring/spring-common-annotations.html">https://javaguide.cn/system-design/framework/spring/spring-common-annotations.html</a></p>
+<p>Web服务开发常用的注解有哪些？</p>
+<p>Spring Bean相关：</p>
+<ul>
+<li>@Autowired:自动导入对象到类中，被注入进的类同样要被Spring容器管理。</li>
+<li>@RestController:@RestController注解是@Controller和@ResponseBody的合集，表示这是个控制器bean,并且是将函数的返回值直接填入HTTP响应体。</li>
+<li>@Component:通用的注解，可标注任意类为Spring组件。如果一个Bean不知道属于哪个层，可以使用@Component注解标注。</li>
+<li>@Repository:对应持久层即Dao层，主要用于数据库相关操作。</li>
+<li>@Service:对应服务层，主要涉及一些复杂的逻辑，需要用到Dao层。</li>
+<li>@Controller:对应Spring MVC控制层，主要用于接受用户请求并调用Service层返回数据给前端页面。</li>
+</ul>
+<p>Restful风格相关的：</p>
+<ul>
+<li><p>处理常见的HTTP请求类型：@GetMapping:GET请求、@PostMapping:POST请求。@PutMapping:PUT请求。@DeleteMapping:DELETE请求。</p>
+</li>
+<li><p>前后端传值：@PathVariable用于获取路径参数，@RequestParam用于获取查询参数。</p>
+</li>
+<li><p>@RequestBody:用于读取Request请求(可能是POST,PUT,DELETE,GET请求)的body部分并且Content-Type为application&#x2F;json格式的数据，接收到数据之后会自动将数据绑定到Java对象上去。系统会使用HttpMessageConverter或者自定义的HttpMessageConverter将请求的body中的json字符串转换为java对象。</p>
+</li>
+</ul>
+<p>其他</p>
+<ul>
+<li><p>@ControllerAdvice：统一异常处理</p>
+</li>
+<li><p>@PostConstruct：</p>
+</li>
+</ul>
+<p>在spring中注入bean的方式：</p>
+<p>@Autowired，@Resource，ApplicationContext.getBean（）</p>
+<p>ApplicationContext.getBean（）适用于在先初始的bean中注入后初始的bean，可以通过在先初始的bean中提供一个初始化方法调用ApplicationContext.getBean（）注入bean(调用方法时，spring容器已经创建完成)</p>
+<p>@Autowired和@Resource的区别</p>
+<p>1.@Autowired默认按byType自动装配，而@Resource默认byName自动装配。<br>2.@Autowired只包含一个参数：required，默认是true，true表示必须注入依赖，如果找不到符合要求的依赖，就会抛出异常。@Resource包含七个参数，其中最重要的两个参数是：name 和 type。<br>3.@Autowired如果要使用byName，需要使用@Qualifier一起配合，用@Qualifier的name属性指定。而@Resource如果指定了name，则用byName自动装配，如果指定了type，则用byType自动装配。（注：@Autowire如果没有配置@Qualifier也会在类型找不到时按名称找）<br>4.@Autowired是spring定义的注解，而@Resource是java定义的注解。这说明@Autowired依赖于spring框架，而@Resource可以支持其他框架。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903153012812.png" alt="image-20230903153012812" style="zoom:45%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903153021993.png" alt="image-20230903153021993" style="zoom:45%;" /></p>
+<h2 id="spring扩展点"><a href="#spring扩展点" class="headerlink" title="spring扩展点"></a>spring扩展点</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/587683725">https://zhuanlan.zhihu.com/p/587683725</a></p>
+<p><strong>1.自定义拦截器</strong></p>
+<p><strong>2.获取Spring容器对象</strong></p>
+<p><strong>3.全局异常处理</strong></p>
+<p><strong>4.类型转换器</strong></p>
+<p><strong>5.导入配置</strong></p>
+<p><strong>6.项目启动时</strong></p>
+<p><strong>7.修改BeanDefinition</strong></p>
+<p><strong>8.初始化Bean前后</strong></p>
+<p><strong>9.初始化方法</strong></p>
+<p><strong>10.关闭容器前</strong></p>
+<h2 id="SpringSecurity"><a href="#SpringSecurity" class="headerlink" title="SpringSecurity"></a>SpringSecurity</h2><p>SpringSecurity原理</p>
+<p>SpringSecurity的本质就是一个过滤器链，内部包含了提供各种功能的过滤器</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/282b3b76f4f24bd4901391b2be94eec6.png" alt="img"></p>
+<p>UsernamePasswordAuthenticationFilter:负责处理我们在登陆页面填写了用户名密码后的登陆请求。基本案例的认证工作主要有它负责</p>
+<p>ExceptionTranslationFilter：处理过滤器链中抛出的任何AccessDeniedException和AuthenticationException</p>
+<p>FilterSecurityInterceptor：负责权限校验的过滤器</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20211214151515385-16800070196876.png" alt="image-20211214151515385"></p>
+<p>Authentication接口: 它的实现类，表示当前访问系统的用户，封装了用户相关信息</p>
+<p>AuthenticationManager接口：定义了认证Authentication的方法</p>
+<p>UserDetailsService接口：加载用户特定数据的核心接口。里面定义了一个根据用户名查询用户信息（密码权限）的方法</p>
+<p>UserDetails接口：提供核心用户信息。通过UserDetailsService根据用户名获取处理的用户信息要封装成UserDetails对象返回。然后将这些信息封装到Authentication对象中</p>
+<p>UsernamePasswordAuthenticationFilter实现类：实现了我们最常用的基于用户名和密码的认证逻辑，封装Authentication对象</p>
+<p>DaoAuthenticationProvider实现类：负责封装权限信息到Authentication中。调用UserDetailsService接口获取UserDetails对象，这里叫DAO的原因就是因为UserDetails是持久层中的信息是真正的用户密码，然后比较UserDetail和Authentication的密码是否匹配，如果是则把权限信息封装到Authentication中。</p>
+<p>1.登录授权的原理</p>
+<p>SpringSecurity的本质就是一个过滤器链，内部包含了提供各种功能的过滤器。首先用户输入用户密码后会经过</p>
+<p>UsernamePasswordAuthenticationFilter，这个过滤器的作用是对比输入的用户名密码和后端储存的用户名密码是否匹配，如果匹配则把用户对应的权限封装在Authentication对象中，用于后续该用户操作某个接口的权限判断。</p>
+<p>它的具体流程是UsernamePasswordAuthenticationFilter会把用户输入的用户名密码封装到Authentication对象中，然后调用AuthenticationManager接口对Authentication对象进行认证，AuthenticationManager接口调用DaoAuthenticationProvider实现类调用UserDetailsService接口，在UserDetailsService接口定义获取资源的用户名密码和权限的方法（例如从数据库中获取，还是从内存中获取）并封装成UserDetail对象返回，这时DaoAuthenticationProvider就拥有了Authentication对象和UserDetail对象，对比这两个对象储存的密码是否匹配，如果不匹配过滤器不会获得Authenication对象，抛出认证异常；如果匹配成功，则把权限信息封装到Authenication对象中并返回给过滤器，过滤器将Authenication对象保存在一个contextHolder中。</p>
+<p>不过在实际开发中，一般不会直接使用UsernamePasswordAuthenticationFilter进行登录认证，一个原因是需要扩展登录功能，另一个原因是默认过滤器只有uri为&#x2F;login的才会生效</p>
+<p>2.校验权限的原理</p>
+<p>授权基本流程</p>
+<p>在SpringSecurity中，会使用默认的FilterSecurityInterceptor来进行权限校验。</p>
+<p>而且SpringSecurity还提供了PreAuthorize注解，用来控制一个接口是否能够被调用的</p>
+<p>在PreAuthorize中可以传入一个自定义方法，方法的参数是接口的权限值，方法的返回值是一个Boolean值，可以用来判断是否具有权限。</p>
+<p>然后在自定义方法中需要定义比对用户拥有的权限和资源所需的权限的逻辑</p>
+<p>用户拥有的权限可以从SecurityContextHolder中的Authentication获取。</p>
+<p>资源所需的权限会作为自定义方法的参数传入。</p>
+<p>然后对比这两个权限，如果成功则返回true，对比失败则返回false，会抛出授权异常。</p>
+<p>2.RBAC模型</p>
+<p>RBAC 即基于角色的权限访问控制（Role-Based Access Control）。简单地说：一个用户可以拥有若干角色，每一个角色又可以被分配若干权限，这样就构造成“用户-角色-权限” 的授权模型。在这种模型中，用户与角色、角色与权限之间构成了多对多的关系。所以在数据库中需要5张表来储存用户权限信息。</p>
+<p>在 RBAC 中，权限与角色相关联，用户通过成为适当角色的成员而得到这些角色的权限。就能简化权限的管理。</p>
+<p>而且RBAC模型比较切合实际业务需求，一个用户拥有某些权限并不是因为它是谁，而是他担任了什么角色，这个角色具有哪些权限。也方便管理，例如用户的角色发生改变，或者用户新增了某些角色。</p>
+<h2 id="MyBatis"><a href="#MyBatis" class="headerlink" title="MyBatis"></a>MyBatis</h2><h3 id="和-的区别是什么？"><a href="#和-的区别是什么？" class="headerlink" title="#{} 和 ${} 的区别是什么？"></a>#{} 和 ${} 的区别是什么？</h3><ul>
+<li><p>MyBatis获取参数值的两种方式：${}和#{}  </p>
+</li>
+<li><p>${}的本质就是字符串拼接，#{}的本质就是占位符赋值  </p>
+</li>
+<li><p>${}使用字符串拼接的方式拼接sql，若为字符串类型或日期类型的字段进行赋值时，需要手动加单引号；但是#{}使用占位符赋值的方式拼接sql，此时为字符串类型或日期类型的字段进行赋值时，可以自动添加单引号</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getUserByUsername&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">	select * from t_user where username = #&#123;username&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getUserByUsername&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;User&quot;</span>&gt;</span>  </span><br><span class="line">	select * from t_user where username = &#x27;$&#123;username&#125;&#x27;  </span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="xml-映射文件中，除了常见的-select、insert、update、delete-标签之外，还有哪些标签？"><a href="#xml-映射文件中，除了常见的-select、insert、update、delete-标签之外，还有哪些标签？" class="headerlink" title="xml 映射文件中，除了常见的 select、insert、update、delete 标签之外，还有哪些标签？"></a>xml 映射文件中，除了常见的 select、insert、update、delete 标签之外，还有哪些标签？</h3><ul>
+<li><p>标识实现方法的id标签，指定返回值类型的resultMap</p>
+</li>
+<li><p>实现自定义映射的resultMap标签，用于多表连接的association标签</p>
+</li>
+<li><p>实现动态sql的&lt; if &gt;,&lt; where &gt;,&lt; foreach &gt;标签</p>
+</li>
+</ul>
+<h3 id="Dao-接口里的方法，参数不同时，方法能重载吗？"><a href="#Dao-接口里的方法，参数不同时，方法能重载吗？" class="headerlink" title="Dao 接口里的方法，参数不同时，方法能重载吗？"></a>Dao 接口里的方法，参数不同时，方法能重载吗？</h3><p>在使用MyBatis最为持久层框架时，DAO接口其实就是Mapper接口。Mapper接口中的方法由Mapper.xml文件实现。</p>
+<p>Mybatis 的 Dao 接口可以有多个重载方法，但是多个重载方法对应的映射必须只有一个，否则启动会报错。利用动态sql，实现方法如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Person <span class="title function_">queryById</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">Person <span class="title function_">queryById</span><span class="params">(<span class="meta">@Param(&quot;id&quot;)</span> Long id)</span>;</span><br><span class="line"></span><br><span class="line">Person <span class="title function_">queryById</span><span class="params">(<span class="meta">@Param(&quot;id&quot;)</span> Long id, <span class="meta">@Param(&quot;name&quot;)</span> String name)</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;queryById&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;PersonMap&quot;</span>&gt;</span></span><br><span class="line">    select</span><br><span class="line">      id, name, age, address</span><br><span class="line">    from person</span><br><span class="line">    <span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;id != null&quot;</span>&gt;</span></span><br><span class="line">            id = #&#123;id&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;name != null and name != &#x27;&#x27;&quot;</span>&gt;</span></span><br><span class="line">            name = #&#123;name&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">where</span>&gt;</span></span><br><span class="line">    limit 1</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="MyBatis-动态-sql-是做什么的？都有哪些动态-sql？"><a href="#MyBatis-动态-sql-是做什么的？都有哪些动态-sql？" class="headerlink" title="MyBatis 动态 sql 是做什么的？都有哪些动态 sql？"></a>MyBatis 动态 sql 是做什么的？都有哪些动态 sql？</h3><p>MyBatis 动态 sql 可以让我们在 xml 映射文件内，以标签的形式编写动态 sql，完成逻辑判断和动态拼接 sql 的功能。</p>
+<p>&lt; where &gt;相当于sql语句中的where，与if搭配使用，用if选择过滤的条件</p>
+<p>&lt; foreach &gt;当传入的参数是集合时，可以对集合中的元素遍历，一般用于批量添加和删除</p>
+<h3 id="自定义映射resultMap"><a href="#自定义映射resultMap" class="headerlink" title="自定义映射resultMap"></a>自定义映射resultMap</h3><p>resultMap：若字段名和实体类中的属性名不一致，则可以通过resultMap设置自定义映射，作为一种临时实体类。</p>
+<h2 id="Netty"><a href="#Netty" class="headerlink" title="Netty"></a>Netty</h2><h3 id="BIO-NIO-AIO的区别"><a href="#BIO-NIO-AIO的区别" class="headerlink" title="BIO,NIO,AIO的区别"></a>BIO,NIO,AIO的区别</h3><h4 id="1-什么是IO"><a href="#1-什么是IO" class="headerlink" title="1.什么是IO"></a>1.什么是IO</h4><p>IO指计算机系统与外部设备之间通信的过程，在平常开发中接触最多的就是磁盘IO（读写文件）和网络IO（网络请求和响应）。</p>
+<p>因为在一个进程中用户空间和内核空间是不同的，应用程序对操作系统的内核发起IO调用（系统调用），操作系统负责的内核执行具体的IO操作，然后内核将数据从内核空间拷贝到用户空间。</p>
+<h4 id="2-JAVA中常见的3种IO模型"><a href="#2-JAVA中常见的3种IO模型" class="headerlink" title="2.JAVA中常见的3种IO模型"></a>2.JAVA中常见的3种IO模型</h4><p>BIO：同步阻塞IO模型中，在进行I&#x2F;O操作时，会一直阻塞（线程挂起），直到内核把数据拷贝到用户空间后才能进行下一步操作。基于Stream流的IO基本都属于BIO。</p>
+<p>NIO：同步非阻塞I&#x2F;O，在进行I&#x2F;O操作时，不会阻塞（线程运行），主线程一直在执行操作，对于select操作来说，线程要么在轮询判断哪个客户端就绪，要么就在执行IO操作（内核把数据拷贝到用户空间）。</p>
+<p>Java的NIO一般是通过多路复用技术实现的。多路复用指的是一种实现同时监控多个文件描述符（包括socket，文件和标准输入输出等）的技术，直白一点就是一次系统调用，我就能得到多个客户端是否有读写事件，多路（多个客户端）复用（复用一次系统调用）。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106203143316.png" alt="image-20231106203143316" style="zoom: 80%;" />
+
+<p>linux中实现的多路复用技术包括select，poll，epoll。</p>
+<p>select，poll：使用轮询的方式来查询文件描述符上是否有事件发生，select最大支持1024个文件描述符，而poll则使用链表来存储文件描述符，没有数量限制。</p>
+<p>缺点：select和poll每次都需要拷贝所有的文件描述符，内核需要遍历文件描述符才能发现哪些客户端发生了读写事件。</p>
+<p>epoll：</p>
+<p>epoll中使用红黑树和链来储存文件描述符，红黑树用来储存所有被监听的文件描述符，链表用来储存所有事件就绪的文件描述符。使用红黑树是为了方便进行增删查改。</p>
+<p>当内核监听到有就绪事件时就会将就绪事件从红黑树迁移一份到就绪事件链表中，用户直接就可以执行就绪事件链表中的IO操作。</p>
+<p>AIO:AIO也就是NIO2。它是异步非阻塞的IO模型。异步IO是基于事件和回调机制实现的，在进行I&#x2F;O操作时，不需要等待操作完成，就可继续进行其他操作，当操作完成后会自动回调通知</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825203754885.png" alt="image-20230825203754885" style="zoom: 33%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825203818500.png" alt="image-20230825203818500" style="zoom:33%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825203846479.png" alt="image-20230825203846479" style="zoom: 50%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825204945709.png" alt="image-20230825204945709" style="zoom:50%;" /></p>
+<p>多路复用：select，poll，epoll</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BIOServer</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">		<span class="type">ServerSocket</span> <span class="variable">server</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerSocket</span>(<span class="number">9998</span>, <span class="number">20</span>);</span><br><span class="line">		System.out.println(<span class="string">&quot;server begin&quot;</span>);</span><br><span class="line">		<span class="keyword">while</span> (<span class="literal">true</span>) &#123; <span class="comment">// 阻塞1</span></span><br><span class="line">			<span class="type">Socket</span> <span class="variable">client</span> <span class="operator">=</span> server.accept();</span><br><span class="line">			System.out.println(<span class="string">&quot;accept client&quot;</span> + client.getPort());</span><br><span class="line">			<span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">				InputStream in;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					in = client.getInputStream();</span><br><span class="line">					<span class="type">BufferedReader</span> <span class="variable">reader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferedReader</span>(<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(in));</span><br><span class="line">					<span class="keyword">while</span> (<span class="literal">true</span>) &#123; <span class="comment">// 阻塞2</span></span><br><span class="line">						<span class="type">String</span> <span class="variable">data</span> <span class="operator">=</span> reader.readLine();</span><br><span class="line">						<span class="keyword">if</span> (<span class="literal">null</span> != data) &#123;</span><br><span class="line">							System.out.println(data);</span><br><span class="line">						&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">							client.close();</span><br><span class="line">							<span class="keyword">break</span>;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">					System.out.println(<span class="string">&quot;client break&quot;</span>);</span><br><span class="line">				&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;).start();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NIOServer</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, InterruptedException &#123;</span><br><span class="line">		LinkedList&lt;SocketChannel&gt; clients = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;(); <span class="comment">// 服务端开启监听</span></span><br><span class="line">		<span class="type">ServerSocketChannel</span> <span class="variable">serverSocketChannel</span> <span class="operator">=</span> ServerSocketChannel.open();</span><br><span class="line">		serverSocketChannel.bind(<span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(<span class="number">9998</span>)); <span class="comment">// 设置操作系统 级别非阻塞 NONBLOCKING!!!</span></span><br><span class="line">		serverSocketChannel.configureBlocking(<span class="literal">false</span>);</span><br><span class="line">		<span class="keyword">while</span> (<span class="literal">true</span>) &#123; <span class="comment">// 接受客户端的连接</span></span><br><span class="line">			Thread.sleep(<span class="number">500</span>);</span><br><span class="line">			<span class="comment">/**</span></span><br><span class="line"><span class="comment">			 * accept 调用了内核， 在设置configureBlocking(false) 及非阻塞的情况下 若有客户端连进来，直接返回客户端，</span></span><br><span class="line"><span class="comment">			 * 若无客户端连接，则返回null 设置成NONBLOCKING后，代码不阻塞，线程不挂起，继续往下执行</span></span><br><span class="line"><span class="comment">			 */</span></span><br><span class="line">			<span class="type">SocketChannel</span> <span class="variable">client</span> <span class="operator">=</span> serverSocketChannel.accept();</span><br><span class="line">			<span class="keyword">if</span> (client == <span class="literal">null</span>) &#123; <span class="comment">//</span></span><br><span class="line">				System.out.println(<span class="string">&quot;null.....&quot;</span>);</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="comment">/**</span></span><br><span class="line"><span class="comment">				 * 重点，设置client读写数据时非阻塞</span></span><br><span class="line"><span class="comment">				 */</span></span><br><span class="line">				client.configureBlocking(<span class="literal">false</span>);</span><br><span class="line">				<span class="type">int</span> <span class="variable">port</span> <span class="operator">=</span> client.socket().getPort();</span><br><span class="line">				System.out.println(<span class="string">&quot;client..port: &quot;</span> + port);</span><br><span class="line">				clients.add(client);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="type">ByteBuffer</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBuffer.allocateDirect(<span class="number">4096</span>); <span class="comment">// 遍历所有客户端，不需要多线程</span></span><br><span class="line">			<span class="keyword">for</span> (SocketChannel c : clients) &#123; <span class="comment">// 不阻塞</span></span><br><span class="line">				<span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> c.read(buffer);</span><br><span class="line">				<span class="keyword">if</span> (num &gt; <span class="number">0</span>) &#123;</span><br><span class="line">					buffer.flip();</span><br><span class="line">					<span class="type">byte</span>[] aaa = <span class="keyword">new</span> <span class="title class_">byte</span>[buffer.limit()];</span><br><span class="line">					buffer.get(aaa);</span><br><span class="line">					<span class="type">String</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(aaa);</span><br><span class="line">					System.out.println(c.socket().getPort() + <span class="string">&quot; : &quot;</span> + b);</span><br><span class="line">					buffer.clear();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="主流网络模型"><a href="#主流网络模型" class="headerlink" title="主流网络模型"></a>主流网络模型</h3><p>对应BIO</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106204404474.png" alt="image-20231106204404474" style="zoom:80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106205853135.png" alt="image-20231106205853135" style="zoom:80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106205907874.png" alt="image-20231106205907874" style="zoom:80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231106205915656.png" alt="image-20231106205915656" style="zoom:80%;" />
+
+<p>netty和redis不考虑线程池的引入，因此可以理解为只有single-reactor单线程模型和multi-reactor多线程模型。</p>
+<p>为了解决上诉问题，<strong>Java1.4中引入了Nl0,一种同步非阻塞的I&#x2F;O模型。</strong></p>
+<p>NIO的网络通信中的特点在于，<strong>客户端不再使用流这种传统的IO方式进行，传统的流的这种形式都会基于InputStream或者OutPutStream来进行输入和输出。但是在NIO当中，是使用的是管道的这种形式。</strong></p>
+<p><strong>作为Selector来讲，能帮我们解决的问题是这样的，监控个客户端的channel这是一种主动式的监控，如果是客户端发短信进行通信的时候，是否能进行正常的通讯（1.正常的鉴别原因，没有阻塞。）监控过程当中有正常的读写，且无阻塞，就会给他分配线程。当其中某一个客户端channel阻塞了之后，会被Selector监控到，就会把分配给他的后台线程解放出来，给到其他的Channel，这跟传统的网络通通信有一个本质的区别，后台的线程当中可能同时给多个Channel使用。这就是NIO版的网络通信，解决客户端阻塞导致后台资源闲置的方式。</strong>基于NIO网络通信技术，在客户端和后台服务体系中引入Channel和Selector之后，后台线程的阻塞问题得到了解决。</p>
+<p><strong>补充：</strong></p>
+<p><strong>关于同步和异步</strong></p>
+<p><strong>同步和异步其实指的是，请求发起方对消息结果的获取是主动发起的，还是等被动通知的。</strong>如果是请求方主动发起的，一直在等待应答结果（同步阻塞），或者可以先去处理其他的事情，但要不断轮询查看发起的请求是否有应答结果（同步非阻塞 ）因为不管如何都要发起方主动获取消息结果，所以形式上还是同步操作。如果是由服务方通知的，也就是请求方发出请求后，要么在一直等待通知（异步阻塞），要么就先去干自己的事了（异步非阻塞），当事情处理完成之后，服务方会主动通知请求方，它的请求已经完成，这就是异步。异步通知的方式一般是通过状态改变，消息通知，或者回调函数来完成，大多数时候采用的都是回调函数。</p>
+<p><strong>关于阻塞和非阻塞</strong></p>
+<p>就是我们调用了一个函数之后，在等待这个函数返回结果之前，当前的线程是处于挂起状态，还是运行状态.如果是挂起状态，就意味着当前线程什么都不能干，就等着获取结果，这就叫<strong>同步阻塞</strong>，如果仍然是运行状态，就意味当前线程是可以的继续处理其他任务，但要时不时的去看下是否有结果了，这就是同步非阻塞。</p>
+<p>Future 类通过 get() 方法阻塞等待获取异步执行的运行结果，性能比较差。</p>
+<p>JDK1.8 中，Java 提供了 CompletableFuture 类，它是基于异步函数式编程。相对阻塞式等待返回结果，CompletableFuture 可以通过回调的方式来处理计算结果，实现了异步非阻塞，性能更优。</p>
+<h5 id="netty是同步的还是异步的？"><a href="#netty是同步的还是异步的？" class="headerlink" title="netty是同步的还是异步的？"></a>netty是同步的还是异步的？</h5><p><code>Netty</code> 是一个异步的、基于事件驱动的网络应用框架，用以快速开发高性能、高可靠性的网络 <code>IO</code> 程序。</p>
+<p>Netty是虽然是基于java.nio.*的（同步非阻塞），但是在Reactor模式下用多线程实现了”异步”的效果。</p>
+<p><strong>同步是针对NIO的select线程的</strong>。当有准备好的IO事件时，马上就处理，处理过程是同步的。</p>
+<p><strong>异步是针对Netty使用者的</strong>。当调用bind、write或connect时，不是马上拿到结果，而是返回Future，等到NIO完成操作后再通过回调通知。</p>
+<p>channel的处理器中会有一个read（）方法把读取到的键值对放入到一个类似map的容器中，然后使</p>
+<p>由于read和write，</p>
+<p>为了能够在异步操作下顺利拿到值，需要在客户端自己实现同步获取消息的机制</p>
+<p>一.通过<code>future</code>来实现，用<code>future</code>的方法<code>get</code>阻塞拿值，但是使用future会导致Event Loop阻塞导致效率下降。</p>
+<p>二.通过CompletableFuture 来实现，CompletableFuture可以通过异步编程的方式，把阻塞等待返回Response的过程交给异步线程处理，解放Event Loop线程继续执行流程代码，在业务流程中真正需要用到Response再同步等待异步线程执行结果。</p>
+<h3 id="Netty核心组件"><a href="#Netty核心组件" class="headerlink" title="Netty核心组件"></a>Netty核心组件</h3><p><a target="_blank" rel="noopener" href="https://www.yuque.com/snailclimb/mf2z3k/wlr1b0#zlra8">https://www.yuque.com/snailclimb/mf2z3k/wlr1b0#zlra8</a></p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230825204043005.png" alt="image-20230825204043005" style="zoom: 50%;" />
+
+<h4 id="Bytebuf（字节容器）"><a href="#Bytebuf（字节容器）" class="headerlink" title="Bytebuf（字节容器）"></a>Bytebuf（字节容器）</h4><p>网络通信最终都是通过字节流进行传输的。ByteBuf就是Netty提供的一个字节容器，其内部是一个字节数组。当我们通过Netty传输数据的时候，就是通过ByteBuf进行的。</p>
+<h4 id="Bootstrap和ServerBootstrap（启动引导类）"><a href="#Bootstrap和ServerBootstrap（启动引导类）" class="headerlink" title="Bootstrap和ServerBootstrap（启动引导类）"></a>Bootstrap和ServerBootstrap（启动引导类）</h4><p>1.客户端创建客户端启动引导类Bootstrap，通过Bootstrap对象指定一个线程模型EventLoopGroup，然后调用connect指定ip和端口建立连接。<br>2.服务端创建服务端启动引导类Bootstrap，通过Bootstrap对象指定两个线程模型EventLoopGroup，一个用于接收连接，一个用于具体的IO处理，然后调用bind指定端口。<br><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903171637722.png" alt="image-20230903171637722" style="zoom: 67%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903171657800.png" alt="image-20230903171657800" style="zoom:67%;" /></p>
+<h4 id="Channel（网络操作抽象类）"><a href="#Channel（网络操作抽象类）" class="headerlink" title="Channel（网络操作抽象类）"></a>Channel（网络操作抽象类）</h4><p>Channel接口是Netty对网络操作抽象类。通过Channel我们可以进行I&#x2F;O操作，channel中传输数据的单位是Bytebu。一旦客户端成功连接服务端，就会新建一个Channel绑定这对连接。<br>比较常用的Channel接口实现类是：NioServerSocketChannel（服务端）JavaNioSocketChannel（客户端）这两个Channel可以和BIO编程模型中的ServerSocket以及Socket两个慨念对应上。</p>
+<h4 id="EventLoopGroup和EvenLoop（事件循环）"><a href="#EventLoopGroup和EvenLoop（事件循环）" class="headerlink" title="EventLoopGroup和EvenLoop（事件循环）"></a>EventLoopGroup和EvenLoop（事件循环）</h4><p>MainReactorGroup和SubReactorGroup。</p>
+<p>EventLoop的主要作用实际就是责监听网络事件并调用事件处理器进行相关I&#x2F;O操作（读写）的处理。</p>
+<ul>
+<li>EventLoopGroup 负责分配 EventLoop 到新创建的 Channel</li>
+<li>异步实现只用了很少 EventLoop，这几个 EventLoop 被所有 Channel 共享</li>
+<li>一但 Channel 被指派了一个 EventLoop，在它的整个生命周期过程中，都会用这个 EventLoop</li>
+</ul>
+<p>EventLoop处理的I&#x2F;O事件都将在它专有的Thread上被处理，即Thread和EventLoop属于1:1的关系，从而保证线程安全。</p>
+<ul>
+<li>EventLoop 始终由一个线程驱动</li>
+<li>一个 EventLoop 可以被指派来服务多个 Channel</li>
+<li>一个 Channel 只拥有一个 EventLoop</li>
+</ul>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903171037189.png" alt="image-20230903171037189" style="zoom:80%;" />
+
+<h4 id="ChannelHandler（消息处理器）和ChannelPipeline-ChannelHandler对象链表）"><a href="#ChannelHandler（消息处理器）和ChannelPipeline-ChannelHandler对象链表）" class="headerlink" title="ChannelHandler（消息处理器）和ChannelPipeline(ChannelHandler对象链表）"></a>ChannelHandler（消息处理器）和ChannelPipeline(ChannelHandler对象链表）</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903171731107.png" alt="image-20230903171731107" style="zoom: 67%;" />
+
+<p>ChannelHandler是消息的具体处理器，主要负责处理客户端&#x2F;服务端接收和发送的数据。<br>当Channel被创建时，它会被自动地分配到它专属的ChannelPipeline。一个Channel包含一个ChannelPipeline.ChannelPipeline为ChannelHandler的链，一个pipeline上可以有多个ChannelHandler.<br>我们可以在ChannelPipeline上通过addLast（）方法添加一个或者多个ChannelHandler(一个数据或者事件可能会被多个Handler处理。当一个ChannelHandler处理完之后就将数据交给下一个ChannelHandler</p>
+<h4 id="NioEventLoopGroup默认的构造函数会起多少线程"><a href="#NioEventLoopGroup默认的构造函数会起多少线程" class="headerlink" title="NioEventLoopGroup默认的构造函数会起多少线程?"></a>NioEventLoopGroup默认的构造函数会起多少线程?</h4><p>NioEventLoopGroup默认的构造函数实际会起的线程数为CPU核心数*2.<br>每个NioEventLoopGroup对象内部都会分配一组NioEventLoop,其大小是nThreads,这样就构成了一个线程池，一个NIOEventLoop和一个线程相对应，这和我们上面说的EventloopGroup和EventLoop关系这部分内容相对应。</p>
+<h4 id="Reactor线程模型（NioEventLoopGroup）"><a href="#Reactor线程模型（NioEventLoopGroup）" class="headerlink" title="Reactor线程模型（NioEventLoopGroup）"></a>Reactor线程模型（NioEventLoopGroup）</h4><p>预防针：IO模型和IO线程模型是不同的，IO模型是是指BIO，NIO和AIO</p>
+<p>Reactor是利用NIO对IO线程进行不同的分工,通过IO多路复用技术就可以不断的监听IO事件，不断的分发dispatch,就像一个反应堆一样，看起来像不断的产生IO事件，因比我们称这种模式为Reactor模型。</p>
+<ul>
+<li>将监听到就绪的IO事件分发dispatch到各个具体的处理Handler中进行相应的IO事件处理。</li>
+</ul>
+<p><strong>Reactor线程模型分为单线程模型、多线程模型以及主从多线程模型。</strong></p>
+<p>在Netty主要靠NioEventLoopGroup线程池来实现具体的线程模型的。<br>实现服务端的时候，一般会初始化两个线程组：bossGroup（MainReactorGroup），workerGroup（SubReactorGroup）。</p>
+<p><strong>在主从多线程模型中：</strong></p>
+<p>MainReactorGroup中通常只有一个Reactor,专门负责做最重要的事情，也就是监听连接accept事件。当有连接事件产生时，创建初始化相应的NioSocketChannel(代表一个Socket连接)。然后以负载均衡的方式在SubReactorGroup中选取一个Reactor,注册上去，监听Read事件。</p>
+<p>MainReactorGroup中只有一个Reactor的原因是，通常我们服务端程序只会绑定监听一个端口，如果要绑定监听多个端口，就会配置多个Reactor。</p>
+<p>SubReactorGroup中有多个Reactor。默认的Reactor的个数为CPU核数*2。SubReactorGroup中的Reactor主要负责监听读写事件，每一个Reactor负责监听一组socket连接（channel）。</p>
+<p><strong>单线程模型</strong></p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231103099.png" alt="image-20230903231103099" style="zoom: 67%;" />
+
+
+
+<p><strong>主从多线程模型</strong></p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231252649.png" alt="image-20230903231252649" style="zoom:50%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231257598.png" alt="image-20230903231257598" style="zoom:50%;" /></p>
+<p><strong>多线程模型</strong></p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231438292.png" alt="image-20230903231438292" style="zoom: 50%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230903231448289.png" alt="image-20230903231448289" style="zoom:50%;" /></p>
+<h4 id="Netty服务端和客户端的启动过程"><a href="#Netty服务端和客户端的启动过程" class="headerlink" title="Netty服务端和客户端的启动过程"></a>Netty服务端和客户端的启动过程</h4><p><a target="_blank" rel="noopener" href="https://www.yuque.com/snailclimb/mf2z3k/wlr1b0#2014fda3">https://www.yuque.com/snailclimb/mf2z3k/wlr1b0#2014fda3</a></p>
+<p>实际上，服务端与客户端的启动过程相似，服务端需要开两个NioEventLoopGroup，而客户端只有一个；服务端是绑定端口，而客户端是建立连接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1.创建两个NioEventLoopGroup对象，bossGroup用于接收连接，workerGroup用于具体的处理</span></span><br><span class="line">EventLoopGroup bossGroup <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>(<span class="number">1</span>);</span><br><span class="line">EventLoopGroup workerGroup <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();</span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">//2.创建服务端启动引导/辅助类：ServerBootstrap</span></span><br><span class="line">    ServerBootstrap b <span class="keyword">new</span> <span class="title class_">ServerBootstrap</span>();</span><br><span class="line">    <span class="comment">//3.给引导类配置两大线程组，确定了线程模型</span></span><br><span class="line">    b.group(bossGroup,workerGroup)</span><br><span class="line">        <span class="comment">//（非必备）打印日志</span></span><br><span class="line">        .handler(<span class="keyword">new</span> <span class="title class_">LoggingHandler</span>(LogLevel.INFO))</span><br><span class="line">        <span class="comment">//4.通过channel()方法给引导类指定了IO模型为NIO</span></span><br><span class="line">        .channel(NioServerSocketChannel.class)</span><br><span class="line">        .childHandler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span>&#123;</span><br><span class="line">                <span class="type">ChannelPipeline</span> <span class="variable">p</span> <span class="operator">=</span> ch.pipeline();</span><br><span class="line">                <span class="comment">//5.通过childHandler()方法添加自定义客户端消息的业务处理逻辑</span></span><br><span class="line">                p.addLast(<span class="keyword">new</span> <span class="title class_">HelloServerHandler</span>());</span><br><span class="line">            &#125;</span><br><span class="line">         &#125;);</span><br><span class="line">     <span class="comment">//6.绑定端口，调用sync方法阻塞知道绑定完成</span></span><br><span class="line">     ChannelFuture f b.bind(port).sync();</span><br><span class="line">     <span class="comment">//7.阻塞等待直到服务器Channel关闭</span></span><br><span class="line">     f.channel().closeFuture().sync();</span><br><span class="line">&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">     <span class="comment">//8.优雅关闭相关线程组资源</span></span><br><span class="line">     bossGroup.shutdownGracefully();</span><br><span class="line">     workerGroup.shutdownGracefully();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1.创建一个NioEventLoopGroup对象实例</span></span><br><span class="line">EventLoopGroup group <span class="keyword">new</span> <span class="title class_">NioEventLoopGroup</span>();<span class="number">3</span></span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">    <span class="comment">//2.创建客户端启动引导/辅助类：Bootstrap</span></span><br><span class="line">	Bootstrap b <span class="keyword">new</span> <span class="title class_">Bootstrap</span>();</span><br><span class="line">	<span class="comment">//3.指定线程组</span></span><br><span class="line">	b.group(group)</span><br><span class="line">	<span class="comment">//4.指定I0模型</span></span><br><span class="line">	.channel(NioSocketChannel.class)</span><br><span class="line">	.handler(<span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;（）&#123;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span><span class="keyword">throws</span> Exception&#123;</span><br><span class="line">            ChannelPipeline p ch.pipeline（）;</span><br><span class="line">			<span class="comment">//5.这里可以自定义消息的业务处理逻辑</span></span><br><span class="line">			p.addLast(<span class="keyword">new</span> <span class="title class_">HelloclientHandler</span>(message));</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;);</span><br><span class="line">    <span class="comment">//6.尝试建立连接</span></span><br><span class="line">    ChannelFuture f b.connect(host,port).sync();</span><br><span class="line">    <span class="comment">//7.等待连接关闭(阻塞，直到Channel1关闭)</span></span><br><span class="line">    f.channel().closeFuture().sync();</span><br><span class="line">&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">    group.shutdownGracefully();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="什么是TCP粘包-拆包？Netty的解决办法"><a href="#什么是TCP粘包-拆包？Netty的解决办法" class="headerlink" title="什么是TCP粘包&#x2F;拆包？Netty的解决办法"></a>什么是TCP粘包&#x2F;拆包？Netty的解决办法</h4><p>Netty自带的解码器</p>
+<ul>
+<li>发送端发送数据包的时候，每个数据包之间以换行符作为分隔</li>
+<li>自定义分隔符解码器</li>
+<li>固定长度解码器，它能够按照指定的长度对消息进行相应的拆包。如果不够指定的长度，则空格补全</li>
+</ul>
+<h4 id="Netty长连接、心跳机制了解么？"><a href="#Netty长连接、心跳机制了解么？" class="headerlink" title="Netty长连接、心跳机制了解么？"></a>Netty长连接、心跳机制了解么？</h4><p>在TCP保持长连接的过程中，可能会出现断网等网络异常出现，异常发生的时候，client与server之间如果没有交互的话，它们是无法发现对方已经掉线的。为了解决这个问题，我们就需要引入心跳机制。</p>
+<p>心跳机制的工作原理是：在client与server之间在一定时间内没有数据交互时，即处于idle状态时，客户端或服务器就会发送一个特殊的数据包给对方，当接收方收到这个数据报文后，也立即发送一个特殊的数据报文，回应发送方，此即一个PING-PONG交互。所以，当某一端收到心跳消息后，就知道了对方仍然在线，这就确保TCP连接的有效性</p>
+<p>TCP实际上自带的就有长连接选项，本身是也有心跳包机制，也就是TCP的选项：KEEPALIVE。但是，TCP协议层面的长连接灵活性不够，判断存活的时间过长。所以，一般情况下我们都是在应用层协议上实现自定义心跳机制的，也就是在Netty层面通过编码实现。通过Net地y实现心跳机制的话，核心类是IdleStateHandler。</p>
+<h4 id="Netty零拷贝"><a href="#Netty零拷贝" class="headerlink" title="Netty零拷贝"></a>Netty零拷贝</h4><p>所谓的 <code>Zero-copy</code>, 就是在操作数据时, 不需要将数据 buffer 从一个内存区域拷贝到另一个内存区域。在OS层面上的Zero-copy通常指避免在用户态(User-space)与内核态(Kernel-space)之间来回拷贝数据。在Netty层面，零拷贝主要体现在对于数据操作的优化。</p>
+<p>Netty中的零拷贝体现在以下几个方面：<br>1.堆外内存，避免M堆内存到堆外内存的数据拷贝。<br>2.使用Netty提供的CompositeByteBuf类可以将多个ByteBuf合并为一个逻辑上的ByteBuf,避免了各个ByteBuf之间的拷贝。<br>3.ByteBuf支持slice操作，因此可以将ByteBuf分解为多个共享同一个存储区域的ByteBuf,避免了内存的拷贝。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java-Web/" rel="tag"># Java Web</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/cb72.html" rel="prev" title="2023-03-10-集合类常用函数">
+      <i class="fa fa-chevron-left"></i> 2023-03-10-集合类常用函数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/299c.html" rel="next" title="2023-03-12-链表类算法">
+      2023-03-12-链表类算法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6"><span class="nav-number">1.</span> <span class="nav-text">框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring"><span class="nav-number">1.1.</span> <span class="nav-text">Spring</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-%E5%9F%BA%E7%A1%80"><span class="nav-number">1.1.1.</span> <span class="nav-text">Spring 基础</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Spring"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">什么是 Spring?</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Core-Container"><span class="nav-number">1.1.1.1.1.</span> <span class="nav-text">Core Container</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#AOP"><span class="nav-number">1.1.1.1.2.</span> <span class="nav-text">AOP</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Data-Access"><span class="nav-number">1.1.1.1.3.</span> <span class="nav-text">Data Access</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Spring-Web"><span class="nav-number">1.1.1.1.4.</span> <span class="nav-text">Spring Web</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Spring-Test"><span class="nav-number">1.1.1.1.5.</span> <span class="nav-text">Spring Test</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spring-cloud%E5%9F%BA%E7%A1%80%E7%BB%84%E4%BB%B6"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">spring cloud基础组件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Spring-MVC-Spring-Boot-%EF%BC%8Cspring-cloud%E4%B9%8B%E9%97%B4%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">Spring,Spring MVC,Spring Boot ，spring cloud之间什么关系?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Boot-%EF%BC%8Cspring-cloud%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.1.4.</span> <span class="nav-text">Spring Boot ，spring cloud的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SpringBoot%E7%9A%84%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.1.5.</span> <span class="nav-text">SpringBoot的启动流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#starter%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE"><span class="nav-number">1.1.1.6.</span> <span class="nav-text">starter自动配置?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-Spring-Bean%EF%BC%9F"><span class="nav-number">1.1.1.7.</span> <span class="nav-text">什么是 Spring Bean？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%AA%E4%BA%9BBean%E7%9A%84%E4%BC%9A%E8%A2%AB%E5%AE%9E%E4%BE%8B%E5%8C%96"><span class="nav-number">1.1.1.8.</span> <span class="nav-text">哪些Bean的会被实例化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-%E6%A1%86%E6%9E%B6%E4%B8%AD%E7%94%A8%E5%88%B0%E4%BA%86%E5%93%AA%E4%BA%9B%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%EF%BC%9F"><span class="nav-number">1.1.1.9.</span> <span class="nav-text">Spring 框架中用到了哪些设计模式？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-IoC%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="nav-number">1.1.2.</span> <span class="nav-text">Spring IoC（重要）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFIOC"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">什么是IOC</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#IOC%E5%AE%B9%E5%99%A8"><span class="nav-number">1.1.2.1.1.</span> <span class="nav-text">IOC容器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC-IOC-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5-DI"><span class="nav-number">1.1.2.1.2.</span> <span class="nav-text">控制反转(IOC)&#x2F;依赖注入(DI)</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IOC%E7%9A%84%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">IOC的执行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#springIOC%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.2.2.1.</span> <span class="nav-text">springIOC的工作流程</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-Bean%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F0"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">Spring Bean的生命周期0</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Spring%E4%B8%ADBean%E7%9A%84%E5%AE%9E%E4%BE%8B%E5%8C%96%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.2.3.1.</span> <span class="nav-text">Spring中Bean的实例化和初始化有什么区别</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8D%95%E4%BE%8B-Bean-%E7%9A%84%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98%E4%BA%86%E8%A7%A3%E5%90%97%EF%BC%9F"><span class="nav-number">1.1.2.3.2.</span> <span class="nav-text">单例 Bean 的线程安全问题了解吗？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#spring%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84bean%E6%98%AF%E5%90%A6%E5%85%81%E8%AE%B8%E8%A2%AB%E5%9B%9E%E6%94%B6"><span class="nav-number">1.1.2.3.3.</span> <span class="nav-text">spring容器中的bean是否允许被回收</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-AoP%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="nav-number">1.1.3.</span> <span class="nav-text">Spring AoP（重要）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFAOP"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">什么是AOP</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOP-%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">AOP 解决了什么问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spring%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0aop"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">spring如何实现aop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOP-%E5%88%87%E9%9D%A2%E7%BC%96%E7%A8%8B%E7%9A%84%E6%9C%AF%E8%AF%AD%EF%BC%9A"><span class="nav-number">1.1.3.4.</span> <span class="nav-text">AOP 切面编程的术语：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-AOP-%E5%92%8C-AspectJ-AOP-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">1.1.3.5.</span> <span class="nav-text">Spring AOP 和 AspectJ AOP 有什么区别？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AspectJ-%E5%AE%9A%E4%B9%89%E7%9A%84%E9%80%9A%E7%9F%A5%E7%B1%BB%E5%9E%8B%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">1.1.3.6.</span> <span class="nav-text">AspectJ 定义的通知类型有哪些？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.1.3.7.</span> <span class="nav-text">代理对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.3.8.</span> <span class="nav-text">循环依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98"><span class="nav-number">1.1.3.8.1.</span> <span class="nav-text">为什么使用三级缓存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E5%A4%B1%E6%95%88%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.1.3.8.2.</span> <span class="nav-text">循环依赖失效的场景</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-MVC"><span class="nav-number">1.2.</span> <span class="nav-text">Spring MVC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSpringMVC"><span class="nav-number">1.2.1.</span> <span class="nav-text">什么是SpringMVC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringMVC%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6"><span class="nav-number">1.2.2.</span> <span class="nav-text">SpringMVC常用组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringMVC%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.2.3.</span> <span class="nav-text">SpringMVC执行流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%BB%A4%E5%99%A8%E5%92%8C%E6%8B%A6%E6%88%AA%E5%99%A8%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.4.</span> <span class="nav-text">过滤器和拦截器的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot"><span class="nav-number">1.3.</span> <span class="nav-text">SpringBoot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.4.</span> <span class="nav-text">Spring 事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-%E7%AE%A1%E7%90%86%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%96%B9%E5%BC%8F%E6%9C%89%E5%87%A0%E7%A7%8D%EF%BC%9F"><span class="nav-number">1.4.1.</span> <span class="nav-text">Spring 管理事务的方式有几种？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="nav-number">1.4.2.</span> <span class="nav-text">事务的属性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-%E4%BA%8B%E5%8A%A1%E4%B8%AD%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">Spring 事务中的隔离级别有哪几种?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Spring-%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">Spring 事务传播行为</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%BA%8B%E5%8A%A1%E7%9A%84%E4%BC%A0%E6%92%AD%E8%A1%8C%E4%B8%BA"><span class="nav-number">1.4.2.2.1.</span> <span class="nav-text">什么是事务的传播行为</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%8C%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E9%83%A8%E6%96%B9%E6%B3%95%E4%BA%92%E7%9B%B8%E8%B0%83%E7%94%A8"><span class="nav-number">1.4.2.2.2.</span> <span class="nav-text">同对象的内部方法互相调用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E8%A1%8C%E4%B8%BA%E6%9C%89%E5%87%A0%E7%A7%8D"><span class="nav-number">1.4.2.2.3.</span> <span class="nav-text">事务传播行为有几种</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E8%B6%85%E6%97%B6%E5%B1%9E%E6%80%A7"><span class="nav-number">1.4.2.3.</span> <span class="nav-text">事务超时属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%9B%9E%E6%BB%9A%E8%A7%84%E5%88%99"><span class="nav-number">1.4.2.4.</span> <span class="nav-text">事务回滚规则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transactional-%E4%BA%8B%E5%8A%A1%E6%B3%A8%E8%A7%A3%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.3.</span> <span class="nav-text">@Transactional 事务注解原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E5%A4%B1%E6%95%88%E7%9A%84%E5%9C%BA%E6%99%AF"><span class="nav-number">1.4.4.</span> <span class="nav-text">事务失效的场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Spring-boot-%E5%B8%B8%E7%94%A8%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.5.</span> <span class="nav-text">Spring&amp;Spring boot 常用注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#spring%E6%89%A9%E5%B1%95%E7%82%B9"><span class="nav-number">1.6.</span> <span class="nav-text">spring扩展点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringSecurity"><span class="nav-number">1.7.</span> <span class="nav-text">SpringSecurity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MyBatis"><span class="nav-number">1.8.</span> <span class="nav-text">MyBatis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8C-%E7%9A%84%E5%8C%BA%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.8.1.</span> <span class="nav-text">#{} 和 ${} 的区别是什么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#xml-%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E4%B8%AD%EF%BC%8C%E9%99%A4%E4%BA%86%E5%B8%B8%E8%A7%81%E7%9A%84-select%E3%80%81insert%E3%80%81update%E3%80%81delete-%E6%A0%87%E7%AD%BE%E4%B9%8B%E5%A4%96%EF%BC%8C%E8%BF%98%E6%9C%89%E5%93%AA%E4%BA%9B%E6%A0%87%E7%AD%BE%EF%BC%9F"><span class="nav-number">1.8.2.</span> <span class="nav-text">xml 映射文件中，除了常见的 select、insert、update、delete 标签之外，还有哪些标签？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dao-%E6%8E%A5%E5%8F%A3%E9%87%8C%E7%9A%84%E6%96%B9%E6%B3%95%EF%BC%8C%E5%8F%82%E6%95%B0%E4%B8%8D%E5%90%8C%E6%97%B6%EF%BC%8C%E6%96%B9%E6%B3%95%E8%83%BD%E9%87%8D%E8%BD%BD%E5%90%97%EF%BC%9F"><span class="nav-number">1.8.3.</span> <span class="nav-text">Dao 接口里的方法，参数不同时，方法能重载吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MyBatis-%E5%8A%A8%E6%80%81-sql-%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E7%9A%84%EF%BC%9F%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%8A%A8%E6%80%81-sql%EF%BC%9F"><span class="nav-number">1.8.4.</span> <span class="nav-text">MyBatis 动态 sql 是做什么的？都有哪些动态 sql？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84resultMap"><span class="nav-number">1.8.5.</span> <span class="nav-text">自定义映射resultMap</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Netty"><span class="nav-number">1.9.</span> <span class="nav-text">Netty</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BIO-NIO-AIO%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.9.1.</span> <span class="nav-text">BIO,NIO,AIO的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AFIO"><span class="nav-number">1.9.1.1.</span> <span class="nav-text">1.什么是IO</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-JAVA%E4%B8%AD%E5%B8%B8%E8%A7%81%E7%9A%843%E7%A7%8DIO%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.9.1.2.</span> <span class="nav-text">2.JAVA中常见的3种IO模型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E6%B5%81%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.9.2.</span> <span class="nav-text">主流网络模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#netty%E6%98%AF%E5%90%8C%E6%AD%A5%E7%9A%84%E8%BF%98%E6%98%AF%E5%BC%82%E6%AD%A5%E7%9A%84%EF%BC%9F"><span class="nav-number">1.9.2.0.1.</span> <span class="nav-text">netty是同步的还是异步的？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="nav-number">1.9.3.</span> <span class="nav-text">Netty核心组件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Bytebuf%EF%BC%88%E5%AD%97%E8%8A%82%E5%AE%B9%E5%99%A8%EF%BC%89"><span class="nav-number">1.9.3.1.</span> <span class="nav-text">Bytebuf（字节容器）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bootstrap%E5%92%8CServerBootstrap%EF%BC%88%E5%90%AF%E5%8A%A8%E5%BC%95%E5%AF%BC%E7%B1%BB%EF%BC%89"><span class="nav-number">1.9.3.2.</span> <span class="nav-text">Bootstrap和ServerBootstrap（启动引导类）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Channel%EF%BC%88%E7%BD%91%E7%BB%9C%E6%93%8D%E4%BD%9C%E6%8A%BD%E8%B1%A1%E7%B1%BB%EF%BC%89"><span class="nav-number">1.9.3.3.</span> <span class="nav-text">Channel（网络操作抽象类）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#EventLoopGroup%E5%92%8CEvenLoop%EF%BC%88%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%EF%BC%89"><span class="nav-number">1.9.3.4.</span> <span class="nav-text">EventLoopGroup和EvenLoop（事件循环）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ChannelHandler%EF%BC%88%E6%B6%88%E6%81%AF%E5%A4%84%E7%90%86%E5%99%A8%EF%BC%89%E5%92%8CChannelPipeline-ChannelHandler%E5%AF%B9%E8%B1%A1%E9%93%BE%E8%A1%A8%EF%BC%89"><span class="nav-number">1.9.3.5.</span> <span class="nav-text">ChannelHandler（消息处理器）和ChannelPipeline(ChannelHandler对象链表）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NioEventLoopGroup%E9%BB%98%E8%AE%A4%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%BC%9A%E8%B5%B7%E5%A4%9A%E5%B0%91%E7%BA%BF%E7%A8%8B"><span class="nav-number">1.9.3.6.</span> <span class="nav-text">NioEventLoopGroup默认的构造函数会起多少线程?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reactor%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%EF%BC%88NioEventLoopGroup%EF%BC%89"><span class="nav-number">1.9.3.7.</span> <span class="nav-text">Reactor线程模型（NioEventLoopGroup）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Netty%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%92%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B"><span class="nav-number">1.9.3.8.</span> <span class="nav-text">Netty服务端和客户端的启动过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFTCP%E7%B2%98%E5%8C%85-%E6%8B%86%E5%8C%85%EF%BC%9FNetty%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">1.9.3.9.</span> <span class="nav-text">什么是TCP粘包&#x2F;拆包？Netty的解决办法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Netty%E9%95%BF%E8%BF%9E%E6%8E%A5%E3%80%81%E5%BF%83%E8%B7%B3%E6%9C%BA%E5%88%B6%E4%BA%86%E8%A7%A3%E4%B9%88%EF%BC%9F"><span class="nav-number">1.9.3.10.</span> <span class="nav-text">Netty长连接、心跳机制了解么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Netty%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="nav-number">1.9.3.11.</span> <span class="nav-text">Netty零拷贝</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">248k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:45</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

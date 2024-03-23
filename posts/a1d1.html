@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="数组类算法一.双指针快慢指针简介： 对撞指针简介：对撞指针实际上是一种放缩思想。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023-03-04-数组类算法">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/a1d1.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="数组类算法一.双指针快慢指针简介： 对撞指针简介：对撞指针实际上是一种放缩思想。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypratmp2776.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypraimage-20220621110230292.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypratmpA86F.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240118152958445.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240110104639130.png">
+<meta property="article:published_time" content="2023-03-04T06:18:38.000Z">
+<meta property="article:modified_time" content="2024-03-21T09:30:23.125Z">
+<meta property="article:author" content="yebin">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypratmp2776.png">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/a1d1.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2023-03-04-数组类算法 | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/a1d1.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023-03-04-数组类算法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-04 14:18:38" itemprop="dateCreated datePublished" datetime="2023-03-04T14:18:38+08:00">2023-03-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 17:30:23" itemprop="dateModified" datetime="2024-03-21T17:30:23+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="数组类算法"><a href="#数组类算法" class="headerlink" title="数组类算法"></a>数组类算法</h1><h2 id="一-双指针"><a href="#一-双指针" class="headerlink" title="一.双指针"></a>一.双指针</h2><p>快慢指针简介：</p>
+<p>对撞指针简介：对撞指针实际上是一种放缩思想。</p>
+ <span id="more"></span>
+
+<p><strong>开区间与闭区间</strong>：</p>
+<ul>
+<li><p>性质：</p>
+<ul>
+<li>如果为双闭区间[left….right]， 那么元素个数为right - left + 1</li>
+<li>如果为一闭一开区间[left…right)，那么元素个数为right - left</li>
+<li>[)和(]的区别在于前者包含了left但不包含right，后者相反。</li>
+</ul>
+</li>
+<li><p>意义：可以帮助设计代码。</p>
+</li>
+<li><p>示例（LeetCode颜色分类）：在方法i中，我们使用三个指针划分数组，zero，one，i，其中i也是遍历指针。[0，zero)保存0；[zero，one)保存1；(two，n]保存2；开闭区间告诉我们代码nums[0]的值为0，nums[zero]的值为1，nums[one]和nums[two]为待鉴定的元素。</p>
+</li>
+</ul>
+<p><strong>循环不变量</strong>：实际在循环中值会一直变化，但是由于佳加入了维护的代码，使之在逻辑上保持定义不变的量</p>
+<ul>
+<li><p>性质：</p>
+<ul>
+<li>初始化：循环的第一次迭代之前，它为真。</li>
+<li>保持：如果循环的某次迭代之前它为真，那么下次迭代之前它仍为真。</li>
+<li>终止：在循环终止时，不变式为我们提供一个有用的性质，该性质有助于证明算法是正确的。</li>
+</ul>
+</li>
+<li><p>意义：可以清楚算法的细节，例如帮助设计代码的初始化的时候变量的取值，及其循环过程中各个步奏的先后顺序。</p>
+</li>
+<li><p>举例:</p>
+<ul>
+<li>选择排序：区间nums[0…i）里保存了数组里最小的i个元素，且i表示第i个最小元素</li>
+<li>插入排序：区间nums[0…i）里保存了输入数组里的前i个元素(字面上)，并且他们是暂时有序的。</li>
+<li>综合运用，LeetCode颜色分类：类似三路快速排序，见附录。</li>
+</ul>
+</li>
+<li><p>循环不变量和双指针的关系：</p>
+<ul>
+<li><p>移动0：<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypratmp2776.png" alt="tmp2776" style="zoom: 50%;" /></p>
+<p>设两个指针i和j，不变量定义为区间[0…i)内一定是不为0的元素，[i…j)内是为0的元素，[j…hi]是待定的元素。（快慢指针）</p>
+<p>也可以设为，不变量定义为区间[0…i)内一定是不为0的元素，[i…j]是待定的元素，(j…hi]是为0元素。（碰撞指针）</p>
+</li>
+<li><p>移除元素：<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypraimage-20220621110230292.png" alt="image-20220621110230292" style="zoom: 50%;" /></p>
+<p>设两个指针i和j，不变量定义为区间[0…i)内一定是不为2的元素，[i…j)内是为2的元素，[j…hi]是待定的元素。（快慢指针）</p>
+<p>碰撞指针同理。</p>
+</li>
+<li><p>删除排序数组中的重复项：<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypratmpA86F.png" alt="tmpA86F" style="zoom: 50%;" /></p>
+<p>设两个指针i和j，不变量定义为区间[0…i)内一定是不重复的元素，[i…j)内是与前面重复的元素，[j…hi]是待定的元素。（快慢指针）</p>
+</li>
+</ul>
+</li>
+<li><p>双指针问题还需要注意保持前面的指针比后面的指针大</p>
+<p>i &gt;&#x3D; one &gt;&#x3D; zero &gt;&#x3D; 0</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sort-colors/">75. 颜色分类</a> 双指针（第二种写法比较清晰）<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240118152958445.png" alt="image-20240118152958445" style="zoom:50%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240110104639130.png" alt="image-20240110104639130" style="zoom:50%;" /></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-duplicates-from-sorted-array/">26. 删除有序数组中的重复项</a> 双指针</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-element/">27. 移除元素</a> 双指针</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/remove-duplicates-from-sorted-array-ii/">80. 删除有序数组中的重复项 II</a> 双指针</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/max-consecutive-ones/">485. 最大连续 1 的个数</a> 双指针</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/shortest-unsorted-continuous-subarray/">581. 最短无序连续子数组 </a> 双指针</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-k-closest-elements/">658. 找到 K 个最接近的元素</a> 双指针 二分查找</p>
+<h2 id="二-nsum问题"><a href="#二-nsum问题" class="headerlink" title="二.nsum问题"></a>二.<strong>nsum问题</strong></h2><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/two-sum/">1. 两数之和</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/3sum/">15. 三数之和</a> 双指针，排序</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/4sum/">18. 四数之和</a> 双指针，排序  nums[j] &#x3D;&#x3D; nums[j+1]是为了避免重复的组合</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">fourSum</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">        Arrays.sort(nums);</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; four = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">        <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> nums.length;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; length;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> i + <span class="number">1</span>;j &lt; length;j++)&#123; <span class="comment">//i+1</span></span><br><span class="line">                <span class="type">long</span> <span class="variable">tar</span> <span class="operator">=</span>(<span class="type">long</span>) target - nums[i] - nums[j];<span class="comment">//long减法</span></span><br><span class="line">                List&lt;List&lt;Integer&gt;&gt; twos = twoSum(nums,j,tar);</span><br><span class="line">                <span class="keyword">for</span>(List&lt;Integer&gt; two:twos)&#123;</span><br><span class="line">                    two.add(nums[i]);</span><br><span class="line">                    two.add(nums[j]);</span><br><span class="line">                    four.add(two);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">while</span>(j &lt; length - <span class="number">1</span> &amp;&amp; nums[j] == nums[j+<span class="number">1</span>]) j++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">while</span>(i &lt; length - <span class="number">1</span> &amp;&amp; nums[i] == nums[i+<span class="number">1</span>]) i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> four;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> List&lt;List&lt;Integer&gt;&gt; <span class="title function_">twoSum</span><span class="params">(<span class="type">int</span>[] nums,<span class="type">int</span> start,<span class="type">long</span> target)</span>&#123;</span><br><span class="line">        List&lt;List&lt;Integer&gt;&gt; two = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">        <span class="type">int</span> <span class="variable">lo</span> <span class="operator">=</span> start + <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">hi</span> <span class="operator">=</span> nums.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(lo &lt; hi)&#123;</span><br><span class="line">            <span class="type">long</span> <span class="variable">sum</span> <span class="operator">=</span> nums[lo] + nums[hi];</span><br><span class="line">            <span class="keyword">if</span>(target &gt; sum)&#123;</span><br><span class="line">                <span class="keyword">while</span>(lo &lt; hi &amp;&amp; nums[lo] == nums[lo + <span class="number">1</span>]) lo++;</span><br><span class="line">                lo++;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(target &lt; sum)&#123;</span><br><span class="line">                <span class="keyword">while</span>(lo &lt; hi &amp;&amp; nums[hi] == nums[hi - <span class="number">1</span>]) hi--;</span><br><span class="line">                hi--;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">                list.add(nums[lo]);</span><br><span class="line">                list.add(nums[hi]);</span><br><span class="line">                two.add(list);</span><br><span class="line">                <span class="keyword">while</span>(lo &lt; hi &amp;&amp; nums[hi] == nums[hi - <span class="number">1</span>]) hi--;</span><br><span class="line">                hi--;</span><br><span class="line">                <span class="keyword">while</span>(lo &lt; hi &amp;&amp; nums[lo] == nums[lo + <span class="number">1</span>]) lo++;</span><br><span class="line">                lo++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> two;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/4sum-ii/">454. 四数相加 II</a> 哈希表</p>
+<h2 id="三-前缀和数组"><a href="#三-前缀和数组" class="headerlink" title="三.前缀和数组"></a>三.前缀和数组</h2><p>例子：[1,2,3,4,5] 的前缀和为[0,1,3,6,10,15]</p>
+<p>定义：设nums[n]数组的前缀和数组为sum[n+1],那么sum[i]表示为nums[i]前面的数组的和（不包括nums[i]本身），公式表示为sum[i] &#x3D; sum[i-1] + num[i-1]</p>
+<p>定理：<br>1.sum[0]一定为0，因为第0个元素(1)是第一个元素，第一个元素之前是没有元素的，所以和为0；<br>2.在nums中第i个元素到第j个元素的和(包括i，j)公式为：nums.between[i,j] &#x3D; sum[j+1] - sum[i]<br>理解：sum[j+1]为包括j的前缀和，sum[i]为不包括i的前缀和，两者相减的差当然包括i和j元素了。</p>
+<p>例子：</p>
+<p>$\begin{vmatrix}<br>1 &amp; 2 &amp; 3 \<br>4 &amp; 5 &amp; 6 \<br>7 &amp; 8 &amp; 9 \<br>\end{vmatrix}$前缀和&#x3D;&gt;$\begin{vmatrix}<br>0 &amp; 0 &amp; 0 &amp; 0 \<br>0 &amp; 1 &amp; 3 &amp; 6 \<br>0 &amp; 5 &amp; 12 &amp; 21 \<br>0 &amp; 12 &amp; 27 &amp; 45 \<br>\end{vmatrix}$</p>
+<p>定义：同理，sum[i] [j]不包括nums[i] [j]。<br>sum[i] [j] &#x3D; sum[i] [j-1] + sum[i-1] [j] - sum[i-1] [j-1]  + nums[i - 1] [j - 1]</p>
+<p>定理：同理，sum[c+1] [d+1]包括nums[c] [d]，sum[a] [b]不包括nums[a] [b],公式其余部分排列组合。<br>nums.between[(c,d),(a,b)] &#x3D; sum[c+1] [d+1] - sum[c + 1] [b] - sum[a] [d+1]+ sum[a] [b]</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/minimum-size-subarray-sum/">209. 长度最小的子数组</a> 前缀和 二分查找</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/product-of-array-except-self/">238. 除自身以外数组的乘积 </a> 前缀和</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/range-sum-query-immutable/">303. 区域和检索 - 数组不可变</a> 前缀和</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/range-sum-query-2d-immutable/">304. 二维区域和检索 - 矩阵不可变</a> 前缀和</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/random-pick-with-weight/">528. 按权重随机选择 </a> 前缀和  二分查找</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/subarray-sum-equals-k/">560. 和为 K 的子数组 </a> 前缀和 哈希表（这道题与209.很像，但是元素可以是负数，所以前缀和不一定是有序的，所以不能用二分查找）</p>
+<h2 id="四-差分数组"><a href="#四-差分数组" class="headerlink" title="四.差分数组"></a>四.差分数组</h2><p>例子：[1,2,3,4,5]的差分数组为[1,1,1,1,1]</p>
+<p>定义： diff[i] 表示为 nums[i - 1] 到nums[i]的增量（可能是负的）<br>base：diff[0] &#x3D; nums[0]<br>公式： i &gt; 0; diff[i] &#x3D; nums[i] - nums[i-1]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </p>
+<p>定理：<br>1.nums.between[i,j] + x &#x3D;&gt; diff[i] + x 且 diff[j+1] - x<br>理解：为什么nums[i]到nums[j]都加了x，diff数组只需要改变两个元素？因为diff数组只跟前面的一个元素有关，为什么nums[i]到nums[j]都加了x，那么i，j之间的元素的差值还是不变，但是边界处diff[i]和diff[j+1]就会发生改变。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/car-pooling/">1094. 拼车</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/corporate-flight-bookings/">1109. 航班预订统计</a></p>
+<h2 id="五-归并排序"><a href="#五-归并排序" class="headerlink" title="五.归并排序"></a>五.归并排序</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span>[] aux;</span><br><span class="line">sort(<span class="type">int</span>[] nums,<span class="type">int</span> lo,<span class="type">int</span> hi)&#123;</span><br><span class="line">    <span class="keyword">if</span>(lo &gt;= hi) <span class="keyword">return</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> lo + (hi - lo)/<span class="number">2</span>;</span><br><span class="line">    sort(nums,lo,mid);</span><br><span class="line">    sort(nums,mid+<span class="number">1</span>,hi);</span><br><span class="line">    merge(nums,lo,mid,hi);</span><br><span class="line">&#125;</span><br><span class="line">merge(<span class="type">int</span>[] nums,<span class="type">int</span> lo,<span class="type">int</span> mid,<span class="type">int</span> hi)&#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> lo;</span><br><span class="line">    <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> mid + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> lo;k &lt;= hi;k++)&#123;</span><br><span class="line">        aux[k] = nums[k];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> lo;k &lt;= hi;k++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&gt;mid)&#123;</span><br><span class="line">            nums[k] = aux[j++];</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(j&gt;hi)&#123;</span><br><span class="line">            nums[k] = aux[i++];</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(aux[i]&lt;aux[j])&#123;</span><br><span class="line">            nums[k] = aux[i++];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            nums[k] = aux[j++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/median-of-two-sorted-arrays/">4. 寻找两个正序数组的中位数</a> 归并排序</p>
+<p>逆序对与归并的关系  ※※※※</p>
+<p>例子： [ 4,8,9 ] [ 5,6,7 ]求逆序对</p>
+<p>关键思路：像这种有序数组一定要用双指针，才能避免重复计算。</p>
+<p>求逆序对：<br>1.初始指针i&#x3D;4,j&#x3D;5<br>2.4不是逆序对，传给8；8是逆序对(8 &gt; 5)，此时有两种选择，一种是给8之后的逆序对都+1；<strong>另一种是遍历直到j &gt; 8时，那么8的逆序对就是j之前的数字，8的次数+x</strong>；很明显第二种可以避免重复计算。<br>3.直到i越界时结束。</p>
+<p>归并：由于 [ 4,8,9 ] [ 5,6,7 ]这对数组的逆序对已经被求完了，在传给上一层时为了避免重复计算，因此这对数组应该排成正确顺序[4,5,6,7,8,9]</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/count-of-smaller-numbers-after-self/">315. 计算右侧小于当前元素的个数</a> 归并排序 </p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/reverse-pairs/">493. 翻转对</a> 归并排序</p>
+<h2 id="六-快速排序"><a href="#六-快速排序" class="headerlink" title="六.快速排序"></a>六.快速排序</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">sort</span><span class="params">(<span class="type">int</span>[] nums,<span class="type">int</span> lo,<span class="type">int</span> hi)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(lo &gt;= hi) <span class="keyword">return</span>; </span><br><span class="line">        <span class="type">int</span> <span class="variable">p</span> <span class="operator">=</span> partition(nums,lo,hi);</span><br><span class="line">        sort(nums,lo,p-<span class="number">1</span>);</span><br><span class="line">        sort(nums,p+<span class="number">1</span>,hi);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> <span class="title function_">partition</span><span class="params">(<span class="type">int</span>[] nums,<span class="type">int</span> lo,<span class="type">int</span> hi)</span>&#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> lo;</span><br><span class="line">	<span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> lo;</span><br><span class="line">	<span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> hi+<span class="number">1</span>;</span><br><span class="line">	<span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">    	<span class="keyword">while</span>(nums[++left] &lt; nums[k])&#123;<span class="comment">//从大到小则改变符号即可</span></span><br><span class="line">        	<span class="keyword">if</span>(left == hi) <span class="keyword">break</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="keyword">while</span>(nums[--right] &gt; nums[k])&#123;</span><br><span class="line">        	<span class="keyword">if</span>(right == lo) <span class="keyword">break</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    	<span class="keyword">if</span>(left &gt;= right)&#123;</span><br><span class="line">      		swap(nums,k,right);</span><br><span class="line">        	<span class="keyword">break</span>;</span><br><span class="line">    	&#125;</span><br><span class="line">    	swap(nums,left,right);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>注意细节：</p>
+<p>1.随机化</p>
+<p>2.遍历细节（建议直接背）</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/kth-largest-element-in-an-array/">215. 数组中的第K个最大元素 </a>快排+二分</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sort-an-array/">912. 排序数组</a> 快排，归排</p>
+<h2 id="七-矩阵"><a href="#七-矩阵" class="headerlink" title="七.矩阵"></a>七.矩阵</h2><p>应用场景：</p>
+<ol>
+<li>二维数组的数据存到一维数组中，而且可以复原<ul>
+<li>设二维数组的大小为$m<em>n$（num2[m] [n]），定义一个长度为$m</em>n$(num1[m*n])的一维数组</li>
+<li>他们的对应关系为$num2[x][y] &#x3D; num1[x*m+y],$$num1[z] &#x3D; num2[z&#x2F;m][z%m]$</li>
+</ul>
+</li>
+<li>储存二维数组的索引，设索引为(x,y)<ul>
+<li>整数形式：x*m+y</li>
+<li>字符串形式：x,y</li>
+</ul>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/spiral-matrix/">54. 螺旋矩阵</a> 矩阵</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/spiral-matrix-ii/">59. 螺旋矩阵 II</a> 矩阵</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/rotate-image/">48. 旋转图像</a> 矩阵</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/search-a-2d-matrix-ii/">240. 搜索二维矩阵 II</a> 矩阵</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/diagonal-traverse/">498. 对角线遍历</a> 矩阵</p>
+<h2 id="八-哈希表"><a href="#八-哈希表" class="headerlink" title="八.哈希表"></a>八.哈希表</h2><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/valid-sudoku/">36. 有效的数独</a> 哈希表</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/group-anagrams/">49. 字母异位词分组</a> 哈希表 编码</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/majority-element/">169. 多数元素</a> 哈希表 排序</p>
+<p>投票算法证明：</p>
+<ol>
+<li>如果候选人不是maj 则 maj,会和其他非候选人一起反对 会反对候选人,所以候选人一定会下台(maj&#x3D;&#x3D;0时发生换届选举)</li>
+<li>如果候选人是maj , 则maj 会支持自己，其他候选人会反对，同样因为maj 票数超过一半，所以maj 一定会成功当选</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/contains-duplicate-ii/">219. 存在重复元素 II</a> 哈希表 </p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/intersection-of-two-arrays-ii/">350. 两个数组的交集 II</a> 哈希表</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/insert-delete-getrandom-o1/">380. O(1) 时间插入、删除和获取随机元素</a> 哈希表 数组扩容</p>
+<p>数组可以实现O(1)获取随机元素,在不要求顺序的情况下还可以实现O(1)插入元素，直接插到尾部。<br>如果知道要删除的元素(查找)，且不需要保证原本顺序的情况下，也可以实现O(1)删除元素。&#x2F;&#x2F;找到删除元素后，与最后一个元素交换位置&#x2F;&#x2F;删除最后一个元素<br>哈希表可以实现O(1)查找元素，但不能获取随机元素。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/random-pick-with-blacklist/">710. 黑名单中的随机数 </a> 哈希表</p>
+<p>1.设黑名单的元素个数为m，选择的整数范围为[0，n-1]，因此白名单的个数为n-1-m；我们可以假设0-n-1-m为白名单，后面m个数为黑名单<br>2.这里我们并不会正在去改变数组的结构。而是使用散列表将出现在白名单位置的黑名单跟出现在黑名单位置的白名单进行匹配，实现替换。<br>3.随机取到黑名单时，则通过散列表改为对于的白名单</p>
+<h2 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h2><p>一.重复元素的开头或结尾元素</p>
+<p>在排序数组中，往往会出现重复元素，这些重复元素会经过排序后，聚集在一起，eg：011112有时根据题目要求，我们只需要选择重复元素的一个作为代表即可，此时可以分为两种情况：</p>
+<ol>
+<li><p>选择重复元素的开头：</p>
+<p>从左向右（0后面的1）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(nums[left+<span class="number">1</span>] == nums[left]) left++;</span><br><span class="line">left++;</span><br></pre></td></tr></table></figure>
+
+<p>从右向左（2前面的1）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(nums[right-<span class="number">1</span>] == nums[right]) right--;</span><br><span class="line">right--;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>选择重复元素的结尾：</p>
+<p>从左向右（2前面的1）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">left++;</span><br><span class="line"><span class="keyword">while</span>(nums[left+<span class="number">1</span>] == nums[left]) left++;</span><br></pre></td></tr></table></figure>
+
+<p>从右向左（0后面的1）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">right--;</span><br><span class="line"><span class="keyword">while</span>(nums[right-<span class="number">1</span>] == nums[right]) right--;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>应用实例可以参考threeSum解决重复元素的问题</p>
+<p>二.排序概念</p>
+<p><strong>稳定的排序</strong>：</p>
+<p>当需要排序的元素相等时，可以保持原来的顺序不变，即排在前面的任然排在前面</p>
+<p><a target="_blank" rel="noopener" href="https://worktile.com/blog/pingcode-80/amp/">https://worktile.com/blog/pingcode-80/amp/</a></p>
+<p>冒泡排序，插入排序，归并排序</p>
+<p><strong>比较排序</strong>：基于比较的排序算法是指对于元素的排序必须是建立在元素之间是可以比较的。</p>
+<p>选择排序，（交换）冒泡排序，插入排序，归并排序，快速排序</p>
+<p><strong>非比较排序</strong>：</p>
+<p>三.二维数组储存</p>
+<p>关于如何用一个一维整数数组存储所需的二维数组的索引值。<br>加入有一个5行10列的二维数组a，如何储存a[ 2 ][ 3 ]的索引。<br>储存：<br>2*10 + 3 &#x3D; 23<br>使用：<br>23 &#x2F; 10 &#x3D; 2<br>23% 10 &#x3D; 3</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/posts/cb72.html" rel="next" title="2023-03-10-集合类常用函数">
+      2023-03-10-集合类常用函数 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E7%B1%BB%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">数组类算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E5%8F%8C%E6%8C%87%E9%92%88"><span class="nav-number">1.1.</span> <span class="nav-text">一.双指针</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-nsum%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">二.nsum问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E5%89%8D%E7%BC%80%E5%92%8C%E6%95%B0%E7%BB%84"><span class="nav-number">1.3.</span> <span class="nav-text">三.前缀和数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B-%E5%B7%AE%E5%88%86%E6%95%B0%E7%BB%84"><span class="nav-number">1.4.</span> <span class="nav-text">四.差分数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94-%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F"><span class="nav-number">1.5.</span> <span class="nav-text">五.归并排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><span class="nav-number">1.6.</span> <span class="nav-text">六.快速排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83-%E7%9F%A9%E9%98%B5"><span class="nav-number">1.7.</span> <span class="nav-text">七.矩阵</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB-%E5%93%88%E5%B8%8C%E8%A1%A8"><span class="nav-number">1.8.</span> <span class="nav-text">八.哈希表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9A"><span class="nav-number">1.9.</span> <span class="nav-text">补充：</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">248k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:45</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

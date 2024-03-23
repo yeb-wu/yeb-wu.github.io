@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="分布式https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1VW4y1o7n5&#x2F;?spm_id_from&#x3D;333.337.search-card.all.click&amp;vd_source&#x3D;3b3520ea5845a2bda781e688011626d9 http:&#x2F;&#x2F;icyfenix.cn&#x2F;changelog&#x2F; cap和basehttps:&#x2F;&#x2F;baijiahao.baidu.c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023-10-01-分布式">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/91c5.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="分布式https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1VW4y1o7n5&#x2F;?spm_id_from&#x3D;333.337.search-card.all.click&amp;vd_source&#x3D;3b3520ea5845a2bda781e688011626d9 http:&#x2F;&#x2F;icyfenix.cn&#x2F;changelog&#x2F; cap和basehttps:&#x2F;&#x2F;baijiahao.baidu.c">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20230906130406634.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/v2-5dd9961f01d21283b622b6ef08270f08_r.jpg">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/0b46f21fbe096b6376e07b1d01be2e48eaf8ac1f.jpeg">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/a1ec08fa513d2697304b25ed5d761bf74216d87b.jpeg">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/aa18972bd40735fafb346f9996dca6bf0e240866-16989466511937.jpeg">
+<meta property="article:published_time" content="2023-10-01T06:26:18.000Z">
+<meta property="article:modified_time" content="2024-03-21T09:37:32.398Z">
+<meta property="article:author" content="yebin">
+<meta property="article:tag" content="Java Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20230906130406634.png">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/91c5.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2023-10-01-分布式 | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/91c5.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023-10-01-分布式
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-10-01 14:26:18" itemprop="dateCreated datePublished" datetime="2023-10-01T14:26:18+08:00">2023-10-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 17:37:32" itemprop="dateModified" datetime="2024-03-21T17:37:32+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Web/" itemprop="url" rel="index"><span itemprop="name">Java Web</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="分布式"><a href="#分布式" class="headerlink" title="分布式"></a>分布式</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1VW4y1o7n5/?spm_id_from=333.337.search-card.all.click&vd_source=3b3520ea5845a2bda781e688011626d9">https://www.bilibili.com/video/BV1VW4y1o7n5/?spm_id_from=333.337.search-card.all.click&amp;vd_source=3b3520ea5845a2bda781e688011626d9</a></p>
+<p><a target="_blank" rel="noopener" href="http://icyfenix.cn/changelog/">http://icyfenix.cn/changelog/</a></p>
+<h2 id="cap和base"><a href="#cap和base" class="headerlink" title="cap和base"></a>cap和base</h2><p><a target="_blank" rel="noopener" href="https://baijiahao.baidu.com/s?id=1770092408059967099&wfr=spider&for=pc">https://baijiahao.baidu.com/s?id=1770092408059967099&amp;wfr=spider&amp;for=pc</a></p>
+<h3 id="一、CAP定理"><a href="#一、CAP定理" class="headerlink" title="一、CAP定理"></a><strong>一、CAP定理</strong></h3><p>在一个分布式系统中（指互相连接并共享数据的节点集合）中，当涉及到读写操作时，只能保证一致性（Consistence）、可用性(Availability）、分区容错性（Partition Tolerance）三者中的两个，另外一个必须被牺牲。</p>
+<p><strong>一致性(Consistence)</strong> , 这个是针对数据来说的，比如数据库MySQL中的数据，一个分布式系统中，某个节点修改了一个数据，那么之后其他所有节点读取这条数据的时候，得到的一定是最新的数据。</p>
+<p>**可用性(Availability)**，分布式系统中某些节点挂掉了，但是不会影响整体的业务，比如 C 这个微服务，有10个实例组成一个集群，其中5个挂了，另外5个正常，这种情况下整个系统还是可用的，不会因为挂了那5个，导致系统整体不可用。</p>
+<p>**分区容错性(Partition Tolerance)**，分布式系统出现网络分区的时候，仍然能够对外提供服务。</p>
+<span id="more"></span>
+
+<p>什么是网络分区？</p>
+<p>分布式系统中，多个节点之前的网络本来是连通的，但是因为某些故障（比如部分节点网络出了问题）某些节点之间不连通了，整个网络就分成了几块区域，这就叫网络分区。</p>
+<p><strong>1.1只能三选二？</strong></p>
+<p>因为在分布式系统中，网络不是100%可靠的，网络分区是必选项，也就是P是必选的，如果我们不选P，选CA，这个时候如果网络发生了分区，那么为了保证C，系统就会禁止写入数据，这样就与A产生了冲突，如果为了保证A，那么正常的分区可以写入数据，有故障的分区就不能写入了，这就与C产生了冲突。</p>
+<p>简单来说，就是P是必须要实现的，因为网络不是100%可靠的，在此基础上C 和 A 二选一组成 CP 或者 AP 架构。</p>
+<p>比如Zookeer 是CP架构，Eureka是AP架构，Nacos 不仅支持 CP 架构也支持 AP 架构。</p>
+<p>对于服务注册来说，针对同一个服务，即使注册中心的不同节点保存的服务注册信息不相同，也并不会造成灾难性的后果，对于服务消费者来说，能消费才是最重要的，就算拿到的数据不是最新的数据，消费者本身也可以进行尝试失败重试。总比为了追求数据的一致性而获取不到实例信息整个服务不可用要好。</p>
+<p>所以，对于服务注册来说，可用性比数据一致性更加的重要，选择AP。</p>
+<p><strong>1.2 CAP的实际应用：注册中心</strong></p>
+<p>Zookeeper 保证的是CP。任何时刻对Zookeeper的读请求都能得到一致的结果，但是zookeeper不&#96;能保证服务的可用性，比如在选举Leader的时候，或者一半以上的机器不可用，那么整个系统就是不可用状态。</p>
+<p>Eureka保证的是AP。因为在设计的时候就是优先保证AP，而且Eureka集群中没有Leader节点，每个节点都是一样的，所以Eureka可以做到只要有一个节点可用，那么系统就是可用的，只不过这个节点上的数据不能保证是最新的。</p>
+<h3 id="二、BASE理论"><a href="#二、BASE理论" class="headerlink" title="二、BASE理论"></a><strong>二、BASE理论</strong></h3><p><strong>BASE</strong> 是 <strong>Basically Available（基本可用）</strong>、<strong>Soft-state（软状态）</strong> 和 <strong>Eventually Consistent（最终一致性）</strong> BASE理论本质上是对CAP的延伸和补充，是对CAP中的AP方案的一个补充，即在选择AP方案的情况下，如何更好地最终达到C。</p>
+<p><strong>基本可用：出现故障的时候，允许损失部分可用性，即，保证核心可用</strong></p>
+<p>如，电商大促时，为了应对访问量激增，部分用户可能会被引导到降级页面，服务层也可能只提供降级服务。</p>
+<p><strong>软状态：允许系统存在中间状态，而该中间状态不会影响系统整体可用性。</strong></p>
+<p>软状态本质上是一种弱一致性，允许的软状态不能违背“基本可用”的要求。如，kafka中可以对分区设置副本，允许不同节点间副本同步的延时。</p>
+<p><strong>最终一致性：系统中的所有数据副本经过一定时间后，最终能够达到一致的状态。</strong></p>
+<p>最终一致性强调的是系统中所有的数据副本，在经过一段时间的同步后，最终能够达到一个一致的状态。因此，最终一致性的本质是需要系统保证最终数据能够达到一致，而不需要实时保证系统数据的强一致性。</p>
+<p>分布式中的一致性有三种级别：</p>
+<p>①强一致性：系统在某个节点中写入或修改了数据，那么之后在任意节点读取到的数据都是最新的数据。</p>
+<p>②弱一致性：不一定能读到最新的值，也不能保证在一定时间后读取到的数据是最新的，只会尽量在某个时刻达到数据一致的状态。</p>
+<p>③最终一致性：弱一致性的升级版，可以保证在一定时间内达到数据的最终一致性。</p>
+<p>一般常用的是最终一致性，但是也有一些对一致性要求比较高的，比如银行的交易系统，这种要保证强一致性。</p>
+<h3 id="补充：zookeeper集群"><a href="#补充：zookeeper集群" class="headerlink" title="补充：zookeeper集群"></a><strong>补充：zookeeper集群</strong></h3><p><strong>最典型集群模式：Master&#x2F;Slave 模式（主备模式）</strong>。在这种模式中，通常 Master 服务器作为主服务器提供写服务，其他的 Slave 服务器从服务器通过异步复制的方式获取 Master 服务器最新的数据提供读服务。</p>
+<p><strong>ZooKeeper集群角色</strong></p>
+<p>在ZooKeeper中没有选择传统的Master&#x2F;Slave慨念，而是引入了Leader、Follower和Observer三种角色。</p>
+<img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20230906130406634.png" alt="image-20230906130406634" style="zoom:80%;" />
+
+<p>ZooKeeper集群中的所有机器通过一个Leader选举过程来选定一台称为“Leader’”的机器，Leader既可以为客户端提供写服务又能提供读服务。除了Leader外，Follower和Observer都只能提供读服务。Follower和Observer唯一的区别在于Observer机器不参与Leader的选举过程，也不参与写操作的”过半写成功”策略，因此Observer机器可以在不影响写性能的情况下提升集群的读性能。</p>
+<h3 id="ZooKeeper-集群-Leader-选举过程"><a href="#ZooKeeper-集群-Leader-选举过程" class="headerlink" title="ZooKeeper 集群 Leader 选举过程"></a>ZooKeeper 集群 Leader 选举过程</h3><p>当 Leader 服务器出现网络中断、崩溃退出与重启等异常情况时，就会进入 Leader 选举过程，这个过程会选举产生新的 Leader 服务器。</p>
+<p>这个过程大致是这样的：</p>
+<ol>
+<li><strong>Leader election（选举阶段）</strong>：节点一开始处于选举阶段，只要有一个节点得到超半数节点的票数，它就可以当选准 leader。然后followers跟准leader进行通信，同步followers最近接收的事务提议。</li>
+<li><strong>Synchronization（同步阶段）</strong> :同步阶段主要是利用 leader 前一阶段获得的事务提议，同步集群中所有的副本。同步完成之后准 leader 才会成为真正的 leader。</li>
+</ol>
+<h3 id="ZooKeeper-集群为啥最好奇数台？"><a href="#ZooKeeper-集群为啥最好奇数台？" class="headerlink" title="ZooKeeper 集群为啥最好奇数台？"></a>ZooKeeper 集群为啥最好奇数台？</h3><p>ZooKeeper 集群在宕掉几个 ZooKeeper 服务器之后，如果剩下的 ZooKeeper 服务器个数大于宕掉的个数的话整个 ZooKeeper 才依然可用。</p>
+<p>比如假如我们有 3 台，那么最大允许宕掉 1 台 ZooKeeper 服务器，如果我们有 4 台的的时候也同样只允许宕掉 1 台。 假如我们有 5 台，那么最大允许宕掉 2 台 ZooKeeper 服务器，如果我们有 6 台的的时候也同样只允许宕掉 2 台。综上，何必增加那一个不必要的 ZooKeeper 呢？</p>
+<h3 id="ZooKeeper-选举的过半机制防止脑裂"><a href="#ZooKeeper-选举的过半机制防止脑裂" class="headerlink" title="ZooKeeper 选举的过半机制防止脑裂"></a>ZooKeeper 选举的过半机制防止脑裂</h3><p><strong>何为集群脑裂？</strong></p>
+<p>对于一个集群，通常多台机器会部署在不同机房，来提高这个集群的可用性。保证可用性的同时，会发生一种机房间网络线路故障，导致机房间网络不通，而集群被割裂成几个小集群。这时候子集群各自选主导致“脑裂”的情况。</p>
+<p>举例说明：比如现在有一个由 6 台服务器所组成的一个集群，部署在了 2 个机房，每个机房 3 台。正常情况下只有 1 个 leader，但是当两个机房中间网络断开的时候，每个机房的 3 台服务器都会认为另一个机房的 3 台服务器下线，而选出自己的 leader 并对外提供服务。若没有过半机制，当网络恢复的时候会发现有 2 个 leader。仿佛是 1 个大脑（leader）分散成了 2 个大脑，这就发生了脑裂现象。脑裂期间 2 个大脑都可能对外提供了服务，这将会带来数据一致性等问题。</p>
+<p><strong>过半机制是如何防止脑裂现象产生的？</strong></p>
+<p>ZooKeeper 的过半机制导致不可能产生 2 个 leader，因为少于等于一半是不可能产生 leader 的，这就使得不论机房的机器如何分配都不可能发生脑裂。</p>
+<h2 id="什么是微服务架构"><a href="#什么是微服务架构" class="headerlink" title="什么是微服务架构"></a>什么是微服务架构</h2><p>微服务是一种通过多个小型服务组合来构建单个应用的架构风格，各个服务相互解耦，运行在不同的进程之中。微服务之间的通信一般会采用调用远程方法RPC实现。</p>
+<p>单体架构（Monolithic）</p>
+<p>“单体”只是表明系统中主要的过程调用都是进程内调用，不会发生进程间通信，仅此而已。</p>
+<p>微服务的优点：</p>
+<p>1.模块之间解耦：模块之间的解耦好处包括，技术选型的多样性，横向扩展方便等</p>
+<p>2.服务可用性：在“拆分”这方面，单体系统的真正缺陷不在如何拆分，而在拆分之后的隔离与自治能力上的欠缺。由于所有代码都运行在同一个进程空间之内，所有模块、方法的调用都无须考虑网络分区、对象复制这些麻烦的事和性能损失。获得了进程内调用的简单、高效等好处的同时，也意味着如果任何一部分代码出现了缺陷，过度消耗了进程空间内的资源，所造成的影响也是全局性的、难以隔离的。譬如内存泄漏、线程爆炸、阻塞、死循环等问题，都将会影响整个程序，而不仅仅是影响某一个功能、模块本身的正常运作。</p>
+<p>微服务的缺点：</p>
+<p>1.远程调用的消耗：相比于本地调用，远程调用除了会消耗带宽外，对网络环境的要求会更高</p>
+<p>2.分布式带来的编程复杂性：最经典的就是分布式锁的实现。</p>
+<p>3.项目部署会跟复杂：</p>
+<p>微服务项目的版本：</p>
+<p>1.0：仅使用注册发现和远程过程调用来开发。</p>
+<p>2.0：使用了熔断，限流，降级等服务治理策略。</p>
+<p>3.0：</p>
+<h2 id="访问远程服务"><a href="#访问远程服务" class="headerlink" title="访问远程服务"></a>访问远程服务</h2><h3 id="远程服务调用（RPC）"><a href="#远程服务调用（RPC）" class="headerlink" title="远程服务调用（RPC）"></a>远程服务调用（RPC）</h3><p>通过远程服务调用RPC可以使得微服务系统中不同服务之间的调用像本地一样，但是相比调用本地方法，rpc需要考虑很多的问题。</p>
+<p>譬如，<strong>外部的服务由谁提供？具体在什么网络位置？（服务发现），如何保证每个远程服务都接收到相对平均的流量，获得尽可能高的服务质量与可靠性（负载均衡）</strong>，网络出现分区、超时或者服务出错了怎么办（熔断、隔离、降级），<strong>方法的参数与返回结果如何表示（序列化协议），信息如何传输（传输协议）</strong>，服务权限如何管理（认证、授权），如何保证通信安全（网络安全层），如何令调用不同机器的服务返回相同的结果（分布式数据一致性）等一系列问题，全部都需要设计者耗费大量心思。</p>
+<p>gRPC 和 Thrift 都有自己优秀的专有序列化器。</p>
+<p>而传输协议方面，gRPC 是基于 HTTP&#x2F;2 的，支持多路复用和 Header 压缩，Thrift 则直接基于传输层的 TCP 协议来实现，省去了额外应用层协议的开销。Dubbo 表现得更为明显，它默认有自己的传输协议（Dubbo 协议），同时也支持其他协议；</p>
+<h3 id="REST设计风格"><a href="#REST设计风格" class="headerlink" title="REST设计风格"></a>REST设计风格</h3><p>首先REST不是一种协议，而是一种风格，面向资源的编程思想</p>
+<p><strong>RESTful风格是一种基于HTTP协议设计Web API的软件架构风格，由Roy Fielding在2000年提出。它强调使用HTTP动词来表示对资源的操作（GET、POST、PUT、PATCH、DELETE等），并通过URI表示资源的唯一标识符。</strong></p>
+<p><strong>restful API的设计遵循以下几个原则：</strong>：</p>
+<ol>
+<li><strong>基于资源</strong>：<strong>将数据和功能抽象成资源，并通过URI来唯一标识资源。例如，一个用户资源可以通过URL“&#x2F;users&#x2F;{id}”来访问，其中“{id}”表示该用户的唯一标识符。</strong></li>
+<li><strong>无状态</strong>（Stateless）<br><strong>REST 希望服务器不要去负责维护状态，每一次从客户端发送的请求中，应包括所有的必要的上下文信息，会话信息也由客户端负责保存维护，服务端依据客户端传递的状态来执行业务处理逻辑，驱动整个应用的状态变迁。</strong>客户端承担状态维护职责以后，会产生一些新的问题，譬如身份认证、授权等可信问题，它们都应有针对性的解决方案</li>
+<li><strong>可缓存</strong>（Cacheability）<br><strong>无状态服务虽然提升了系统的可见性、可靠性和可伸缩性，但降低了系统的网络性。</strong>“降低网络性”的通俗解释是某个功能如果使用有状态的设计只需要一次（或少量）请求就能完成，使用无状态的设计则可能会需要多次请求，或者在请求中带有额外冗余的信息。<strong>为了缓解这个矛盾，REST允许客户端将部分服务端的应答缓存起来。当然，为了缓存能够正确地运作，服务端的应答中必须明确地或者间接地表明本身是否可以进行缓存、可以缓存多长时间，以避免客户端在将来进行请求的时候得到过时的数据。</strong>运作良好的缓存机制可以减少客户端、服务器之间的交互，甚至有些场景中可以完全避免交互，这就进一步提高了性能。</li>
+<li><strong>统一接口</strong>（Uniform Interface）<br><strong>使用统一的接口来简化客户端与服务器之间的交互，包括资源标识符、资源操作和响应消息的格式。</strong>比如使用get请求用来获取资源，post增加资源，put修改资源，delete删除资源，使用http状态码作为响应信息头等</li>
+</ol>
+<h3 id="RESFUL与RPC的关系"><a href="#RESFUL与RPC的关系" class="headerlink" title="RESFUL与RPC的关系"></a>RESFUL与RPC的关系</h3><p>RESTFUL的优点（<strong>RPC的缺点</strong>）</p>
+<p><strong>降低服务接口的学习成本。</strong>统一接口（Uniform Interface）是 REST 的重要标志，将对资源的标准操作都映射到了标准的 HTTP 方法上去，这些方法对于每个资源的用法都是一致的</p>
+<p>REST 绑定于 HTTP 协议。面向资源编程不是必须构筑在 HTTP 之上，但 REST 是，这是缺点，也是优点。因为 HTTP 本来就是面向资源而设计的网络协议，纯粹只用 HTTP带来的好处是 <strong>RPC 中的 Wire Protocol 问题</strong>就无需再多考虑了，REST 将复用 HTTP 协议中已经定义的概念和相关基础支持来解决问题。</p>
+<p><strong>RESTFUL一般是前后端分离的项目，页面中含有请求的地址没有服务发现这些概念；而RPC一般用于服务端之间调用，需要服务发现的手段。</strong></p>
+<p>RESTFUL的缺点（<strong>RPC的优点</strong>）</p>
+<p>面向资源的编程思想只适合做 CRUD，面向过程、面向对象编程才能处理真正<strong>复杂的业务逻辑</strong></p>
+<p>REST 与 HTTP 完全绑定，<strong>不适合应用于要求高性能传输的场景中</strong></p>
+<h2 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h2><h3 id="客户端缓存"><a href="#客户端缓存" class="headerlink" title="客户端缓存"></a>客户端缓存</h3><p>HTTP 协议的无状态性决定了它必须依靠客户端缓存来解决网络传输效率上的缺陷。</p>
+<p>无状态简化了HTTP 服务器的设计但无状态并不只有好的一面，由于每次请求都是独立的，服务端不保存此前请求的状态和资源，所以也不可避免地导致其携带有重复的数据，造成网络性能降低。HTTP使用强制缓存和协商缓存的机制。</p>
+<p>强制缓存，协商缓存（具体见计网2）</p>
+<h3 id="服务端缓存"><a href="#服务端缓存" class="headerlink" title="服务端缓存"></a>服务端缓存</h3><p>服务端缓存的主要目的是提高系统响应性能，通过把经常被访问的数据放入缓存从而减少磁盘的IO操作，最原始的实现方法就是使用Map容器来实现，如今一般会使用redis来作为缓存中间件使用，主要是因为它支持分布式缓存，更丰富的数据结构，实现缓存淘汰等等。</p>
+<p>使用服务端缓存的优点主要是缓解 I&#x2F;O 压力：譬如把原本对网络、磁盘等较慢介质的读写访问变为对内存等较快介质的访问，将原本对数据库的读写访问变为缓存中间件的访问，提升响应性能。</p>
+<p>使用缓存需要考虑的问题（缓存的缺点）</p>
+<ul>
+<li><p>内存的储存容量时有限的：缓存淘汰策略</p>
+<p><strong>LRU</strong>（Least Recent Used）：优先淘汰最久未被使用访问过的数据。</p>
+<p><strong>LFU</strong>（Least Frequently Used）：优先淘汰最不经常使用的数据。LFU 会给每个数据添加一个访问计数器，每访问一次就加 1，需要淘汰时就清理计数器数值最小的那批数据。</p>
+</li>
+<li><p>数据一致性问题：强一致性和最终一致性</p>
+</li>
+<li><p>缓存的风险：穿透，击穿，雪崩</p>
+</li>
+</ul>
+<h2 id="服务发现"><a href="#服务发现" class="headerlink" title="服务发现"></a>服务发现</h2><p>对消费者来说，外部的服务由谁提供？具体在什么网络位置？</p>
+<h3 id="1-服务发现的意义"><a href="#1-服务发现的意义" class="headerlink" title="1.服务发现的意义"></a>1.服务发现的意义</h3><p><strong>在单体架构中，方法之间的调用通过链接器将代码里的符号引用转换为内存地址的直接引用；而在微服务架构中，不同的方法会分布在不同的服务器上，因此方法之间的调用需要服务发现来确定目标方法的确切位置。</strong></p>
+<p>占主流地位的服务发现方法类似于 DNS ，只满足从某个代表服务提供者的全限定名到服务实际主机 IP 地址的翻译转换，并不关心服务具体是哪个厂家提供的，也不关心服务有几个方法，各自由什么参数构成，默认这些细节信息是服务消费者本身已完全了解的，此时服务坐标就可以退化为更简单的“全限定名+端口号”。</p>
+<p>虽然使用负载均衡器也能完成外部 IP 地址到各个服务内部实际 IP 的转换，但随着微服务的逐渐流行，服务的非正常宕机、重启和正常的上线、下线变得越发频繁，仅靠着 DNS 服务器和负载均衡器就会变得笨重。</p>
+<h3 id="2-服务发现的操作"><a href="#2-服务发现的操作" class="headerlink" title="2.服务发现的操作"></a>2.服务发现的操作</h3><ul>
+<li>服务的注册：当服务启动的时候将自己的坐标信息通知到服务注册中心，这个过程可能由应用程序本身来完成。</li>
+<li>服务的维护：当服务下线，或者宕机、断网导致服务不可以用时，需要维护的服务列表的正确性，避免告知消费者服务的坐标后，得到的服务却不能使用的尴尬情况。可以使用长连接、心跳、探针等去监控服务是否健康存活，将不健康的服务自动从服务注册表中剔除。</li>
+<li>服务的发现：消费者获取全限定名的过程。一般会使用接口的全限定名来表示</li>
+</ul>
+<h3 id="3-作为注册中心的工具"><a href="#3-作为注册中心的工具" class="headerlink" title="3.作为注册中心的工具"></a>3.作为注册中心的工具</h3><ul>
+<li><p>在分布式 K&#x2F;V 存储框架上自己开发服务发现功能，这类的代表是 ZooKeeper。</p>
+<p>像zookeeper框架只有基本的 CRUD 和 Watch 等少量 API，所以要在上面完成功能齐全的服务发现，很多基础的能力，譬如服务如何注册、如何做健康检查，等等都必须自己去实现。</p>
+</li>
+<li><p>使用专门用于服务发现的框架和工具，这类的代表是 Eureka 和 Nacos。</p>
+<p>像这种框架的优点就是方便使用和配置，缺点就是需要考虑所用的程序语言问题。</p>
+</li>
+</ul>
+<h2 id="网关路由"><a href="#网关路由" class="headerlink" title="网关路由"></a>网关路由</h2><p>对生产者来说，内部哪些服务需要暴露？哪些应当隐藏？应当以何种形式暴露服务？以什么规则在集群中分配请求？</p>
+<p>微服务中网关的首要职责就是作为统一的出口对外提供服务，将外部访问网关地址的流量，根据适当的规则路由到内部集群中正确的服务节点之上，因此，微服务中的网关，也常被称为“服务网关”或者“API 网关”，微服务中的网关首先应该是个路由器，在满足此前提的基础上，网关还可以根据需要作为流量过滤器来使用，提供某些额外的可选的功能，譬如安全、认证、授权、限流、监控、缓存，等等</p>
+<h2 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h2><p>对调用过程来说，如何保证每个远程服务都接收到相对平均的流量，获得尽可能高的服务质量与可靠性？</p>
+<h3 id="1-负载均衡算法"><a href="#1-负载均衡算法" class="headerlink" title="1.负载均衡算法"></a><strong>1.负载均衡算法</strong></h3><p>负载均衡的两大职责是“选择谁来处理用户请求”和“将用户请求转发过去”。到此我们仅介绍了后者，即请求的转发或代理过程。前者是指均衡器所采取的均衡策略，由于这一块涉及的均衡算法太多，笔者无法逐一展开，所以本节仅从功能和应用的角度去介绍一些常见的均衡策略。</p>
+<ul>
+<li><strong>轮循均衡</strong>（Round Robin）：每一次来自网络的请求轮流分配给内部中的服务器，从 1 至 N 然后重新开始。此种均衡算法适合于集群中的所有服务器都有相同的软硬件配置并且平均服务请求相对均衡的情况。</li>
+<li><strong>权重轮循均衡</strong>（Weighted Round Robin）：根据服务器的不同处理能力，给每个服务器分配不同的权值，使其能够接受相应权值数的服务请求。譬如：服务器 A 的权值被设计成 1，B 的权值是 3，C 的权值是 6，则服务器 A、B、C 将分别接收到 10%、30％、60％的服务请求。此种均衡算法能确保高性能的服务器得到更多的使用率，避免低性能的服务器负载过重。</li>
+<li><strong>随机均衡</strong>（Random）：把来自客户端的请求随机分配给内部中的多个服务器，在数据足够大的场景下能达到相对均衡的分布。</li>
+<li><strong>一致性哈希均衡</strong>（Consistency Hash）：根据请求中某一些数据（可以是 MAC、IP 地址，也可以是更上层协议中的某些参数信息）作为特征值来计算需要落在的节点上，算法一般会保证同一个特征值每次都一定落在相同的服务器上。一致性的意思是保证当服务集群某个真实服务器出现故障，只影响该服务器的哈希，而不会导致整个服务集群的哈希键值重新分布。</li>
+<li><strong>响应速度均衡</strong>（Response Time）：负载均衡设备对内部各服务器发出一个探测请求（例如 Ping），然后根据内部中各服务器对探测请求的最快响应时间来决定哪一台服务器来响应客户端的服务请求。此种均衡算法能较好的反映服务器的当前运行状态，但这最快响应时间仅仅指的是负载均衡设备与服务器间的最快响应时间，而不是客户端与服务器间的最快响应时间。</li>
+<li><strong>最少连接数均衡</strong>（Least Connection）：客户端的每一次请求服务在服务器停留的时间可能会有较大的差异，随着工作时间加长，如果采用简单的轮循或随机均衡算法，每一台服务器上的连接进程可能会产生极大的不平衡，并没有达到真正的负载均衡。最少连接数均衡算法对内部中需负载的每一台服务器都有一个数据记录，记录当前该服务器正在处理的连接数量，当有新的服务连接请求时，将把当前请求分配给连接数最少的服务器，使均衡更加符合实际情况，负载更加均衡。此种均衡策略适合长时处理的请求服务，如 FTP 传输。</li>
+</ul>
+<h3 id="2-负载均衡器"><a href="#2-负载均衡器" class="headerlink" title="2.负载均衡器"></a><strong>2.负载均衡器</strong></h3><p>硬件均衡器，nginx通过反向代理实现。反向代理指前端请求的地址为代理服务器的地址，代理服务器重写请求的服务地址（根据uri），并发送请求给后端服务器，也就是前端从头到尾都不知道具体服务器的地址。在重写请求的时候使用负载均衡算法。</p>
+<p>客户端层负载均衡器，其代表是spring cloud中的LoadBalancer。这里的客户端指调用者，这种负载均衡器的特点是由客户端自己去不断去发现更新维护自己的一套服务列表，自己去定义服务的均衡负载策略，然后获取具体的服务实例。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/v2-5dd9961f01d21283b622b6ef08270f08_r.jpg" alt="img"></p>
+<h2 id="流量治理"><a href="#流量治理" class="headerlink" title="流量治理"></a>流量治理</h2><h3 id="服务容错"><a href="#服务容错" class="headerlink" title="服务容错"></a>服务容错</h3><h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><h4 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h4><p>1.计数器算法</p>
+<p>在指定周期内累加访问次数，当访问次数达到设定的阈值时，触发限流策略，当进入下一个时间周期时<strong>进行访问次数的清零</strong>。如图所示，我们要求3秒内的请求不要超过150次：</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/0b46f21fbe096b6376e07b1d01be2e48eaf8ac1f.jpeg" alt="img"></p>
+<p>但是，貌似看似很“完美”的流量统计方式其实存在一个非常严重的<strong>临界问题</strong>，即：如果第2到3秒内产生了<code>150</code>次请求，而第3到4秒内产生了<code>150</code>次请求，那么其实在第2秒到第4秒这两秒内，就已经发生了<code>300</code>次请求了，远远大于我们要求的<strong>3秒内的请求不要超过150次</strong>这个限制，如下图所示：</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/a1ec08fa513d2697304b25ed5d761bf74216d87b.jpeg" alt="img"></p>
+<p>2.滑动窗口算法</p>
+<p>滑动窗口为固定窗口的改良版，解决了固定窗口在窗口切换时会受到两倍于阈值数量的请求，滑动窗口在固定窗口的基础上，<strong>将一个窗口分为若干个等份的小窗口</strong>，每个小窗口对应不同的时间点，拥有独立的计数器，当请求的时间点大于当前窗口的最大时间点时，则将窗口向前平移一个小窗口（将第一个小窗口的数据舍弃，第二个小窗口变成第一个小窗口，当前请求放在最后一个小窗口），整个窗口的所有请求数相加不能大于阈值。其中，<strong>Sentinel</strong>就是采用滑动窗口算法来实现限流的。如图所示：</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/aa18972bd40735fafb346f9996dca6bf0e240866-16989466511937.jpeg" alt="img"></p>
+<blockquote>
+<p><strong>【1】</strong> 把3秒钟划分为3个小窗，每个小窗限制请求不能超过50个。<br><strong>【2】</strong> 比如我们设置，3秒内不能超过150个请求，那么这个窗口就可以容纳3个小窗，并且随着时间推移，往前滑动。每次请求过来后，都要统计滑动窗口内所有小窗的请求总量。</p>
+</blockquote>
+<p>3.令牌桶限流算法</p>
+<p>令牌桶是<strong>网络流量整形</strong>（Traffic Shaping）和<strong>速率限制</strong>（Rate Limiting）中最常使用的一种算法。对于每一个请求，都需要从令牌桶中获得一个令牌；如果没有获得令牌，则需要触发限流策略。系统会以<strong>恒定速度</strong>（r tokens&#x2F;sec）往固定容量的令牌桶中<strong>放入令牌</strong>。<strong>令牌桶有固定的大小</strong>，如果令牌桶被填满，则会<strong>丢弃令牌</strong>。</p>
+<p>会存在三种情况：</p>
+<blockquote>
+<p>【<strong>请求速度 大于 令牌生成速度</strong>】当令牌被取空后，会被限流<br>【<strong>请求速度 等于 令牌生成速度</strong>】流量处于平稳状态<br>【<strong>请求速度 小于 令牌生成速度</strong>】请求可被正常处理，桶满则丢弃令牌</p>
+</blockquote>
+<p>熔断</p>
+<p>当下游服务因访问压力过大而响应变慢或失败，上游服务为了保护系统整体的可用性，可以暂时切断对下游服务的调用。</p>
+<p>这种牺牲局部，保全整体的措施就叫做熔断。</p>
+<p>降级</p>
+<p>服务降级是指 当服务器压力剧增的情况下，根据实际业务情况及流量，对一些服务和页面有策略的不处理或换种简单的方式处理，从而释放服务器资源以保证核心业务正常运作或高效运作。说白了，就是尽可能的把系统资源让给优先级高的服务。</p>
+<p>在双 11 时，使用的人比较多，此时如果开放所有功能，可能会导致系统不可用，所以此时可以开启降级功能，优先保证支付功能可用，而其他非核心功能，如评论、物流、商品介绍等功能可以暂时关闭。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java-Web/" rel="tag"># Java Web</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/e6af.html" rel="prev" title="2023-07-06-Lottery抽奖系统">
+      <i class="fa fa-chevron-left"></i> 2023-07-06-Lottery抽奖系统
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/bb81.html" rel="next" title="2023-12-11-ChatGPT">
+      2023-12-11-ChatGPT <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">分布式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#cap%E5%92%8Cbase"><span class="nav-number">1.1.</span> <span class="nav-text">cap和base</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81CAP%E5%AE%9A%E7%90%86"><span class="nav-number">1.1.1.</span> <span class="nav-text">一、CAP定理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81BASE%E7%90%86%E8%AE%BA"><span class="nav-number">1.1.2.</span> <span class="nav-text">二、BASE理论</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9Azookeeper%E9%9B%86%E7%BE%A4"><span class="nav-number">1.1.3.</span> <span class="nav-text">补充：zookeeper集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZooKeeper-%E9%9B%86%E7%BE%A4-Leader-%E9%80%89%E4%B8%BE%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.4.</span> <span class="nav-text">ZooKeeper 集群 Leader 选举过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZooKeeper-%E9%9B%86%E7%BE%A4%E4%B8%BA%E5%95%A5%E6%9C%80%E5%A5%BD%E5%A5%87%E6%95%B0%E5%8F%B0%EF%BC%9F"><span class="nav-number">1.1.5.</span> <span class="nav-text">ZooKeeper 集群为啥最好奇数台？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZooKeeper-%E9%80%89%E4%B8%BE%E7%9A%84%E8%BF%87%E5%8D%8A%E6%9C%BA%E5%88%B6%E9%98%B2%E6%AD%A2%E8%84%91%E8%A3%82"><span class="nav-number">1.1.6.</span> <span class="nav-text">ZooKeeper 选举的过半机制防止脑裂</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">什么是微服务架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.3.</span> <span class="nav-text">访问远程服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%EF%BC%88RPC%EF%BC%89"><span class="nav-number">1.3.1.</span> <span class="nav-text">远程服务调用（RPC）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#REST%E8%AE%BE%E8%AE%A1%E9%A3%8E%E6%A0%BC"><span class="nav-number">1.3.2.</span> <span class="nav-text">REST设计风格</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RESFUL%E4%B8%8ERPC%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.3.3.</span> <span class="nav-text">RESFUL与RPC的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98"><span class="nav-number">1.4.</span> <span class="nav-text">缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BC%93%E5%AD%98"><span class="nav-number">1.4.1.</span> <span class="nav-text">客户端缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%BC%93%E5%AD%98"><span class="nav-number">1.4.2.</span> <span class="nav-text">服务端缓存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0"><span class="nav-number">1.5.</span> <span class="nav-text">服务发现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">1.5.1.</span> <span class="nav-text">1.服务发现的意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="nav-number">1.5.2.</span> <span class="nav-text">2.服务发现的操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BD%9C%E4%B8%BA%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E7%9A%84%E5%B7%A5%E5%85%B7"><span class="nav-number">1.5.3.</span> <span class="nav-text">3.作为注册中心的工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E5%85%B3%E8%B7%AF%E7%94%B1"><span class="nav-number">1.6.</span> <span class="nav-text">网关路由</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="nav-number">1.7.</span> <span class="nav-text">负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%AE%97%E6%B3%95"><span class="nav-number">1.7.1.</span> <span class="nav-text">1.负载均衡算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%99%A8"><span class="nav-number">1.7.2.</span> <span class="nav-text">2.负载均衡器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%B2%BB%E7%90%86"><span class="nav-number">1.8.</span> <span class="nav-text">流量治理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%AE%B9%E9%94%99"><span class="nav-number">1.8.1.</span> <span class="nav-text">服务容错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="nav-number">1.8.2.</span> <span class="nav-text">流量控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%99%90%E6%B5%81"><span class="nav-number">1.8.2.1.</span> <span class="nav-text">限流</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">248k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:45</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

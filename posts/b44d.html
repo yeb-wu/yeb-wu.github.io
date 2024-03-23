@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="一.redisredis优点1.高性能 Redis 基于内存，内存的访问速度是磁盘的上千倍； 基于 epoll&#x2F;select&#x2F;kqueue 等 I&#x2F;O 多路复用技术，实现高吞吐的网络 I&#x2F;O。 单线程模型，单线程无法利用多核，但是从另一个层面来说则避免了多线程频繁上下文切换，以及同步机制如锁带来的开销。 2.高并发 MySQL这类的数据库的QPS大概都在1w">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023-03-20-Redis">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/b44d.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="一.redisredis优点1.高性能 Redis 基于内存，内存的访问速度是磁盘的上千倍； 基于 epoll&#x2F;select&#x2F;kqueue 等 I&#x2F;O 多路复用技术，实现高吞吐的网络 I&#x2F;O。 单线程模型，单线程无法利用多核，但是从另一个层面来说则避免了多线程频繁上下文切换，以及同步机制如锁带来的开销。 2.高并发 MySQL这类的数据库的QPS大概都在1w">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231204194645494.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231204200347078.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/v2-d80d37ab0f0ee768b59b63ccb9c1612e_b.jpg">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/v2-505ae4590d4a2f8c8388f2b0454b0a4d_b.jpg">
+<meta property="article:published_time" content="2023-03-20T06:26:02.000Z">
+<meta property="article:modified_time" content="2024-03-21T09:32:17.259Z">
+<meta property="article:author" content="yebin">
+<meta property="article:tag" content="Java Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231204194645494.png">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/b44d.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2023-03-20-Redis | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/b44d.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023-03-20-Redis
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-20 14:26:02" itemprop="dateCreated datePublished" datetime="2023-03-20T14:26:02+08:00">2023-03-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 17:32:17" itemprop="dateModified" datetime="2024-03-21T17:32:17+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Web/" itemprop="url" rel="index"><span itemprop="name">Java Web</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>10k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一-redis"><a href="#一-redis" class="headerlink" title="一.redis"></a>一.redis</h2><h3 id="redis优点"><a href="#redis优点" class="headerlink" title="redis优点"></a>redis优点</h3><p><strong>1.高性能</strong></p>
+<p>Redis 基于内存，内存的访问速度是磁盘的上千倍；</p>
+<p>基于 epoll&#x2F;select&#x2F;kqueue 等 I&#x2F;O 多路复用技术，实现高吞吐的网络 I&#x2F;O。</p>
+<p>单线程模型，单线程无法利用多核，但是从另一个层面来说则避免了多线程频繁上下文切换，以及同步机制如锁带来的开销。</p>
+<p><strong>2.高并发</strong></p>
+<p>MySQL这类的数据库的QPS大概都在1w左右(4核8g),但是使用Redis缓存之后很容易达到10w+,甚至最高能达到30w+(就单机Redis的情况，Redis集群的话会更高)。<br>QPS(Query Per Second):服务器每秒可以执行的查询次数；由此可见，直接操作缓存能够承受的数据库请求数量是远远大于直接访问数据库的，所以我们可以考虑把数据库中的部分数据转移到缓存中去，这样用户的一部分请求会直接到缓存这里而不用经过数据库。进而，我们也就提高了系统整体的并发。</p>
+<p><strong>3.Redis 内置了多种优化过后的数据结构</strong>实现，使用非常方便。</p>
+ <span id="more"></span>
+
+<h3 id="基本数据结构"><a href="#基本数据结构" class="headerlink" title="基本数据结构"></a>基本数据结构</h3><ul>
+<li><p><strong>5 种基础数据结构</strong> ：String（字符串）、List（列表）、Set（集合）、Hash（散列）、Zset（有序集合）。</p>
+<p>储存对象String和Hash选择哪一个？</p>
+<ul>
+<li>String 存储的是序列化后的对象数据，存放的是整个对象。Hash 是对对象的每个字段单独存储，可以获取部分字段的信息，也可以修改或者添加部分字段，节省网络流量。如果对象中某些字段需要经常变动或者经常需要单独查询对象中的个别字段信息，Hash 就非常适合。</li>
+<li>String 存储相对来说更加节省内存，缓存相同数量的对象数据，String 消耗的内存约是 Hash 的一半。并且，存储具有多层嵌套的对象时也方便很多。如果系统对性能和资源消耗非常敏感的话，String 就非常适合。</li>
+</ul>
+<p>使用场景：</p>
+<p>Zset：排行榜，Set：数据不能重复，多个数据源交集、并集和差集的场景，例如共同好友。</p>
+</li>
+<li><p><strong>3 种特殊数据结构</strong> ：HyperLogLogs（基数统计）、Bitmap （位存储）、Geospatial (地理位置)。</p>
+<p>Bitmap：签到表 </p>
+<p>Redis中是利用string类型数据结构实现BitMap，因此BitMap可以理解是对string类型的位操作。我们可以把年和月作为bitMap的key，然后保存到一个bitMap中，每次签到就到对应的位上把数字从0变成1，只要对应是1，就表明说明这一天已经签到了，反之则没有签到。</p>
+<p>HyperLogLogs：独立访客量，1天内同一个用户多次访问该网站，只记录1次。</p>
+</li>
+</ul>
+<h3 id="过期的数据的删除策略"><a href="#过期的数据的删除策略" class="headerlink" title="过期的数据的删除策略"></a>过期的数据的删除策略</h3><ol>
+<li><strong>惰性删除</strong> ：只会在取出 key 的时候才对数据进行过期检查。这样对 CPU 最友好，但是可能会造成太多过期 key 没有被删除。</li>
+<li><strong>定期删除</strong> ： 每隔一段时间抽取一批 key 执行删除过期 key 操作。并且，Redis 底层会通过限制删除操作执行的时长和频率来减少删除操作对 CPU 时间的影响。</li>
+</ol>
+<p>定期删除对内存更加友好，惰性删除对 CPU 更加友好。两者各有千秋，所以 Redis 采用的是 <strong>定期删除+惰性&#x2F;懒汉式删除</strong> 。</p>
+<p>仅仅通过给 key 设置过期时间还是有问题的。因为还是可能存在定期删除和惰性删除漏掉了很多过期 key 的情况。这样就导致大量过期 key 堆积在内存里，然后就 Out of memory 了。</p>
+<h3 id="Redis-内存淘汰机制"><a href="#Redis-内存淘汰机制" class="headerlink" title="Redis 内存淘汰机制"></a>Redis 内存淘汰机制</h3><p><strong>volatile-lru</strong>：从已设置过期时间的数据集中挑选最近最少使用的数据淘汰。</p>
+<p><strong>volatile-random</strong>：从已设置过期时间的数据集中挑选将要过期的数据淘汰。</p>
+<p><strong>volatile-lfu</strong>：从已设置过期时间的数据集中挑选最不经常使用的数据淘汰。</p>
+<p><strong>volatile-ttl</strong>：从已设置过期时间的数据集中挑选将要过期的数据淘汰。</p>
+<p><strong>allkeys-lru</strong>：当内存不足以容纳新写入数据时，在键空间中，移除最近最少使用的 key</p>
+<p><strong>allkeys-random</strong>:从数据集中任意选择数据淘汰。</p>
+<p><strong>allkeys-lfu</strong>:当内存不足以容纳新写入数据时，在键空间中，移除最不经常使用的 key。</p>
+<h3 id="缓存更新策略"><a href="#缓存更新策略" class="headerlink" title="缓存更新策略"></a>缓存更新策略</h3><p><strong>1.一种是数据库和缓存一致性要求比较高的，主要以数据库为主，适合读请求比较多的场景。</strong></p>
+<p>旁路缓存模式中需要同时维护数据库和缓存的数据，主要以数据库为主，需要保持比较高的一致性。</p>
+<p>读：</p>
+<p>1.从cache中读取数据，读取到就直接返回；<br>2.cache中读取不到的话，就从db中读取数据返回；<br>3.再把db中读取到的数据放到cache中。</p>
+<p>写：</p>
+<p>1.先更新db;<br>2.直接删除cache。</p>
+<p>删除缓存还是更新缓存？</p>
+<ul>
+<li>更新缓存：每次更新数据库都更新缓存，无效写操作较多</li>
+<li>删除缓存：更新数据库时让缓存失效，查询时再更新缓存(√)</li>
+<li>对服务端资源造成浪费：删除cache更加直接，这是因为cache中存放的一些数据需要服务端经过大量的计算才能得出，会消耗服务端的资源，是一笔不小的开销。如果频繁修改db,就能会导致需要频繁更新cache,而cache中的数据可能都没有被访问到。</li>
+</ul>
+<p>先操作缓存还是先操作数据库？</p>
+<ul>
+<li>先删除缓存，再操作数据库</li>
+<li>先操作数据库，再删除缓存</li>
+<li>应当是先操作数据库，再删除缓存，原因在于，如果你选择第一种方案，在两个线程并发来访问时，假设线程1先来，他先把缓存删了，此时线程2过来，他查询缓存数据并不存在，此时他写入缓存，当他写入缓存后，线程1再执行更新动作时，实际上redis中写入的就是旧的数据，造成了数据库和redis的数据不一致。</li>
+</ul>
+<p><strong>2.一种是一致性要求比较弱的，以缓存为主，适合写请求比较多的场景。</strong></p>
+<p>任何数据的增删查改都在缓存中先完成，然后开启一个定时任务，定时的去将缓存中的数据同步到数据库中。</p>
+<h3 id="常见并发场景"><a href="#常见并发场景" class="headerlink" title="常见并发场景"></a>常见并发场景</h3><h4 id="缓存穿透："><a href="#缓存穿透：" class="headerlink" title="缓存穿透："></a>缓存穿透：</h4><p>缓存穿透是指客户端请求的数据在缓存中和数据库中都不存在，这样缓存永远不会生效，这些请求就会穿透了缓存，直击数据库。如果请求比较多时，对数据库造成了巨大的压力。</p>
+<p>1.最基本的就是首先做好参数校验，一些不合法的参数请求直接抛出异常信息返回给客户端。比如查询的数据库 id 不能小于 0、传入的邮箱格式不对的时候直接返回错误消息给客户端等等。</p>
+<p>2.缓存空对象：简单的解决方案就是哪怕这个数据在数据库中也不存在，我们也把这个数据存入到redis中去，这样，下次用户过来访问这个不存在的数据，那么在redis中也能找到这个数据就不会进入到缓存了。</p>
+<p>3.布隆过滤器：使用布隆过滤器判断该数据是否在数据库中。</p>
+<h4 id="缓存击穿："><a href="#缓存击穿：" class="headerlink" title="缓存击穿："></a>缓存击穿：</h4><p>缓存击穿中，请求的 key 对应的是热点数据 ，该数据存在于数据库中，但不存在于缓存中（通常是因为缓存中的那份数据已经过期） 。这就可能会导致瞬时大量的请求直接打到了数据库上，对数据库造成了巨大的压力。</p>
+<p>注：这些请求是同时发生的，因为根据缓存的更新策略，一旦有一个请求读取数据库成功就会去更新缓存，其他在它之后的请求就能去缓存查询了，所以同时的话就一起去读取数据库了。</p>
+<p>redis实现锁的方法：redis setnx方法，该方法含义是redis中如果没有这个key，则插入成功，返回1，如果有这个key则插入失败，则返回0。一般来说为防止死等，还会加上一个过期时间</p>
+<p>redis释放锁的方法：del key</p>
+<h5 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h5><p>因为在缓存击穿中，是由于高并发场景下，同时访问一个失效key导致的，所以最简单的解决方法就是给这些请求加锁，保证在多个线程未命中缓存数据时，只有一个线程可以获得锁去数据库查询数据并更新到缓存中，其他获取锁失败的线程，隔一段时间去查询缓存或者尝试获取锁，如果查询成功则不需要获取锁了，但如果获取锁成功还要一下查询缓存，做双重确认，避免无效更新。所以这里的锁只锁住了数据库查询和更新缓存的操作，并没锁住查询缓存的操作，在一定程度下减少了锁的粒度。</p>
+<h5 id="逻辑过期（异步操作）"><a href="#逻辑过期（异步操作）" class="headerlink" title="逻辑过期（异步操作）"></a>逻辑过期（异步操作）</h5><p>逻辑过期的基本思想是，不设置过期时间，这样就不会发生key的失效问题。它的策略是这样子的，把过期时间设置在 redis的value中，假设某个请求查询缓存发现逻辑时间过期，那么它会去尝试获取锁，一种情况获取锁成功，就会开启一个新的线程去完成查询数据库更新缓存数据的操作，新线程完成工作后释放锁，然后原线程先返回过期数据；另一种情况是获取锁失败，那么直接返回过期数据。也就是说，缓存的更新操作交由内部线程去异步执行了，在更新操作完成前只能得到过期的数据。</p>
+<p>优缺点对比：</p>
+<p>互斥锁方案：数据一致，且实现简单；串行执行性能会受影响</p>
+<p>逻辑过期方案：数据不保证一致，实现起来麻烦；读取过程中不需要等待，性能好</p>
+<h4 id="缓存雪崩："><a href="#缓存雪崩：" class="headerlink" title="缓存雪崩："></a>缓存雪崩：</h4><p>同一时段大量的缓存key同时失效，导致大量的请求都直接落到了数据库上，对数据库造成了巨大的压力。</p>
+<p>设置不同的失效时间比如随机设置缓存的失效时间。</p>
+<h4 id="缓存击穿和缓存雪崩的区别："><a href="#缓存击穿和缓存雪崩的区别：" class="headerlink" title="缓存击穿和缓存雪崩的区别："></a>缓存击穿和缓存雪崩的区别：</h4><p>击穿是一个被多次请求的key突然失效了，导致这些请求同时打在数据库中，针对一个key的情况；雪崩是多个key同时失效，多个请求同时在数据库上，针对多个key的情况。</p>
+<h4 id="缓存击穿和缓存穿透的区别："><a href="#缓存击穿和缓存穿透的区别：" class="headerlink" title="缓存击穿和缓存穿透的区别："></a>缓存击穿和缓存穿透的区别：</h4><p>缓存穿透的请求的数据不存在于缓存中，也不在数据库中；缓存击穿的请求数据不在缓存中，但存在与数据库中</p>
+<h3 id="如何基于redis实现分布式锁"><a href="#如何基于redis实现分布式锁" class="headerlink" title="如何基于redis实现分布式锁"></a>如何基于redis实现分布式锁</h3><h4 id="如何使用setnx实现分布式锁"><a href="#如何使用setnx实现分布式锁" class="headerlink" title="如何使用setnx实现分布式锁"></a><strong>如何使用setnx实现分布式锁</strong></h4><p>通过把锁放在redis中，使用set数据结构储存锁对象可以实现分布式锁。</p>
+<p>setnx(<strong>SET</strong> if <strong>N</strong>ot e<strong>X</strong>ists)命令中，如果key值不存在的话，设置key的值并返回1；如果key值存在，则返回0。利用这一互斥特性可以实现加锁功能。一般来说为了避免锁无法被释放，需要给锁设置一个过期时间。</p>
+<p>释放锁：直接使用del命令</p>
+<h4 id="锁误删情况"><a href="#锁误删情况" class="headerlink" title="锁误删情况"></a><strong>锁误删情况</strong></h4><p>超时释放：持有锁的线程1执行时间过长，导致了它的锁因为超时而被释放了，这时另一个线程2获得锁，然后在线程2运行的过程中，线程1执行完后执行释放锁操作，就会把线程2中的锁误删了，这样就会导致其他线程也能获取锁了。</p>
+<h4 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h4><h5 id="获取锁时存入线程标识"><a href="#获取锁时存入线程标识" class="headerlink" title="获取锁时存入线程标识"></a>获取锁时存入线程标识</h5><p>key(lock:name)+value(threadId)</p>
+<p>在set在存入锁时，放入当前线程的标识，在删除锁时，从set从取出线程标识判断标识是不是等于当前线程的id值，如果是，则进行删除，如果不是，则不进行删除。</p>
+<p>对于取出线程id，判断线程id，删除锁的操作也就是整个释放锁阶段需要使用lua脚本保证原子性，否则也会出现锁误删情况。</p>
+<p>这种方法虽然可以解决锁误删问题，但需要合理的设置超时时间，因为超时时间过短，会导致多线程的安全问题；过长又会影响性能。</p>
+<h5 id="给锁进行续期"><a href="#给锁进行续期" class="headerlink" title="给锁进行续期"></a>给锁进行续期</h5><p>参考redisson的watchdog机制，可以实现在线程正常运行时，给锁进行续期；在线程崩溃时，超时释放。</p>
+<p>当redisson的lock方法没有设置超时时间时，就会使用 Watch Dog 自动续期机制。</p>
+<p>自动续约机制如下：开启一个定时任务线程每过10s 就会执行lua脚本实现续期操作，<strong>lua脚本会检查当前锁是否被当前线程持有</strong>，如果是，则延长锁的过期时间设置为30s，相当于给该线程无限续约了。当线程使用完锁后，使用Redis的DEL命令释放锁，并关闭看门狗机制。</p>
+<p>watch dog可以避免因为线程异常关闭导致无法释放锁的情况。</p>
+<h3 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h3><h4 id="redis单线程模型"><a href="#redis单线程模型" class="headerlink" title="redis单线程模型"></a>redis单线程模型</h4><p>对于读写命令来说，Redis 一直是单线程模型。Redis 6.0 版本之后引入了多线程来处理网络请求（提高网络 IO 读写性能）。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231204194645494.png" alt="image-20231204194645494" style="zoom: 67%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231204200347078.png" alt="image-20231204200347078" style="zoom: 50%;" /></p>
+<p>Redis基于Reactor模式开发了自己的网络事件处理器，也就是文件事件处理器。文件事件处理器使用IO多路复用技术，同时监听多个套接字，并为套接字关联不同的事件处理函数。当套接字的可读或者可写事件触发时，就会调用相应的事件处理函数。</p>
+<p>文件事件是对套接字操作的抽象，每当一个套接字准备好执行 accept、read、write和 close 等操作时，就会产生一个文件事件。因为 Redis 通常会连接多个套接字，所以多个文件事件有可能并发的出现。尽管多个文件事件可能会并发地出现，但I&#x2F;O多路复用程序总是会将所有产生的套接字都放到同一个队列(也就是后文中描述的<code>aeEventLoop</code>的<code>fired</code>就绪事件表)里边，然后文件事件处理器会以有序、同步、单个套接字的方式处理该队列中的套接字，也就是处理就绪的文件事件。</p>
+<p><strong>Redis 为何选择单线程：</strong></p>
+<ul>
+<li><p>官方：对于一个 DB 来说，CPU 通常不会是瓶颈，因为大多数请求不会是 CPU 密集型的，而是 I&#x2F;O 密集型。具体到 Redis 的话，如果不考虑 RDB&#x2F;AOF 等持久化方案，Redis 是完全的纯内存操作，执行速度是非常快的，因此这部分操作通常不会是性能瓶颈，Redis 真正的性能瓶颈在于网络 I&#x2F;O，也就是客户端和服务端之间的网络传输延迟，因此 Redis 选择了单线程的 I&#x2F;O 多路复用来实现它的核心网络模型。</p>
+</li>
+<li><p>其他：<strong>避免过多的上下文切换开销，避免同步机制的开销</strong></p>
+</li>
+</ul>
+<h4 id="多线程异步任务"><a href="#多线程异步任务" class="headerlink" title="多线程异步任务"></a>多线程异步任务</h4><p>单线程网络模型是Redis 的核心网络模型，一直到 Redis v6.0 才改造成多线程模式，但这并不意味着整个 Redis 一直都只是单线程。</p>
+<p>Redis 在 v4.0 版本的时候就已经引入了的多线程来做一些异步操作，此举主要针对的是那些非常耗时的命令，通过将这些命令的执行进行异步化，避免阻塞单线程的事件循环。</p>
+<p>我们知道 Redis 的 <code>DEL</code> 命令是用来删除掉一个或多个 key 储存的值，它是一个阻塞的命令，大多数情况下你要删除的 key 里存的值不会特别多，最多也就几十上百个对象，所以可以很快执行完，但是如果你要删的是一个超大的键值对，里面有几百万个对象，那么这条命令可能会阻塞至少好几秒，又因为事件循环是单线程的，所以会阻塞后面的其他事件，导致吞吐量下降。</p>
+<p><code>UNLINK</code> 命令其实就是 <code>DEL</code> 的异步版本，它不会同步删除数据，而只是把 key 从 keyspace 中暂时移除掉，然后将任务添加到一个异步队列，最后由后台线程去删除，不过这里需要考虑一种情况是如果用 <code>UNLINK</code> 去删除一个很小的 key，用异步的方式去做反而开销更大，所以它会先计算一个开销的阀值，只有当这个值大于 64 才会使用异步的方式去删除 key，对于基本的数据类型如 List、Set、Hash 这些，阀值就是其中存储的对象数量。</p>
+<h4 id="redis多线程模型"><a href="#redis多线程模型" class="headerlink" title="redis多线程模型"></a>redis多线程模型</h4><p><strong>为什么用多线程</strong></p>
+<p>Redis 最初选择单线程网络模型的理由是：CPU 通常不会成为性能瓶颈，瓶颈往往是<strong>内存</strong>和<strong>网络</strong>，因此单线程足够了。那么为什么现在 Redis 又要引入多线程呢？随着互联网的飞速发展，互联网业务系统所要处理的线上流量越来越大，Redis 的单线程模式会导致系统消耗很多 CPU 时间在网络 I&#x2F;O 上从而降低吞吐量。</p>
+<h4 id="redis多线程模型与标准多线程网络模型的区别"><a href="#redis多线程模型与标准多线程网络模型的区别" class="headerlink" title="redis多线程模型与标准多线程网络模型的区别"></a>redis多线程模型与标准多线程网络模型的区别</h4><p>通常来说，单 Reactor 模式，引入多线程之后会进化为 Multi-Reactors 模式。区别于单 Reactor 模式，这种模式不再是单线程的事件循环，而是有多个线程（Sub Reactors）各自维护一个独立的事件循环，由 Main Reactor 负责接收新连接并分发给 Sub Reactors 去独立处理，最后 Sub Reactors 回写响应给客户端。</p>
+<p>Redis 的多线程网络模型实际上并不是一个标准的 Multi-Reactors 模型，和其他主流的开源网络服务器的模式有所区别，最大的不同就是在标准的 Multi-Reactors模式下，Sub Reactors 会完成 <code>网络读 -&gt; 数据解析 -&gt; 命令执行 -&gt; 网络写</code> 整套流程，Main Reactor 只负责分派任务，而在 Redis 的多线程方案中，I&#x2F;O 线程任务仅仅是通过 socket 读取客户端请求命令并解析，却没有真正去执行命令，所有客户端命令最后还需要回到主线程去执行，因此对多核的利用率并不算高，而且每次主线程都必须在分配完任务之后忙轮询等待所有 I&#x2F;O 线程完成任务之后才能继续执行其他逻辑。</p>
+<p>Redis 之所以如此设计它的多线程网络模型，我认为主要的原因是为了保持兼容性，因为以前 Redis 是单线程的，所有的客户端命令都是在单线程的事件循环里执行的，也因此 Redis 里所有的数据结构都是非线程安全的，现在引入多线程，如果按照标准的 Multi-Reactors 模式来实现，则所有内置的数据结构都必须重构成线程安全的，这个工作量无疑是巨大且麻烦的。</p>
+<h4 id="redis的并发安全问题"><a href="#redis的并发安全问题" class="headerlink" title="redis的并发安全问题"></a>redis的并发安全问题</h4><p>redis使用单线程模型对键值对进行读写操作，能保证命令的序列化，因此原子操作可以保证数据的一致性。</p>
+<p>PS：Redis6.0以前是单线程。这的单线程是说其网络I&#x2F;O和键值对读写是由一个线程完成的。Redis6.0以前是单线程。这的单线程是说其网络I&#x2F;O和键值对读写是由一个线程完成的。</p>
+<p>这里我们说的redis安全问题通常是指，一个事务操作操作中包含多个redis命令，出现命令交叉执行的情况。解决方法是将多个操作写在 Lua 脚本中，然后把整个 Lua 脚本作为一个整体执行，在执行的过程中不会被其他命令打断，从而保证了 Lua 脚本中操作的原子性。</p>
+<h3 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h3><p>如果不考虑 RDB&#x2F;AOF 等持久化方案，Redis 是完全的纯内存操作，执行速度是非常快的。</p>
+<p>持久化也就是将内存中的数据写入到硬盘中。大部分原因是为了之后重用数据（比如重启机器、机器故障之后恢复数据），或者是为了做数据同步（比如 Redis 集群的主从节点通过 RDB 文件同步数据）。</p>
+<h4 id="RDB-持久化"><a href="#RDB-持久化" class="headerlink" title="RDB 持久化"></a><strong>RDB 持久化</strong></h4><p>Redis 可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。</p>
+<ul>
+<li>执行save命令：save命令会导致主进程执行RDB，这个过程中其它所有命令都会被阻塞。只有在数据迁移时可能用到。</li>
+<li>执行bgsave命令：这个命令执行后会开启独立进程完成RDB，主进程可以持续处理用户请求，不受影响。</li>
+<li>Redis停机时</li>
+</ul>
+<h4 id="AOF-持久化"><a href="#AOF-持久化" class="headerlink" title="AOF 持久化"></a><strong>AOF 持久化</strong></h4><p>开启 AOF 持久化后每执行一条会更改 Redis 中的数据的命令，Redis 就会将该命令写入到 AOF 缓冲区<code>server.aof_buf</code> 中，然后再写入到 AOF 文件中（此时还在系统内核缓存区未同步到磁盘），最后再根据持久化方式（ <code>fsync</code>策略）的配置来决定何时将系统内核缓存区的数据同步到硬盘中的。</p>
+<p><strong>1.AOF 持久化方式有哪些？</strong></p>
+<p>在 Redis 的配置文件中存在三种不同的 AOF 持久化方式（ <code>fsync</code>策略），它们分别是：</p>
+<ol>
+<li><code>appendfsync always</code>：主线程调用 <code>write</code> 执行写操作后，后台线程（ <code>aof_fsync</code> 线程）立即会调用 <code>fsync</code> 函数同步 AOF 文件（刷盘），<code>fsync</code> 完成后线程返回，这样会严重降低 Redis 的性能（<code>write</code> + <code>fsync</code>）。</li>
+<li><code>appendfsync everysec</code>：主线程调用 <code>write</code> 执行写操作后立即返回，由后台线程（ <code>aof_fsync</code> 线程）每秒钟调用 <code>fsync</code> 函数（系统调用）同步一次 AOF 文件（<code>write</code>+<code>fsync</code>，<code>fsync</code>间隔为 1 秒）</li>
+<li><code>appendfsync no</code>：主线程调用 <code>write</code> 执行写操作后立即返回，让操作系统决定何时进行同步，Linux 下一般为 30 秒一次（<code>write</code>但不<code>fsync</code>，<code>fsync</code> 的时机由操作系统决定）。</li>
+</ol>
+<p>可以看出：<strong>这 3 种持久化方式的主要区别在于 <code>fsync</code> 同步 AOF 文件的时机（刷盘）</strong>。</p>
+<p>关系型数据库（如 MySQL）通常都是执行命令之前记录日志（方便故障恢复），而 Redis AOF 持久化机制是在执行完命令之后再记录日志。</p>
+<ul>
+<li>在命令执行完之后再记录，不会阻塞当前的命令执行。</li>
+<li>如果刚执行完命令 Redis 就宕机会导致对应的修改丢失；</li>
+</ul>
+<p><strong>2.AOF 重写</strong></p>
+<p>当 AOF 变得太大时，Redis 能够在后台自动重写 AOF 产生一个新的 AOF 文件，这个新的 AOF 文件和原有的 AOF 文件所保存的数据库状态一样，但体积更小。比如AOF会记录对同一个key的多次写操作，但只有最后一次写操作才有意义。通过执行bgrewriteaof命令，可以让AOF文件执行重写功能，用最少的命令达到相同效果。</p>
+<p><strong>3.AOF 校验机制</strong></p>
+<p>AOF 校验机制是 Redis 在启动时对 AOF 文件进行检查，以判断文件是否完整，是否有损坏或者丢失的数据。这个机制的原理其实非常简单，就是通过使用一种叫做 <strong>校验和（checksum）</strong> 的数字来验证 AOF 文件。这个校验和是通过对整个 AOF 文件内容进行 CRC64 算法计算得出的数字。如果文件内容发生了变化，那么校验和也会随之改变。因此，Redis 在启动时会比较计算出的校验和与文件末尾保存的校验和（计算的时候会把最后一行保存校验和的内容给忽略点），从而判断 AOF 文件是否完整。</p>
+<h3 id="布隆过滤器"><a href="#布隆过滤器" class="headerlink" title="布隆过滤器"></a>布隆过滤器</h3><p><strong>1、布隆过滤器使用场景</strong></p>
+<p>原本有10亿个号码，现在又来了10万个号码，要快速准确判断这10万个号码是否在10亿个号码库中？</p>
+<p>解决办法一：将10亿个号码存入数据库中，进行数据库查询，准确性有了，但是速度会比较慢。</p>
+<p>解决办法二：将10亿号码放入内存中，比如Redis缓存中，这里我们算一下占用内存大小：10亿*8字节&#x3D;8GB，通过内存查询，准确性和速度都有了，但是大约8gb的内存空间，挺浪费内存空间的。</p>
+<p><strong>2、布隆过滤器简介</strong></p>
+<p>布隆过滤器：一种数据结构，是由一串很长的二进制向量组成，可以将其看成一个二进制数组。既然是二进制，那么里面存放的不是0，就是1，但是初始默认值都是0。</p>
+<p>如下所示：</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/v2-d80d37ab0f0ee768b59b63ccb9c1612e_b.jpg" alt="img"></p>
+<p><strong>①、添加数据</strong></p>
+<p>介绍概念的时候，我们说可以将布隆过滤器看成一个容器，那么如何向布隆过滤器中添加一个数据呢？</p>
+<p>如下图所示：当要向布隆过滤器中添加一个元素key时，我们通过多个<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=hash%E5%87%BD%E6%95%B0&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22article%22,%22sourceId%22:%22149088311%22%7D">hash函数</a>，算出一个值，然后将这个值所在的方格置为1。</p>
+<p>比如，下图<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=hash1(key)=1&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22article%22,%22sourceId%22:%22149088311%22%7D">hash1(key)&#x3D;1</a>，那么在第2个格子将0变为1（数组是从0开始计数的），<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=hash2(key)=7&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22article%22,%22sourceId%22:%22149088311%22%7D">hash2(key)&#x3D;7</a>，那么将第8个格子置位1，依次类推。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/v2-505ae4590d4a2f8c8388f2b0454b0a4d_b.jpg" alt="img"></p>
+<p><strong>②、判断数据是否存在？</strong></p>
+<p>知道了如何向布隆过滤器中添加一个数据，那么新来一个数据，我们如何判断其是否存在于这个布隆过滤器中呢？</p>
+<p>很简单，我们只需要将这个新的数据通过上面自定义的几个<a target="_blank" rel="noopener" href="https://www.zhihu.com/search?q=%E5%93%88%E5%B8%8C%E5%87%BD%E6%95%B0&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22:%22article%22,%22sourceId%22:%22149088311%22%7D">哈希函数</a>，分别算出各个值，然后看其对应的地方是否都是1，如果存在一个不是1的情况，那么我们可以说，该新数据一定不存在于这个布隆过滤器中。</p>
+<p>反过来说，如果通过哈希函数算出来的值，对应的地方都是1，那么我们能够肯定的得出：这个数据一定存在于这个布隆过滤器中吗？</p>
+<p>答案是否定的，因为多个不同的数据通过hash函数算出来的结果是会有重复的，所以会存在某个位置是别的数据通过hash函数置为的1。</p>
+<p>我们可以得到一个结论：布隆过滤器可以判断某个数据一定不存在，但是无法判断一定存在。</p>
+<p><strong>③、布隆过滤器优缺点</strong></p>
+<p>优点：优点很明显，二进制组成的数组，占用内存极少，并且插入和查询速度都足够快。</p>
+<p>缺点：随着数据的增加，误判率会增加；还有无法判断数据一定存在；另外还有一个重要缺点，无法删除数据。</p>
+<p><strong>3、Redis实现布隆过滤器</strong></p>
+<ul>
+<li><p>bitmaps 我们知道计算机是以二进制位作为底层存储的基础单位，一个字节等于8位。在Redis中，Bitmaps 提供了一套命令用来操作类似上面字符串中的每一个位。</p>
+</li>
+<li><p>Redisson Redis 实现布隆过滤器的底层就是通过 bitmap 这种数据结构，至于如何实现，这里就不重复造轮子了，介绍业界比较好用的一个客户端工具——Redisson。</p>
+</li>
+</ul>
+<p>Redisson 是用于在 Java 程序中操作 Redis 的库，利用Redisson 我们可以在程序中轻松地使用 Redis。</p>
+<h3 id="redis集群×（了解）"><a href="#redis集群×（了解）" class="headerlink" title="redis集群×（了解）"></a>redis集群×（了解）</h3><h3 id="bigkey"><a href="#bigkey" class="headerlink" title="bigkey"></a>bigkey</h3><h4 id="bigkey的定义"><a href="#bigkey的定义" class="headerlink" title="bigkey的定义"></a>bigkey的定义</h4><p>BigKey通常以Key的大小和Key中成员的数量来综合判定，例如：</p>
+<ul>
+<li>Key本身的数据量过大：一个String类型的Key，它的值为5 MB</li>
+<li>Key中的成员数过多：一个ZSET类型的Key，它的成员数量为10,000个</li>
+<li>Key中成员的数据量过大：一个Hash类型的Key，它的成员数量虽然只有1,000个但这些成员的Value（值）总大小为100 MB</li>
+</ul>
+<h4 id="bigkey的危害"><a href="#bigkey的危害" class="headerlink" title="bigkey的危害"></a>bigkey的危害</h4><p>网络阻塞：</p>
+<p>BigKey的内容比较多，会导致带宽使用率被占满</p>
+<p>cpu压力：</p>
+<p>对BigKey的数据序列化和反序列化会导致CPU的使用率飙升，对元素较多的hash、list、zset等做运算会耗时较旧，使主线程被阻塞</p>
+<h4 id="如何发现bigkey"><a href="#如何发现bigkey" class="headerlink" title="如何发现bigkey"></a>如何发现bigkey</h4><p>1.利用redis-cli提供的–bigkeys参数，可以遍历分析所有key，并返回Key的整体统计信息与每个数据的Top1的big key</p>
+<p>2.自己编程，利用scan扫描Redis中的所有key，利用strlen、hlen等命令判断key的长度</p>
+<p>3.第三方监控工具</p>
+<h4 id="如何删除BigKey"><a href="#如何删除BigKey" class="headerlink" title="如何删除BigKey"></a>如何删除BigKey</h4><p>BigKey内存占用较多，即便时删除这样的key也需要耗费很长时间，导致Redis主线程阻塞，引发一系列问题。</p>
+<ul>
+<li>Redis在4.0后提供了异步删除的命令：unlink</li>
+</ul>
+<h3 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h3><h4 id="某个请求的高并发处理"><a href="#某个请求的高并发处理" class="headerlink" title="某个请求的高并发处理"></a>某个请求的高并发处理</h4><p>利用 Redis 分布式集群多节点和数据分片负载均衡来提升性能和保证高可用。</p>
+<h4 id="Redis-除了做缓存，还能做什么？"><a href="#Redis-除了做缓存，还能做什么？" class="headerlink" title="Redis 除了做缓存，还能做什么？"></a>Redis 除了做缓存，还能做什么？</h4><p><strong>分布式锁</strong>：通过 Redis 来做分布式锁是一种比较常见的方式。通常情况下，我们都是基于 Redisson 来实现分布式锁。</p>
+<p><strong>限流</strong>：一般是通过 Redis + Lua 脚本的方式来实现限流。</p>
+<p><strong>消息队列</strong>：Redis 自带的 List 数据结构可以作为一个简单的队列使用。Redis 5.0 中增加的 Stream 类型的数据结构更加适合用来做消息队列。发布 &#x2F; 订阅模式；按照消费者组进行消费；消息持久化；ACK 机制。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java-Web/" rel="tag"># Java Web</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/1ca0.html" rel="prev" title="2023-03-18-二分查找">
+      <i class="fa fa-chevron-left"></i> 2023-03-18-二分查找
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/e3ac.html" rel="next" title="2023-03-30-二叉树">
+      2023-03-30-二叉树 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-redis"><span class="nav-number">1.</span> <span class="nav-text">一.redis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E4%BC%98%E7%82%B9"><span class="nav-number">1.1.</span> <span class="nav-text">redis优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">基本数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%87%E6%9C%9F%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5"><span class="nav-number">1.3.</span> <span class="nav-text">过期的数据的删除策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E6%9C%BA%E5%88%B6"><span class="nav-number">1.4.</span> <span class="nav-text">Redis 内存淘汰机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%9B%B4%E6%96%B0%E7%AD%96%E7%95%A5"><span class="nav-number">1.5.</span> <span class="nav-text">缓存更新策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E5%B9%B6%E5%8F%91%E5%9C%BA%E6%99%AF"><span class="nav-number">1.6.</span> <span class="nav-text">常见并发场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%EF%BC%9A"><span class="nav-number">1.6.1.</span> <span class="nav-text">缓存穿透：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%EF%BC%9A"><span class="nav-number">1.6.2.</span> <span class="nav-text">缓存击穿：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%92%E6%96%A5%E9%94%81"><span class="nav-number">1.6.2.1.</span> <span class="nav-text">互斥锁</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E8%BF%87%E6%9C%9F%EF%BC%88%E5%BC%82%E6%AD%A5%E6%93%8D%E4%BD%9C%EF%BC%89"><span class="nav-number">1.6.2.2.</span> <span class="nav-text">逻辑过期（异步操作）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%EF%BC%9A"><span class="nav-number">1.6.3.</span> <span class="nav-text">缓存雪崩：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="nav-number">1.6.4.</span> <span class="nav-text">缓存击穿和缓存雪崩的区别：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E5%92%8C%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="nav-number">1.6.5.</span> <span class="nav-text">缓存击穿和缓存穿透的区别：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%9F%BA%E4%BA%8Eredis%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">1.7.</span> <span class="nav-text">如何基于redis实现分布式锁</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8setnx%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">1.7.1.</span> <span class="nav-text">如何使用setnx实现分布式锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%81%E8%AF%AF%E5%88%A0%E6%83%85%E5%86%B5"><span class="nav-number">1.7.2.</span> <span class="nav-text">锁误删情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.7.3.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E9%94%81%E6%97%B6%E5%AD%98%E5%85%A5%E7%BA%BF%E7%A8%8B%E6%A0%87%E8%AF%86"><span class="nav-number">1.7.3.1.</span> <span class="nav-text">获取锁时存入线程标识</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%99%E9%94%81%E8%BF%9B%E8%A1%8C%E7%BB%AD%E6%9C%9F"><span class="nav-number">1.7.3.2.</span> <span class="nav-text">给锁进行续期</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.8.</span> <span class="nav-text">线程模型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.8.1.</span> <span class="nav-text">redis单线程模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1"><span class="nav-number">1.8.2.</span> <span class="nav-text">多线程异步任务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redis%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.8.3.</span> <span class="nav-text">redis多线程模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redis%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%A0%87%E5%87%86%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.8.4.</span> <span class="nav-text">redis多线程模型与标准多线程网络模型的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#redis%E7%9A%84%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="nav-number">1.8.5.</span> <span class="nav-text">redis的并发安全问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">1.9.</span> <span class="nav-text">持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RDB-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">1.9.1.</span> <span class="nav-text">RDB 持久化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF-%E6%8C%81%E4%B9%85%E5%8C%96"><span class="nav-number">1.9.2.</span> <span class="nav-text">AOF 持久化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">1.10.</span> <span class="nav-text">布隆过滤器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E9%9B%86%E7%BE%A4%C3%97%EF%BC%88%E4%BA%86%E8%A7%A3%EF%BC%89"><span class="nav-number">1.11.</span> <span class="nav-text">redis集群×（了解）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bigkey"><span class="nav-number">1.12.</span> <span class="nav-text">bigkey</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#bigkey%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">1.12.1.</span> <span class="nav-text">bigkey的定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#bigkey%E7%9A%84%E5%8D%B1%E5%AE%B3"><span class="nav-number">1.12.2.</span> <span class="nav-text">bigkey的危害</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%8F%91%E7%8E%B0bigkey"><span class="nav-number">1.12.3.</span> <span class="nav-text">如何发现bigkey</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A0%E9%99%A4BigKey"><span class="nav-number">1.12.4.</span> <span class="nav-text">如何删除BigKey</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">1.13.</span> <span class="nav-text">面试题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%90%E4%B8%AA%E8%AF%B7%E6%B1%82%E7%9A%84%E9%AB%98%E5%B9%B6%E5%8F%91%E5%A4%84%E7%90%86"><span class="nav-number">1.13.1.</span> <span class="nav-text">某个请求的高并发处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-%E9%99%A4%E4%BA%86%E5%81%9A%E7%BC%93%E5%AD%98%EF%BC%8C%E8%BF%98%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.13.2.</span> <span class="nav-text">Redis 除了做缓存，还能做什么？</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">248k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:45</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

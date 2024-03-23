@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="项目2.0一.lottery">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023-07-06-Lottery抽奖系统">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/e6af.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="项目2.0一.lottery">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230907231459300.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230730112213382.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230911223619498.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230912234548380.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/1&e=1698767999&s=vtvyvvtymvytjty&token=kIxbL07-8jAj8w1n4s9zv64FuZZNEATmlU_Vm6zDT0pANjUuPmk27lmhpJmo7h3AW4I=.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230912181517336.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132111337.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132212221.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132237062.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132322854.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132348181.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132448917.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231030002217252.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925115812275.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230817165417137.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230817172445879.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230817172433424.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826235412026.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826235634027.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826233712026.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826235555115.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000556673.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000601192.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230831230854165.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826233110101.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230828111812748.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230828122649067.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230828123106186.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000619257.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000523416.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230901174319846.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000900469.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000907950.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827001235654.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902001327015.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902001334163.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902004446409.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902004849183.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902200905676.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230906153708828.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230929222406133.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231012232551470.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231012232137902.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231012232416945.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231012232436254.png">
+<meta property="article:published_time" content="2023-07-06T06:27:55.000Z">
+<meta property="article:modified_time" content="2024-03-21T09:37:10.852Z">
+<meta property="article:author" content="yebin">
+<meta property="article:tag" content="项目实战">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230907231459300.png">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/e6af.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2023-07-06-Lottery抽奖系统 | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/e6af.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023-07-06-Lottery抽奖系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-06 14:27:55" itemprop="dateCreated datePublished" datetime="2023-07-06T14:27:55+08:00">2023-07-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 17:37:10" itemprop="dateModified" datetime="2024-03-21T17:37:10+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/" itemprop="url" rel="index"><span itemprop="name">项目实战</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>20k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>19 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="项目2-0"><a href="#项目2-0" class="headerlink" title="项目2.0"></a>项目2.0</h1><h2 id="一-lottery"><a href="#一-lottery" class="headerlink" title="一.lottery"></a>一.lottery</h2><span id="more"></span>
+
+<h3 id="1-状态模式"><a href="#1-状态模式" class="headerlink" title="1.状态模式"></a>1.状态模式</h3><p><strong>利用状态模式思想，实现活动审核状态流转的过程，避免代码中存在过多的分支语句，提高了系统的可读性和可拓展性</strong></p>
+<p>状态模式和简单工厂模式结合的方式</p>
+<p>活动审核通过后，第一次开启活动会直接进入“活动中”状态，“活动中”的状态可以“关闭”，然后再“开启”，即“通过”的活动第一次不会进入“开启”状态，也即只有“关闭”的活动才能“开启”</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230907231459300.png" alt="image-20230907231459300" style="zoom:80%;" />
+
+<p>业务场景：</p>
+<p>一个活动的状态可以流转分为未审核，审核通过，审核拒绝，活动运行中，活动关闭，对一个活动可以执行的动作包括审核，开启和关闭。不同状态下活动执行同一行为会产生不同的结果。例如，一个未审核的活动需要先进行审核，当他变成通过状态时才能进行开启。一个运行中的活动只能进行关闭，不能开启也不能审核。（注：在数据库中会有一个专门的字段来储存活动的状态信息）</p>
+<p>状态模式的使用场景：</p>
+<p>当一个对象的行为取决于它的状态，并且它必须在运行时刻根据状态改变它的行为时，就可以考虑使用状态模式了。对于这种多种状态流转的业务，如果直接编写代码，需要使用大量的if else语句，判断活动的状态执行对应的方法逻辑，这不仅会降低可读性而且也不利于拓展。</p>
+<p>如何使用状态模式来实现这个业务场景：</p>
+<p>1.创建一个接口作为活动状态的抽象类，在接口中定义活动的审核，开启，关闭方法。</p>
+<p>2.将不同的状态类实现这个接口并实现这个接口的方法，例如：未审核状态的活动的审核方法会执行成功，并将活动状态置为审核通过或者审核拒绝状态（数据库字段），而它的开启方法和关闭方法则会无效。</p>
+<p>3.然后根据状态获取具体的状态类对象执行对应的方法即可，这里我是借助了工厂模式的思想，使用一个map集合储存所有的状态类的对象，通过状态的字段名获取状态对象，这样可以避免直接创建状态类的对象。</p>
+<h3 id="2-模板模式"><a href="#2-模板模式" class="headerlink" title="2.模板模式"></a>2.模板模式</h3><p>利用模板模式设计思想，编排抽奖流程，实现快速迭代诉求。<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230730112213382.png" alt="image-20230730112213382" style="zoom:80%;" /></p>
+<p>业务场景：</p>
+<p>整体抽奖流程</p>
+<p>1.根据入参策略ID获取抽奖策略</p>
+<p>2.初始化奖品数据，包括从数据库中获取该活动所有奖品的数量和概率信息，获取不在抽奖范围内的列表。</p>
+<p>3.执行具体的抽奖策略，这里主要实现了两种，一种是单体概率，另一种总体概率；单体概率跟总体概率的区别在于，单体概率的某个奖品抽光之后还会有概率抽到空奖品，而总体概率在每次有奖品抽光后都会重新调整抽奖概率，避免抽空。</p>
+<p>4.包装中奖结果。</p>
+<p>模板模式：</p>
+<p>模板方法模式，通过定义一个操作中的算法的骨架，而将一些不同的步骤延迟到子类中，避免在子类中编写相同步骤的代码。</p>
+<p>如何使用实现：</p>
+<p>因为这个抽奖过程中除了第三步抽奖策略有不同的实现外，其他步骤的实现都是相同的。</p>
+<p>1.定义一个抽象父类，里面实现一个抽奖方法，在抽奖方法里面实现整个流程，而其中的第三步则作为抽象方法调用。</p>
+<p>2.定义具体的抽奖策略的子类，子类继承抽象父类实现它的抽象方法。</p>
+<p>3.创建子类对象，这样就能利用java多态的特性实现使用具体的抽奖策略进行抽奖了。</p>
+<p>总体概率</p>
+<p>单体概率</p>
+<h3 id="3-雪花算法"><a href="#3-雪花算法" class="headerlink" title="3.雪花算法*"></a>3.雪花算法*</h3><p>利用雪花算法生成分布式ID,保证分布式D唯一性，分别用于订单、策略、以及活动号生成上。</p>
+<h4 id="为什么需要分布式ID？"><a href="#为什么需要分布式ID？" class="headerlink" title="为什么需要分布式ID？"></a>为什么需要分布式ID？</h4><p>当ID需要作为数据库主键时就需要使用分布式ID。</p>
+<p>如果是只使用一个数据库情况下，使用主键自增是没有问题的。但是在分布式系统下，由于数据量大一个数据库处理不来，需要进行分库分表建立多个数据库，那么如果仍然使用数据库主键自增来生成唯一id就会造成id重复问题。因此分布式系统需要分布式ID。</p>
+<p>分布式ID需要满足的要求：</p>
+<p>（这两个必须）</p>
+<ul>
+<li><p><strong>全局唯一</strong>：ID 的全局唯一性肯定是首先要满足的！</p>
+</li>
+<li><p><strong>高性能</strong>：分布式 ID 的生成速度要快，对本地资源消耗要小。</p>
+</li>
+<li><p><strong>安全</strong>：ID 中不包含敏感信息。</p>
+</li>
+<li><p><strong>有序递增</strong>：如果要把 ID 存放在数据库的话，ID 的有序性可以提升数据库写入速度。并且，很多时候 ，我们还很有可能会直接通过 ID 来进行排序。</p>
+</li>
+<li><p><strong>有具体的业务含义</strong>：生成的 ID 如果能有具体的业务含义，可以让定位问题以及开发更透明化（通过 ID 就能确定是哪个业务）。</p>
+</li>
+</ul>
+<h4 id="常见的分布式ID方案"><a href="#常见的分布式ID方案" class="headerlink" title="常见的分布式ID方案"></a>常见的分布式ID方案</h4><p><strong>UUID</strong></p>
+<p>其生成规则包括 MAC 地址、时间戳、随机或伪随机数等元素，所以不会重复的。</p>
+<p>比如使用 UUID 作为 MySQL 数据库主键的时候就非常不合适：</p>
+<ul>
+<li>数据库主键要尽量越短越好，而 UUID 的消耗的存储空间比较大（32 个字符串，128 位）。</li>
+<li>UUID 是无顺序的，InnoDB 引擎下，数据库主键的无序性会严重影响数据库性能。</li>
+</ul>
+<p>最后，我们再简单分析一下 <strong>UUID 的优缺点</strong> :</p>
+<ul>
+<li><strong>优点</strong>：全局唯一性，生成速度比较快、简单易用</li>
+<li><strong>缺点</strong>：存储消耗空间大（32 个字符串，128 位）、 不安全（造成 MAC 地址泄露)、UUID 生成的是一个无序的字符串，对于 MySQL 推荐使用增长的数值类型值作为主键来说不适合，没有具体业务含义</li>
+</ul>
+<p><strong>Snowflake</strong></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/645755361">https://zhuanlan.zhihu.com/p/645755361</a></p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230911223619498.png" alt="image-20230911223619498" style="zoom:80%;" />
+
+ 
+
+<p>雪花算法的原理就是生成一个的 64 位比特位的 long 类型的唯一 id。</p>
+<ul>
+<li><p>最高 1 位固定值 0，因为生成的 id 是正整数，如果是 1 就是负数了，影响趋势递增特性。</p>
+</li>
+<li><p>接下来 41 位存储<strong>毫秒级时间戳，保证雪花id是毫秒时间有序的</strong>，2^41&#x2F;(1000<em>60</em>60<em>24</em>365)&#x3D;69，大概可以使用 69 年。</p>
+</li>
+<li><p>再接下 10 位存储<strong>机器码和服务码</strong>，包括 5 位 datacenterId 和 5 位 workerId。最多可以部署 2^10&#x3D;1024 台机器。</p>
+</li>
+<li><p>最后 12 位存储<strong>序列号。序列号的作用在于同一台机器中，如果上个生成 ID 的时间位与当前 ID 的时间位冲突，则会生成一个序列号进行区分，如果序列号用尽，则等待下一个时间点再生成。如果上个生成 ID 的时间位与当前 ID 的时间位不冲突，则将序列号设置成 0。</strong>。</p>
+</li>
+<li><p><strong>为了保证序列号是时间有序的，雪花算法最好用单例方式生成 ID，因为雪花算法会依赖上一次生成的 ID 的时间来判断是否需要对序列号进行增加的操作，如果不是单例，两个业务用两个对象同时获取 ID，则可能会生成相同的 ID。可以将雪花算法作为一个单独的服务进行部署，然后需要全局唯一 id 的系统，请求雪花算法服务获取 id 即可。</strong></p>
+<p>sequence &#x3D; (sequence + 1) &amp; sequenceMask，序列号最大值 sequenceMask 为 2^12&#x3D;4096</p>
+</li>
+</ul>
+<p>Snowflake 算法的优缺点：</p>
+<ul>
+<li><p><strong>优点</strong>：</p>
+<p><strong>高并发分布式环境下生成不重复 id</strong>，每秒可生成百万个不重复 id。</p>
+<p><strong>基于时间戳，以及同一时间戳下序列号自增，基本保证 id 有序递增。</strong></p>
+<p>不依赖第三方库或者中间件。</p>
+<p><strong>算法简单，在内存中进行，效率高。</strong></p>
+</li>
+<li><p><strong>缺点</strong>：需要解决重复 ID 问题（<strong>依赖时间，当机器时间不对的情况下，可能导致会产生重复 ID</strong>）。</p>
+</li>
+</ul>
+<h3 id="4-组合模式"><a href="#4-组合模式" class="headerlink" title="4.组合模式*"></a>4.组合模式*</h3><p>使用组合模式搭建用于量化人群的规则引擎，解决共性功能重复开发问题，提高研发效率。</p>
+<p>上面两个的rule_limit_type的值为enum表示枚举类型</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230912234548380.png" alt="image-20230912234548380" style="zoom: 80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/1&e=1698767999&s=vtvyvvtymvytjty&token=kIxbL07-8jAj8w1n4s9zv64FuZZNEATmlU_Vm6zDT0pANjUuPmk27lmhpJmo7h3AW4I=.png" alt="img" style="zoom:80%;" />
+
+<p>业务需求：</p>
+<p>什么是量化人群？用户在抽奖前需要先参与活动，那么量化人群就是指为不同的人群划分不同的活动。比如可以根据用户年龄和性别推荐适合活动，这部分算法可以借助决策树来实现。决策树的构建一般由专门的算法工程师使用相关的算法生成，然后将这个树结构储存在数据库中，然后在程序启动时生成决策树，遍历决策树获取结果的过程由规则引擎完成。</p>
+<p>组合模式：</p>
+<p>组合模式其实为这种类层次结构的组合对象提供一种解决方法。组合模式的基本对象可以组合成组合对象，而这个组合对象又可以被组合成更复杂的组合对象；在用户使用的时候，无论是组合对象还基本对象都可以使用统一的接口。（例如过滤器中的过滤方法对任何结点都适用）</p>
+<p>决策树本身作为一种树结构，主要包括决策结点和结果结点，因此很适合使用组合模式的思想构建和使用决策树。</p>
+<p>规则引擎：</p>
+<p><strong>实现的简单表述：</strong></p>
+<p><strong>通过组合不同的决策节点和结果结点形成决策树，不同的决策节点向下通过树枝指代了当前决策节点决策规则，使用过滤器为每个决策节点都提供了相同的接口。最终决策树通过规则擎执行决策树，最终找到一个结果结点，返回当前节点活动信息，作为规则引擎执行结果。</strong></p>
+<p>如何实现：</p>
+<p><strong>实现算法由三个部分组成</strong></p>
+<p>第一部分是决策树的构建和持久化</p>
+<p>决策树的数据结构是储存在数据库中的，主要包含两种类型，结点和树枝，其中结点包括决策结点和结果结点。决策结点下还会包含子树结构，而结果结点则是叶子节点，这样就形成了树结构。</p>
+<p>第二部分是决策树过滤器的实现</p>
+<p>过滤器的作用在于根据当前结点树枝中的决策信息找到决策的下一个结点。过滤器相当于组合模式的统一接口。</p>
+<p>第三部分是规则引擎的实现</p>
+<p>在引擎中构建整个决策树，根据用户的个人信息从树根开始借助过滤器过滤，最后到达某个结果结点结束，在结果结点中就包含该用户的参与活动号。</p>
+<h3 id="5-kafka"><a href="#5-kafka" class="headerlink" title="5.kafka*"></a>5.kafka*</h3><p>使用Kafka实现异步奖品发货功能，解耦抽奖流程与发货流程，提高了系统响应时间。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230912181517336.png" alt="image-20230912181517336" style="zoom:80%;" />
+
+<p>业务需求：</p>
+<p>实现整个抽奖的流程，依次是领取活动-&gt;执行抽奖-&gt;结果落库-&gt;触发发奖流程-&gt;返回结果。</p>
+<p>实际上在抽奖结果落库之后，用户的抽奖流程就结束了，不应该等到发奖流程结束才返回结果，这样会提高系统的响应时间，降低用户的体验。</p>
+<p>所以，“触发发奖流程”应该作为异步操作来执行，然后这部分功能由消息队列完成。</p>
+<p>消息队列优点：</p>
+<p>异步，解耦，削峰。</p>
+<p>削峰:相较于异步线程，消息队列可以储存消息慢慢消费，保证消息不丢失。</p>
+<p>具体实现：</p>
+<p><strong>包括发送MQ和消费MQ（触发发奖流程）</strong></p>
+<p>”发送MQ“，调用MQ生产者发送消息，当线程发送消息后，会把结果传给回调函数，并调用回调函数的逻辑。在回调函数中定义MQ 消息发送完成或者失败的处理机制。</p>
+<p>MQ 消息发送完成，更新数据库表 的mq状态为发送成功</p>
+<p>MQ 消息发送失败，更新数据库表 的mq状态为发送失败，后序通过定时任务补偿</p>
+<p>“消费MQ”，调用MQ消费者触发发奖流程。消费者负责监听消息队列中的发奖主题，一旦收到MQ传来的消息就执行对应的发货逻辑，执行成功后为了避免消息丢失需要手动提交offset。</p>
+<p>注：<code>ack.acknowledge()</code> 方法的主要目的是确认已经成功消费了特定分区中的消息。这告诉 Spring Kafka 框架，消费者已经处理了消息，并且可以在适当的时候提交位移（offset）。</p>
+<p>消息丢失</p>
+<p>1.异步发送</p>
+<p>2.消费消息后手动提交</p>
+<p>3.幂等性</p>
+<h3 id="6-线程池"><a href="#6-线程池" class="headerlink" title="6.线程池"></a>6.线程池</h3><p>业务需求：</p>
+<p>在发送MQ失败时并没有立即重新给kafka发送消息，因为消费失败时可能会不断重发请求，导致死循环，严重浪费计算资源，所以发送失败时只是把该订单记录中的一个跟mq状态相关的值设置为0，表示订单异常。那么就需要对消息进行补偿。</p>
+<p>定时任务：</p>
+<p>在线程池中开启一个延迟线程，每隔一段时间就去查询表中所有的异常订单，然后重新发送MQ。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获得当前时间</span></span><br><span class="line"><span class="type">LocalDateTime</span> <span class="variable">now</span> <span class="operator">=</span> LocalDateTime.now();</span><br><span class="line"><span class="comment">// 获取本周四 18:00:00.000</span></span><br><span class="line"><span class="type">LocalDateTime</span> <span class="variable">thursday</span> <span class="operator">=</span> </span><br><span class="line">    now.with(DayOfWeek.THURSDAY).withHour(<span class="number">18</span>).withMinute(<span class="number">0</span>).withSecond(<span class="number">0</span>).withNano(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 如果当前时间已经超过 本周四 18:00:00.000， 那么找下周四 18:00:00.000</span></span><br><span class="line"><span class="keyword">if</span>(now.compareTo(thursday) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">    thursday = thursday.plusWeeks(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 计算时间差，即延时执行时间</span></span><br><span class="line"><span class="type">long</span> <span class="variable">initialDelay</span> <span class="operator">=</span> Duration.between(now, thursday).toMillis();</span><br><span class="line"><span class="comment">// 计算间隔时间，即 1 周的毫秒值</span></span><br><span class="line"><span class="type">long</span> <span class="variable">oneWeek</span> <span class="operator">=</span> <span class="number">7</span> * <span class="number">24</span> * <span class="number">3600</span> * <span class="number">1000</span>;</span><br><span class="line"><span class="type">ScheduledExecutorService</span> <span class="variable">executor</span> <span class="operator">=</span> Executors.newScheduledThreadPool(<span class="number">2</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;开始时间：&quot;</span> + <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">executor.scheduleAtFixedRate(() -&gt; &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;执行时间：&quot;</span> + <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">&#125;, initialDelay, oneWeek, TimeUnit.MILLISECONDS);</span><br></pre></td></tr></table></figure>
+
+<p>为什么要使用线程池：</p>
+<p>降低资源消耗，提高响应速度，提高线程的可管理性；理论上使用一个定时任务线程也能完成，但是当定时任务变多时，就不好管理了。</p>
+<p>实现：</p>
+<p>使用juc提供的ScheduledThreadPool线程池启动定时任务，使用scheduleAtFixedRate提交定时任务。scheduleAtFixedRate需要2个重要的参数，初始延迟时间和间隔时间，初始延迟时间是指该定时任务第一次执行的延迟时间，时间间隔指每隔多久重复执行任务，计算完这些参数值就可以把任务提交给线程池，由线程池分配线程执行任务了。</p>
+<h3 id="7-其他；"><a href="#7-其他；" class="headerlink" title="7.其他；"></a>7.其他；</h3><h4 id="设计滑动库存分布式锁处理活动秒杀，主要是关于秒杀的场景如何实现？"><a href="#设计滑动库存分布式锁处理活动秒杀，主要是关于秒杀的场景如何实现？" class="headerlink" title="设计滑动库存分布式锁处理活动秒杀，主要是关于秒杀的场景如何实现？"></a>设计滑动库存分布式锁处理活动秒杀，主要是关于秒杀的场景如何实现？</h4><p>用户领取活动时，需要保证库存的数量不会发生超卖现象。</p>
+<p><strong>数据库-redis</strong></p>
+<p>由于秒杀操作会有大量的请求访问和修改库存信息，如果直接操作数据库会把数据库搞崩，因此为了提高性能，就会把库存信息保存到redis中，先对redis中库存进行操作，然后在合适的时候同步数据库。</p>
+<p><strong>锁-锁粒度</strong></p>
+<p>为了避免超卖问题，需要使用分布式锁来处理库存扣减的问题。</p>
+<p>分布式锁一般会使用redis的setnx命令来实现，在加锁的时候设置key值，如果设置成功说明加锁成功并执行秒杀操作，如果设置失败说明该锁被占用，秒杀失败。</p>
+<p>为了提高并发量，需要尽可能的降低锁的粒度。</p>
+<p>一般来说不会对整个业务进行加锁，因为这样会导致很多操作失败的情况。对于秒杀操作，可以把key值设置为活动id+库存余量作为分布式锁，这样就缩小了锁的颗粒度。每次申请锁时，都会减少对应的库存，这样每次申请到的都是不同的锁，这样就可以实现高并发了。</p>
+<p><strong>处理数据一致性</strong></p>
+<p>因为秒杀操作只对redis中的库存信息进行修改，因此最终还是要实现数据库数据的一致性。</p>
+<p>这里有两种解决方法：</p>
+<p>1.每次秒杀成功都往MQ里面发送消息，然后在消费端对数据库中的库存进行处理，起到削峰的作用。</p>
+<p>2.开启一个定时任务，定时的去处理缓存和数据库库存同步。</p>
+<p>两种方法的区别在于，消息队列对数据库的操作次数会比较多，但是实时性会比定时任务好。</p>
+<h3 id="DDD架构分布式"><a href="#DDD架构分布式" class="headerlink" title="DDD架构分布式"></a>DDD架构分布式</h3><p>application</p>
+<p>应用层{application}</p>
+<p><strong>应用服务位于应用层。可对微服务内的领域服务以及微服务外的应用服务进行组合和编排，负责处理业务用例的执行顺序以及结果的拼装。</strong></p>
+<p>doDrawProcess(DrawProcessReq req)  领取活动-&gt;执行抽奖-&gt;结果落库-&gt;发送MQ，触发发奖流程-&gt;返回结果</p>
+<p>应用层的服务包括应用服务和领域事件相关服务。<br>应用服务可对微服务内的领域服务以及微服务外的应用服务进行组合和编排，或者对基础层如文件、缓存等数据直接操作形成应用服务，对外提供粗粒度的服务。<br>领域事件服务包括两类：领域事件的发布和订阅。通过事件总线和消息队列实现异步数据传输，实现微服务之间的解耦。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132111337.png" alt="image-20230925132111337" style="zoom:80%;" />
+
+<p>common</p>
+<p>公用模块 common</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132212221.png" alt="image-20230925132212221" style="zoom:67%;" />
+
+<p>domain</p>
+<p>领域层{domain}<br>领域服务位于领域层，为完成领域中跨实体或值对象的操作转换而封装的服务，领域服务以与实体和值对象相同的方式参与实施过程。<br>领域服务对同一个实体的一个或多个方法进行组合和封装，或对多个不同实体的操作进行组合或编排，对外暴露成领域服务。领域服务封装了核心的业务逻辑。实体自身的行为在实体类内部实现，向上封装成领域服务暴露。<br>为隐藏领域层的业务逻辑实现，所有领域方法和服务等均须通过领域服务对外暴露。<br>为实现微服务内聚合之间的解耦，原则上禁止跨聚合的领域服务调用和跨聚合的数据相互关联。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132237062.png" alt="image-20230925132237062" style="zoom:67%;" />
+
+<p>infrastructure</p>
+<p>基础层{infrastructrue}<br>基础服务位于基础层。为各层提供资源服务（如数据库、缓存等），实现各层的解耦，降低外部资源变化对业务逻辑的影响。<br>基础服务主要为仓储服务，通过依赖反转的方式为各层提供基础资源服务，领域服务和应用服务调用仓储服务接口，利用仓储实现持久化数据对象或直接访问基础资源。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132322854.png" alt="image-20230925132322854" style="zoom:67%;" />
+
+<p>interface</p>
+<p>接口层{interfaces}<br>接口服务位于用户接口层，用于处理用户发送的请求，交给应给，然后将数据封装为符合RPC传输的对象。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132348181.png" alt="image-20230925132348181" style="zoom:67%;" />
+
+<p>对于该微服务来说，服务端总的只提供两个接口</p>
+<p>1.doDraw（指定活动抽奖）：1.执行抽奖，2.数据转换，3.数据封装</p>
+<p>2.doQuantificationDraw（量化人群抽奖）：执行规则引擎，获取用户可以参与的活动号，1.执行抽奖，2.数据转换，3.数据封装</p>
+<p>这里的数据转换主要是指把接口的转化为RPC</p>
+<p>rpc</p>
+<p>对外提供接口描述信息</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925132448917.png" alt="image-20230925132448917" style="zoom: 80%;" />
+
+
+
+<p>实体类</p>
+<p>aggregate </p>
+<p>req </p>
+<p>res </p>
+<p>vo</p>
+<p>po </p>
+<p>dto</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231030002217252.png" alt="image-20231030002217252"  />
+
+<h2 id="二-手写RPC"><a href="#二-手写RPC" class="headerlink" title="二.手写RPC"></a>二.手写RPC</h2><p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230925115812275.png" alt="image-20230925115812275"></p>
+<h3 id="项目介绍："><a href="#项目介绍：" class="headerlink" title="项目介绍："></a>项目介绍：</h3><p>rpc框架可以实现不同微服务之间的调用像本地调用一样简单。</p>
+<p>这个手写rpc框架主要实现5个模块</p>
+<p>1.注册中心，注册中心负责服务地址的注册与查找。</p>
+<p>2.网络传输协议，这部分底层直接使用的tcp协议，然后在上层使用了自定义的传输协议。</p>
+<p>3.序列化与反序列化，实现了在网络中快速传输对象。</p>
+<p>4.客户端stub，客户端stub是在该微服务作为客户端调用远程方法的角度设计的，它完成的功能主要是屏蔽调用的细节。</p>
+<p>5.服务端stub，服务端stub是在该微服务作为服务端提供方法服务的角度设计的，它完成的功能主要是服务的注册和调用。</p>
+<p>虽然这个手写RPC跟成熟的RPC框架相比只是完成了最基本的功能，但是通过自己实现rpc框架让我确实是更好的理解了微服务的概念。</p>
+<h3 id="什么是RPC，它的原理和作用"><a href="#什么是RPC，它的原理和作用" class="headerlink" title="什么是RPC，它的原理和作用"></a>什么是RPC，它的原理和作用</h3><h4 id="RPC定义"><a href="#RPC定义" class="headerlink" title="RPC定义"></a>RPC定义</h4><p><strong>RPC</strong>(Remote Procedure Call**)即远程过程调用，通过RPC可以像调用本地方法一样调用远程计算机上某个服务的方法。**</p>
+<p>使用RPC框架的原因在于，两个不同的服务器上的服务提供的方法不在一个内存空间，所以，需要通过网络编程才能传递方法调用所需要的参数和方法调用的结果。但是，如果我们自己手动网络编程来实现这个调用过程的话工作量是非常大的，因为，我们需要考虑底层传输方式(TCP还是UDP)、序列化方式，服务发现等等方面。</p>
+<p>举个例子：两个不同的服务A、B部署在两台不同的机器上，服务A如果想要调用服务B中的某个方法的话就可以通过RPC来做。</p>
+<h4 id="RPC原理"><a href="#RPC原理" class="headerlink" title="RPC原理"></a>RPC原理</h4><p><strong>1.客户端（服务消费端）</strong>：调用远程方法的一端。<br><strong>2.客户端Stub（桩）</strong>：这其实就是一代理类。代理类主要做的事情很简单，就是把你调用方法、类、方法参数等信息传递到服务端。代理类：屏蔽很多细节，封装请求体，调用具体的网络传输服务获取响应体。<br><strong>3.网络传输</strong>：网络传输就是你要把你调用的方法的信息比如说参数啊这些东西传输到服务端，然后服务端执行完之后再把返回结果通过网络传输给你传输回来。网络传输的实现方式有很多种比如最基本的Socket或者性能以及封装更加优秀的Netty（推荐）。<br><strong>4.服务端Stub（桩）</strong>：这个桩就不是代理类了。我觉得理解为桩实际不太好，大家注意一下就好。这里的服务端Sub实际指的就是接收到客户端执行方法的请求后，去指定对应的方法然后返回结果给客户端的类。<br><strong>5.服务端（服务提供端）</strong>：提供远程方法的一端。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230817165417137.png" alt="image-20230817165417137" style="zoom:80%;" />
+
+<p>1.服务消费端(client)以本地调用的方式调用远程服务；<br>2.客户端Stub(client stub)接收到调用后负责将方法、参数等组装成能够进行网络传输的消息体（序列化）：RpcRequest;<br>3.客户端Stub(client stub)找到远程服务的地址，并将消息发送到服务提供端；<br>4.服务端Stub（桩）收到消息将消息反序列化为Java对象：RpcRequest;<br>5.服务端Stub（桩）根据RpcRequest中的类、方法、方法参数等信息调用本地的方法；<br>6.服务端Stub（桩）得到方法执行结果并将组装成能够进行网络传输的消息体：RpcResponse（序列化）发送至消费方；<br>7.客户端Stub(client stub)接收到消息并将消息反序列化为Java对象：RpcResponse,这样也就得到了最终结果。over!</p>
+<h4 id="有HTTP，为什么还要RPC"><a href="#有HTTP，为什么还要RPC" class="headerlink" title="有HTTP，为什么还要RPC"></a>有HTTP，为什么还要RPC</h4><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/V7qg5jsYgCwK8D68ZFGyuw">https://mp.weixin.qq.com/s/V7qg5jsYgCwK8D68ZFGyuw</a></p>
+<p>HTTP与RPC的区别</p>
+<p>1.HTTP是一种协议，而RPC是一种调用方式，没有具体的协议，它的底层可以TCP和HTTP</p>
+<p>2.服务发现，HTTP可以通过域名+DNS服务获取ip地址；而 RPC 的话，一般会有专门的中间服务去保存服务名和 IP 信息，比如Redis和ZooKeeper</p>
+<p>3.传输的内容，在HTTP中是消息头+消息体的形式；而RPC 可以自定义传输协议，一般需要考虑粘包和序列化问题。</p>
+<p>既然有 HTTP 协议为什么要有 RPC ？</p>
+<p>1.首先Http大多用于B&#x2F;S架构，为了实现浏览器之间的兼容，需要有个统一的标准也就是http，因此http协议的功能会尽可能的完备，所以http消息头的信息冗余且复杂。</p>
+<p>2.而在公司内部微服务则使用 RPC ，主要是因为RPC可以自定义传输协议，不需要像 HTTP 那样考虑各种浏览器行为，因此，一个设计良好的RPC性能会比http好。</p>
+<h3 id="常见RPC框架"><a href="#常见RPC框架" class="headerlink" title="常见RPC框架"></a>常见RPC框架</h3><p>Dubbo：Dubbo提供了服务定义，服务发现、流量管控等几乎所有的服务治理能力</p>
+<p>gRPC：gRPC是Google开源的一个高性能、通用的开源RPC框架。基于ProtoBuf序列化协议开发，并且支持众多开发语言。</p>
+<p><strong>何谓ProtoBuf</strong>?ProtoBuf(Protocol Buffer)是一种更加灵活、高效的数据格式，可用于通讯协议、数据存储等领域，基本支持所有主流编程语言且与平台无关。不过，gRPC的设计导致其几乎没有服务治理能力。</p>
+<h3 id="基于Netty-kryo-Zookeeper的RPC框架"><a href="#基于Netty-kryo-Zookeeper的RPC框架" class="headerlink" title="基于Netty+kryo+Zookeeper的RPC框架"></a>基于Netty+kryo+Zookeeper的RPC框架</h3><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230817172445879.png" alt="image-20230817172445879" style="zoom:80%;" />
+
+<p>一般情况下，RPC框架不仅要提供服务发现功能，还要提供负载均衡、序列化等功能，这样的RPC框架才算真正合格的。</p>
+<p>服务提供端Server向注册中心注册服务，服务消费者Client通过注册中心拿到服务相关信息，然后再通过网络请求服务提供端Server。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230817172433424.png" alt="image-20230817172433424" style="zoom:80%;" />
+
+<p>Provider:暴露服务的服务提供方<br>Consumer:调用远程服务的服务消费方<br>Registry:服务注册与发现的注册中心<br>Monitor:统计服务的调用次数和调用时间的监控中心<br>Container:服务运行容器</p>
+<p>1.服务容器负责启动，加载，运行服务提供者。<br>2.服务提供者在启动时，向注册中心注册自己提供的服务。<br>3.服务消费者在启动时，向注册中心订阅自己所需的服务。<br>4.注册中心返回服务提供者地址列表给消费者，如果有变更，注册中心将基于长连接推送变更数据给消费者。<br>5.服务消费者，从提供者地址列表中，基于软负载均衡算法，选一台提供者进行调用，如果调用失败，再选另一台调用。</p>
+<h4 id="框架的组成部分："><a href="#框架的组成部分：" class="headerlink" title="框架的组成部分："></a>框架的组成部分：</h4><p><strong>注册中心</strong></p>
+<p>Zookeeper或者Nacos</p>
+<p><strong>注册中心负责服务地址的注册与查找，相当于目录服务。</strong>服务端启动的时候将服务名称及其对应的地址ip+port注册到注册中心，客户端根据服务名称找到对应的服务地址。有了服务地址之后，服务消费端就可以通过网络请求服务端了。</p>
+<p><strong>网络传输</strong></p>
+<p>Netty开发框架，本质是TCP协议。</p>
+<p>1.Netty是一个基于NIo的client-server（客户端服务器）框架，使用它可以快速简单地开发网络应用程序。<br>2.它极大地简化TCP和UDP套接字服务器等网络编程，并且性能以及安全性等很多方面甚至都要更好。</p>
+<p><strong>序列化与反序列化</strong></p>
+<p>为什么需要序列化？</p>
+<p>要在网络传输数据就要涉及到序列化。因为网络传输的数据必须是二进制的。因此，我们的java对象没办法直接在网络中传输。为了能够让Java对象在网络中传输我们需要将其序列化为二进制的数据。我们最终需要的还是目标java对象，因此我们还要将二进制的数据“解析”为目标Java对象，也就是对二进制数据再进行一次反序列化。</p>
+<p>JDK自带的序列化，只需实现java.io.Serializable接口即可，不过这种方式不推荐，因为不支持跨语言调用并且性能比较差。现在比较常用序列化的有json、kryo。</p>
+<p><strong>客户端stub</strong><br>使用动态代理。当你调用远程方法的时候，实际会通过代理对象来传输网络请求，调用远程方法像调用本地方法一样简单，我们不需要关心远程方法调用的细节比如网络传输，保证请求和响应消息，获取服务地址等等。</p>
+<p><strong>服务端stub</strong></p>
+<p>服务端需要一个服务提供者实现将自己的服务注册到注册中心中，并且在接收到客户端执行方法的请求后，去指定对应的方法然后返回结果给客户端的类。</p>
+<p>提供服务的方法的对象储存到一个容器中(map)，并根据请求消息从容器中获取对象执行方法得到结果。</p>
+<p><strong>负载均衡</strong></p>
+<p>避免单个服务器响应同一请求，容易造成服务器宕机、崩溃等问题。</p>
+<h3 id="Netty开发框架（网络传输）"><a href="#Netty开发框架（网络传输）" class="headerlink" title="Netty开发框架（网络传输）"></a>Netty开发框架（网络传输）</h3><h4 id="netty介绍"><a href="#netty介绍" class="headerlink" title="netty介绍"></a>netty介绍</h4><h4 id="传输实体类"><a href="#传输实体类" class="headerlink" title="传输实体类"></a>传输实体类</h4><p>我们首先定义两个对象，这两个对象是客户端与服务端进行交互的实体类。客户端将RpcRequest类型的对象发送到服务端，服务端进行相应的处理之后将得到结果RpcResponse对象返回给客户端。</p>
+<p><strong>请求实体类</strong> RpcRequest</p>
+<p><strong>响应实体类</strong> RpcResponse</p>
+<h4 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h4><p><strong>NettyClient</strong></p>
+<p>客户端中主要有一个用于向服务端发送消息的sendMessage（）方法，通过这个方法你可以将消息也就是RpcRequest对象发送到服务端，并且你可以同步获取到服务端返回的结果也就是RpcResponse对象。</p>
+<p><strong>自定义ChannelHandler处理服务端消息</strong></p>
+<p>设置channel的读操作，NettyClientHandler用于读取服务端发送过来的RpcResponse消息对象。</p>
+<h4 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h4><p><strong>NettyServer</strong><br>主要作用就是开启了一个服务端用于接受客户端的请求并处理。</p>
+<p><strong>自定义ChannelHandler处理客户端消息</strong></p>
+<p>设置channel的读操作，NettyServerHandler用于接收客户端发送过来的消息，调用本地方法并在channel中返回结果给客户端。</p>
+<h4 id="编码器"><a href="#编码器" class="headerlink" title="编码器"></a>编码器</h4><p>这里需要调用序列化方法，需要注意编码器跟序列化器的功能是不一样的，编码器包括对协议进行解析。</p>
+<p><strong>自定义编码器</strong><br>NettyKryoEncoder是我们自定义的编码器。它负责处理”出站”消息，将消息格式转换为字节数组然后写入到字节数据的容器ByteBuf对象中。除此之外，为了避免粘包问题和校验包的完整性，在ByteBuf对象中添加消息长度的消息头。</p>
+<p><strong>自定义解码器</strong><br>NettyKryoDecoder是我们自定义的解码器。它负责处理”入站”消息，它会从ByteBuf中读取到业务对象对应的字节序列，然后再将字节序列转换为我们的业务对象。</p>
+<h3 id="手写rpc源码分析（分模块）"><a href="#手写rpc源码分析（分模块）" class="headerlink" title="手写rpc源码分析（分模块）"></a>手写rpc源码分析（分模块）</h3><h4 id="序列化模块（serialize包）"><a href="#序列化模块（serialize包）" class="headerlink" title="序列化模块（serialize包）"></a>序列化模块（serialize包）</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826235412026.png" alt="image-20230826235412026" style="zoom:80%;" />
+
+<p>Serializer包括序列化方法和反序列化方法</p>
+<p>序列化的作用：netty使用ByteBuf传输数据，其内部是一个字节数组，在编码器中设置ByteBuf包括消息头和消息体，其中消息体就是传输的java对象，需要通过序列化方法转化为二进制数组放到ByteBuf中。</p>
+<h4 id="负载均衡模块-loadbalance包"><a href="#负载均衡模块-loadbalance包" class="headerlink" title="负载均衡模块(loadbalance包)"></a>负载均衡模块(loadbalance包)</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826235634027.png" alt="image-20230826235634027" style="zoom:80%;" />
+
+<p>LoadBalance:负载均衡，从服务列表中挑选一个合适服务器地址</p>
+<p>RandomLoadBalance:随机挑选</p>
+<p>哈希一致性算法</p>
+<h4 id="注册中心模块（registry包）"><a href="#注册中心模块（registry包）" class="headerlink" title="注册中心模块（registry包）"></a>注册中心模块（registry包）</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826233712026.png" alt="image-20230826233712026" style="zoom:80%;" />
+
+<p><strong>util：</strong></p>
+<ul>
+<li>CuratorUtils：操作zookeeper的工具类</li>
+</ul>
+<p>ZkServiceDiscovery-&gt;(LoadBalance):在获取服务的套接字的时候，有时对应的服务有多个套接字（分布式），需要通过负载均衡策略选择具体的服务主体。</p>
+<p>ZkServiceRegistry:ServiceRegistry的实现类,&#x2F;myrpc&#x2F;interface name + version + group&#x2F;inetSocketAddress</p>
+<p>ServiceDiscovery:提供一个根据服务名从注册中心获取套接字的方法</p>
+<p>ServiceRegistry:提供一个将服务名和对应套接字放到注册中心的方法</p>
+<h4 id="服务提供模块-provider包"><a href="#服务提供模块-provider包" class="headerlink" title="服务提供模块(provider包)"></a>服务提供模块(provider包)</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826235555115.png" alt="image-20230826235555115" style="zoom:80%;" />
+
+<p>ServiceProvider-&gt;(Map&lt;String, Object&gt; serviceMap,ServiceRegistry)：服务对象的容器类，负责对提供的服务对象进行管理，根据接口名添加，查找和发布服务。注：这里将提供服务的对象储存到serviceMap的方法有两种方式，一种是在NettyServer的构造方法中，即启动服务端时绑定服务（手动不推荐）；另一种是使用注解的方法，在下面解释。</p>
+<h4 id="spring容器模块-spring，annotation包"><a href="#spring容器模块-spring，annotation包" class="headerlink" title="spring容器模块(spring，annotation包)"></a>spring容器模块(spring，annotation包)</h4><p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000556673.png" alt="image-20230827000556673" style="zoom:80%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000601192.png" alt="image-20230827000601192" style="zoom:80%;" /></p>
+<p>SpringBeanPostProcessor-&gt;(serviceProvider):继承Spring容器中的BeanPostProcessor，重写其中的postProcessBeforeInitialization方法，在每个bean被初始化之前判断该bean是否有RpcService注解，如果有则把对应的方法信息注册到zookeeper中，实现自动注册。</p>
+<p>RpcService:一个注解类，且该注解类被@component修饰那么被RpcService注解的类也会被spring容器管理。用于标识服务端提供方法的类。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230831230854165.png" alt="image-20230831230854165" style="zoom:80%;" />
+
+<h4 id="网络传输模块-remote包"><a href="#网络传输模块-remote包" class="headerlink" title="网络传输模块(remote包)"></a>网络传输模块(remote包)</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230826233110101.png" alt="image-20230826233110101" style="zoom:80%;" />
+
+<p><strong>dto</strong>：</p>
+<ul>
+<li><p>RpcMessageChecker：提供校验方法，校验请求参数和响应参数的请求Id是否一致，响应参数的响应码是否成功</p>
+</li>
+<li><p>RpcRequest：请求体实体，继承序列化接口。属性如下</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230828111812748.png" alt="image-20230828111812748" style="zoom:80%;" />
+</li>
+<li><p>RpcResponse：响应体参数，继承序列化接口。属性包括：serialVersionUID，requestId，code，message，data(方法返回值)</p>
+</li>
+</ul>
+<p><strong>handler</strong>：（服务端相关）</p>
+<ul>
+<li>RpcRequestHandler -&gt;（ServiceProvider）：根据请求体中的方法信息，利用反射调用服务端的提供的服务(具体方法)，写在外层（不在transport包）的原因是他跟具体的传输框架无关。</li>
+</ul>
+<p><strong>transport</strong>：</p>
+<ul>
+<li><p><strong>netty</strong>：</p>
+<ul>
+<li><p><strong>client</strong>:</p>
+<ul>
+<li><p>NettyClient-&gt;(Bootstrap,EventLoopGroup):<strong>netty框架类</strong>，netty的客户端类，负责客户端netty网络传输的启动和配置。提供一个dochannel方法，根据套接字启动连接并返回channel对象。</p>
+</li>
+<li><p>ChannelProvider-&gt;（Map&lt;String, Channel&gt;，NettyClient）:channel的容器类，负责对开启的channel对象进行管理，根据套接字添加，查找和删除channel。从容器中获取channel时，会查看是否存在相同套接字的channel，如果有就直接复用，如果没有或者channel失效了就调用dochannel方法创建channel。</p>
+</li>
+<li><p>UnprocessedRequests-&gt;(Map&lt;String, CompletableFuture&lt;RpcResponse<Object>&gt;&gt;):暂存未被处理的请求（线程），根据请求Id添加请求和处理请求（线程）。</p>
+</li>
+<li><p>NettyClientHandler-&gt;(UnprocessedRequests,ChannelProvider):<strong>netty框架类</strong>，继承ChannelInboundHandlerAdapter，会被添加到channel的执行链中，提供一个channelRead方法，负责处理从channel读取服务端发过来的消息(RpcResponse)的后续操作，实际上在这里将response消息并放到请求线程中。</p>
+</li>
+<li><p>NettyClientTransport-&gt;（ServiceDiscovery,UnprocessedRequests,ChannelProvider）:ClientTransport的实现类，实现了sendRpcRequest接口。实现的流程包括，创建请求线程-&gt;根据请求体中的信息到注册中心查找对应服务的套接字-&gt;根据套接字获取或添加对应的channel-&gt;将请求线程添加到UnprocessedRequests中，调用channal的write方法写入请求，这个写入过程由异步调用并通过回调函数对失败成功做处理，（这里并没有从channel中读取response消息并放到请求线程中，处理响应消息交给NettyClientHandler）。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230828122649067.png" alt="image-20230828122649067"></p>
+<p>如果在send发送完数据之后对channel进行手动阻塞等待返回Response，这样会导致Event Loop阻塞导致效率下降。优化后使用CompletableFuture包装Response实现线程同步，避免了Event Loop阻塞。</p>
+<p>不通过连接关闭事件让 eventloop 设置 rpcResponse 和 proxy 所在的线程获取 rpcResposne 同步。就像文章说的这种做法“不太清晰”，因为本身它们没有必然联系。通过自定义的 CompletableFuture 让线程间同步更加合适</p>
+<p><strong>使用CompletableFutrue的好处：</strong></p>
+<p>1.不阻塞eventloop，在之前的发送请求操作中需要对channel进行手动阻塞等待返回Response，这样会导致Event Loop阻塞导致效率下降。使用CompletableFuture可以通过异步编程的方式，把阻塞等待返回Response的过程交给异步线程处理，解放Event Loop线程继续执行流程代码，在业务流程中真正需要用到Response再同步等待异步线程执行结果。</p>
+<p>2.利用异步编程执行耗时操作，加快程序执行效率，然后利用回调函数或者同步方法获取异步线程的执行结果。</p>
+</li>
+</ul>
+</li>
+<li><p>codec.kyro</p>
+<ul>
+<li>NettyKryoDecoder-&gt;():<strong>netty框架类</strong>，继承ByteToMessageDecoder。解码 ByteBuf 对象,跟设计的协议有关，这里包括消息长度和消息体，消息长度是为了校验包的完整性。</li>
+<li>NettyKryoEncoder-&gt;():<strong>netty框架类</strong>,继承MessageToByteEncoder。将对象转换为字节码然后写入到 ByteBuf 对象中，同样根据协议写入消息长度和消息体。</li>
+</ul>
+</li>
+<li><p>server</p>
+<ul>
+<li>NettyServer-&gt;(KryoSerializer,ServiceProvider)：<strong>netty框架类</strong>，netty的服务端类，负责服务端netty网络传输的启动和配置，并绑定服务端监听端口。</li>
+<li>NettyServerHandler-&gt;(RpcRequestHandler):<strong>netty框架类</strong>，ChannelInboundHandlerAdapter，会被添加到channel的执行链中，提供一个channelRead方法，负责处理从channel读取客户端发过来的消息(RpcRequest)，调用RpcRequestHandler调用服务端提供的方法处理消息返回结果(rpcResponse)，然后写入channel中。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>socket</strong>：提供基于socket的传输方式</p>
+</li>
+<li><p><strong>ClientTransport</strong>：传输接口<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230828123106186.png" alt="image-20230828123106186" style="zoom:80%;" /></p>
+</li>
+</ul>
+<h4 id="客户端动态代理模块-proxy包"><a href="#客户端动态代理模块-proxy包" class="headerlink" title="客户端动态代理模块(proxy包)"></a>客户端动态代理模块(proxy包)</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000619257.png" alt="image-20230827000619257" style="zoom:80%;" />
+
+<p>动态代理：</p>
+<p>RpcClientProxy-&gt;(ClientTransport)：</p>
+<p>1.首先，在客户端中只提供服务端的服务方法的接口，没有其实现类，这也是为什么需要rpc的原因</p>
+<p>2.从业务的角度看，该代理类可以代理所有服务端的服务方法的实现类，使得我们在编写代码是可以像存在实现类一样，获取对应的接口实现类对象(代理对象)并调用对应接口方法。</p>
+<p>3.从实现的角度看，该代理类使用jdk动态代理技术，代理对象($proxy)实现了接口类，同时在代理方法(invoke)中调用ClientTransport的sendRpcRequest方法进行远程通信。（具体见下）</p>
+<p>4.除此之外，代理方法还可以屏蔽很多细节，封装请求体，调用具体的网络传输服务获取响应体。</p>
+<h4 id="通用设置模块-config包"><a href="#通用设置模块-config包" class="headerlink" title="通用设置模块(config包)"></a>通用设置模块(config包)</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000523416.png" alt="image-20230827000523416" style="zoom:80%;" />
+
+<p>Runtime.getRuntime().addShutdownHook是一个Java的方法，它用于向Java虚拟机添加一个在JVM关闭时执行的线程。当JVM接收到终止信号时，这个钩子线程将被线程调度器调用并执行。</p>
+<h4 id="通用模块"><a href="#通用模块" class="headerlink" title="通用模块"></a>通用模块</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230901174319846.png" alt="image-20230901174319846" style="zoom:80%;" />
+
+<p>单例工厂类：</p>
+<p>1.使用的是双重检查锁模式</p>
+<p>2.它的作用和spring容器（实际上用spring容器好一点，因为可以使用注解）这里为了尽量避免使用框架才使用自己的单例工厂，因此每个单例中的无参构造器中都需要自己手动依赖注入。</p>
+<p>3.NettyClient的启动在构造函数中，因此在单例工厂第一次创建NettyClient时就会启动NettyClient，与之相反的是NettyServer，NettyServer的启动需要调用start函数，不在构造函数中。</p>
+<h4 id="测试模块"><a href="#测试模块" class="headerlink" title="测试模块"></a>测试模块</h4><p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000900469.png" alt="image-20230827000900469" style="zoom: 60%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827000907950.png" alt="image-20230827000907950" style="zoom: 60%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230827001235654.png" alt="image-20230827001235654" style="zoom:60%;" /></p>
+<h5 id="service-api"><a href="#service-api" class="headerlink" title="service-api:"></a>service-api:</h5><p>在该层中提供服务端提供的服务类，实体类。例如，服务端提供一个Result hello(Hello hello)，那么api层里需要一个hello接口和一个Hello类和Result类。</p>
+<h5 id="client"><a href="#client" class="headerlink" title="client:"></a>client:</h5><h5 id="server"><a href="#server" class="headerlink" title="server:"></a>server:</h5><p>需要调用start函数，启动server</p>
+<h4 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h4><p>注：这里无法使用AOP替代动态代理，动态代理不等于AOP。AOP的实现依赖动态代理，但是AOP的作用一般用来增强某个方法，而不是用于生成代理对象。</p>
+<p>例如，Controller需要使用到Service的方法，但是客户端没有对应的Service方法（只有接口没有），需要去服务端请求。</p>
+<p>1.正常情况下，需要在客户端中为每个接口编写实现类，然后在实现类中完成去服务端请求，造成类冗余。</p>
+<p>2.使用JDK动态代理可以减少这部分代码的编写，在Controller中使用不同的接口的代理实现类，这些代理实现类都完成一个功能，就是去服务端请求数据。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestHello</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> HelloController helloController;</span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testHello</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        helloController.test();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">HelloService</span> &#123;</span><br><span class="line">    String <span class="title function_">hello</span><span class="params">(Hello hello)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">HelloService</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;HelloServiceImpl被创建&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">hello</span><span class="params">(Hello hello)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;HelloServiceImpl收到: &quot;</span>+ hello.getMessage());</span><br><span class="line">        <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="string">&quot;Hello description is &quot;</span> + hello.getDescription();</span><br><span class="line">        System.out.println(<span class="string">&quot;HelloServiceImpl返回: .&quot;</span>+ result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.FIELD&#125;)</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RpcReference &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service version, default value is empty string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">version</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service group, default value is empty string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">group</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringBeanPostProcessor</span> <span class="keyword">implements</span> <span class="title class_">BeanPostProcessor</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">postProcessAfterInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">        Class&lt;?&gt; targetClass = bean.getClass();</span><br><span class="line">        Field[] declaredFields = targetClass.getDeclaredFields();</span><br><span class="line">        <span class="keyword">for</span> (Field declaredField : declaredFields) &#123;</span><br><span class="line">            <span class="type">RpcReference</span> <span class="variable">rpcReference</span> <span class="operator">=</span> declaredField.getAnnotation(RpcReference.class);</span><br><span class="line">            <span class="keyword">if</span> (rpcReference != <span class="literal">null</span>) &#123;</span><br><span class="line">                Class&lt;?&gt; type = declaredField.getType();<span class="comment">//HelloService</span></span><br><span class="line">                <span class="comment">//RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcServiceConfig);</span></span><br><span class="line">                <span class="comment">//Object clientProxy = rpcClientProxy.getProxy(declaredField.getType());</span></span><br><span class="line">                <span class="comment">//get里面调用了newProxyInstance</span></span><br><span class="line">                declaredField.setAccessible(<span class="literal">true</span>);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    declaredField.set(bean, <span class="keyword">new</span> <span class="title class_">HelloServiceImpl</span>());</span><br><span class="line">                    <span class="comment">//declaredField.set(bean, clientProxy);</span></span><br><span class="line">                &#125; <span class="keyword">catch</span> (IllegalAccessException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloController</span> &#123;</span><br><span class="line">    <span class="meta">@RpcReference(version = &quot;version1&quot;, group = &quot;test1&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> HelloService helloService;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">hello</span> <span class="operator">=</span> <span class="built_in">this</span>.helloService.hello(<span class="keyword">new</span> <span class="title class_">Hello</span>(<span class="string">&quot;111&quot;</span>, <span class="string">&quot;222&quot;</span>));</span><br><span class="line">        <span class="comment">//如需使用 assert 断言，需要在 VM options 添加参数：-ea</span></span><br><span class="line">        <span class="keyword">assert</span> <span class="string">&quot;Hello description is 222&quot;</span>.equals(hello);</span><br><span class="line">        Thread.sleep(<span class="number">12000</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            System.out.println(helloService.hello(<span class="keyword">new</span> <span class="title class_">Hello</span>(<span class="string">&quot;111&quot;</span>, <span class="string">&quot;222&quot;</span>)));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 BeanPostProcessor解决jdk动态代理对象无法通过依赖注入(Autowire&#x2F;Resourse)的方式，给spring bean的属性自动注入的问题。</p>
+<p>1.BeanPostProcessor的postProcessAfterInitialization会在bean初始化之后执行，因此可以在这个方法中扫描Controller类的成员变量，然后为这些成员变量赋值。</p>
+<p>2.在Controller中需要实例化一个service对象，可以对需要代理对象的成员变量加上自定义注解进行标注。然后在postProcessAfterInitialization中为service创建代理对象，完成初始化。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902001327015.png" alt="image-20230902001327015" style="zoom:80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902001334163.png" alt="image-20230902001334163" style="zoom:80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902004446409.png" alt="image-20230902004446409" style="zoom:80%;" />
+
+
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902004849183.png" alt="image-20230902004849183" style="zoom:80%;" />
+
+
+
+<h4 id="哈希一致性算法"><a href="#哈希一致性算法" class="headerlink" title="哈希一致性算法"></a>哈希一致性算法</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/a745233700/article/details/120814088">https://blog.csdn.net/a745233700/article/details/120814088</a></p>
+<h5 id="普通hash算法"><a href="#普通hash算法" class="headerlink" title="普通hash算法"></a>普通hash算法</h5><ul>
+<li><p>普通hash算法的内容和使用场景</p>
+</li>
+<li><p>普通哈希算法的缺陷</p>
+<p>当服务器数量发生改变时，所有缓存在一定时间内是失效的，当应用无法从缓存中获取数据时，则会向后端服务器请求数据；</p>
+</li>
+</ul>
+<h5 id="一致性哈希算法"><a href="#一致性哈希算法" class="headerlink" title="一致性哈希算法"></a>一致性哈希算法</h5><ul>
+<li><p>一致性哈希算法的内容</p>
+<p>步骤1：一致性哈希算法将整个哈希值空间按照顺时针方向组织成一个虚拟的圆环，称为 Hash 环；</p>
+<p>步骤2：接着将各个服务器使用 Hash 函数进行哈希，具体可以选择服务器的IP或主机名作为关键字进行哈希，从而确定每台机器在哈希环上的位置</p>
+<p>步骤3：最后使用算法定位数据访问到相应服务器：将数据key使用相同的函数Hash计算出哈希值，并确定此数据在环上的位置，从此位置沿环顺时针寻找，第一台遇到的服务器就是其应该定位到的服务器</p>
+</li>
+<li><p>一致性 hash 算法的优点</p>
+<p>一致性Hash算法对于节点的增减都只需重定位环空间中的一小部分数据，只有部分缓存会失效，不至于将所有压力都在同一时间集中到后端服务器上，具有较好的容错性和可扩展性。</p>
+</li>
+<li><p>hash 环的倾斜与虚拟节点</p>
+<p>一致性哈希算法在服务节点太少的情况下，容易因为节点分部不均匀而造成数据倾斜问题，也就是被缓存的对象大部分集中缓存在某一台服务器上，从而出现数据分布不均匀的情况，这种情况就称为 hash 环的倾斜。</p>
+<p>为了解决这种数据倾斜问题，一致性哈希算法引入了虚拟节点机制，即对每一个服务节点计算多个哈希，每个计算结果位置都放置一个此服务节点，称为虚拟节点</p>
+</li>
+</ul>
+<h5 id="项目-Dubbo哈希一致性源码"><a href="#项目-Dubbo哈希一致性源码" class="headerlink" title="项目&#x2F;Dubbo哈希一致性源码"></a>项目&#x2F;Dubbo哈希一致性源码</h5><p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230902200905676.png" alt="image-20230902200905676"></p>
+<p>数据结构：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ConsistentHashLoadBalance</span>&#123;</span><br><span class="line">ConcurrentHashMap&lt;String, ConsistentHashSelector&gt; selectors = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;&gt;();</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ConsistentHashSelector</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TreeMap&lt;Long, String&gt; virtualInvokers;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span> identityHashCode;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>selectors：键为服务的名称(serviceName)，值为选择器类(CHselector)，选择器类的作用是返回方法匹配的服务器ip地址</p>
+<p>virtualInvokers：键为hash值，这个hash值通过对ip+端口+编号进行md5算法得到；值为ip+端口，也就是具体服务的ip地址信息。注：这是一个二叉搜索树，目的就是为了实现一致性 hash 算法中定位最近服务器的功能。</p>
+<p>virtualInvokers给每个ip地址都配置了160个虚拟结点，通过编号的形式，作用是为了防止环倾斜。</p>
+<p>identityHashCode：每个服务都会对应多个服务器ip地址，使用List储存，identityHashCode则是List的哈希值，如果List的内容发生变化就会得到不同的hashcode，对应一致性 hash 算法中服务器地址发生变化的情况。</p>
+<p>输入：服务方法名，服务参数，ip地址List</p>
+<p>输出：负载均衡后的ip地址</p>
+<p>1.根据服务方法名获取CHselector，对ip地址List进行hash得到identityHashCode，判断selectors中的identityHashCode是否一致，如果不一致就需要重新创建CHselector了</p>
+<p>2.对服务方法名+服务参数的内容进行hash得到一个code，然后在virtualInvokers中搜索&gt;code的第一个值返回。</p>
+<h4 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h4><h4 id="如果你节点直接宕机了或者网络断了，客户端怎么感知呢？"><a href="#如果你节点直接宕机了或者网络断了，客户端怎么感知呢？" class="headerlink" title="如果你节点直接宕机了或者网络断了，客户端怎么感知呢？"></a>如果你节点直接宕机了或者网络断了，客户端怎么感知呢？</h4><p>一.利用zookeeper（回调函数和心跳机制）</p>
+<p>1.首先zookeeper是使用这种目录树的结构储存数据的，它的每个结点都可以储存数据，这些节点称为znode。</p>
+<p>2.通过zookeeper提供的Watcher（事件监听器）</p>
+<p>ZooKeeper 允许用户在指定节点上注册一些 Watcher，并且在一些特定事件触发的时候，客户端会执行监听器中的回调方法。</p>
+<p>因此，在服务端注册服务的同时，给结点注册一个监听器，监听节点变化的事件，然后在回调函数中重新获取最新的节点信息，这样客户端就能及时获取最新节点了。</p>
+<p>curatorutil 在zookeeper注册结点时调用</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230906153708828.png" alt="image-20230906153708828" style="zoom:80%;" />
+
+<p>3.zookeeper数据结点znode有一种叫临时结点的类型，它会与客户端保持一个会话，会话通过心跳机制来检测存活。如果会话死亡则节点消失，而结点消失就会触发zookeeper的Watcher机制，通知客户端更新节点信息。</p>
+<p>二.微服务本身</p>
+<p>服务端服务下线时通过一个钩子函数（多线程里面的shutdownhook）清除zookeeper中该服务的相关结点</p>
+<h4 id="协议是如何设计的"><a href="#协议是如何设计的" class="headerlink" title="协议是如何设计的"></a>协议是如何设计的</h4><p>首先，netty的底层是TCP协议，虽然netty使用channel去传输和处理数据，但是其本身还是基于字节流的。为了解决TCP的粘包问题，使用消息头+消息体的方式。</p>
+<p>其中消息头是</p>
+<p>然后消息体是使用Kryo序列化的请求对象或者响应对象，请求对象中包含</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230929222406133.png" alt="image-20230929222406133" style="zoom:80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231012232551470.png" alt="image-20231012232551470" style="zoom: 80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231012232137902.png" alt="image-20231012232137902" style="zoom:80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231012232416945.png" alt="image-20231012232416945" style="zoom:67%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20231012232436254.png" alt="image-20231012232436254" style="zoom:80%;" />
+
+<h4 id="使用了哪些方法去提高框架的性能"><a href="#使用了哪些方法去提高框架的性能" class="headerlink" title="使用了哪些方法去提高框架的性能"></a>使用了哪些方法去提高框架的性能</h4><p>1.序列化：在序列化，体积小，快速，安全</p>
+<p>2.负载均衡：使用了hash一致性协议，来尽可能的让</p>
+<p>3.netty：使用多路复用的技术，能够实现一个线程管理多个连接的目的</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/" rel="tag"># 项目实战</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/8980.html" rel="prev" title="2023-07-04-计算机网络2">
+      <i class="fa fa-chevron-left"></i> 2023-07-04-计算机网络2
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/91c5.html" rel="next" title="2023-10-01-分布式">
+      2023-10-01-分布式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE2-0"><span class="nav-number">1.</span> <span class="nav-text">项目2.0</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-lottery"><span class="nav-number">1.1.</span> <span class="nav-text">一.lottery</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%8A%B6%E6%80%81%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.状态模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%A8%A1%E6%9D%BF%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.2.</span> <span class="nav-text">2.模板模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%9B%AA%E8%8A%B1%E7%AE%97%E6%B3%95"><span class="nav-number">1.1.3.</span> <span class="nav-text">3.雪花算法*</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%88%86%E5%B8%83%E5%BC%8FID%EF%BC%9F"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">为什么需要分布式ID？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8FID%E6%96%B9%E6%A1%88"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">常见的分布式ID方案</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.1.4.</span> <span class="nav-text">4.组合模式*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-kafka"><span class="nav-number">1.1.5.</span> <span class="nav-text">5.kafka*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="nav-number">1.1.6.</span> <span class="nav-text">6.线程池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%85%B6%E4%BB%96%EF%BC%9B"><span class="nav-number">1.1.7.</span> <span class="nav-text">7.其他；</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%BB%91%E5%8A%A8%E5%BA%93%E5%AD%98%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E5%A4%84%E7%90%86%E6%B4%BB%E5%8A%A8%E7%A7%92%E6%9D%80%EF%BC%8C%E4%B8%BB%E8%A6%81%E6%98%AF%E5%85%B3%E4%BA%8E%E7%A7%92%E6%9D%80%E7%9A%84%E5%9C%BA%E6%99%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%9F"><span class="nav-number">1.1.7.1.</span> <span class="nav-text">设计滑动库存分布式锁处理活动秒杀，主要是关于秒杀的场景如何实现？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DDD%E6%9E%B6%E6%9E%84%E5%88%86%E5%B8%83%E5%BC%8F"><span class="nav-number">1.1.8.</span> <span class="nav-text">DDD架构分布式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E6%89%8B%E5%86%99RPC"><span class="nav-number">1.2.</span> <span class="nav-text">二.手写RPC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D%EF%BC%9A"><span class="nav-number">1.2.1.</span> <span class="nav-text">项目介绍：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRPC%EF%BC%8C%E5%AE%83%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">什么是RPC，它的原理和作用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RPC%E5%AE%9A%E4%B9%89"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">RPC定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RPC%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">RPC原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89HTTP%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81RPC"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">有HTTP，为什么还要RPC</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81RPC%E6%A1%86%E6%9E%B6"><span class="nav-number">1.2.3.</span> <span class="nav-text">常见RPC框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8ENetty-kryo-Zookeeper%E7%9A%84RPC%E6%A1%86%E6%9E%B6"><span class="nav-number">1.2.4.</span> <span class="nav-text">基于Netty+kryo+Zookeeper的RPC框架</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A1%86%E6%9E%B6%E7%9A%84%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86%EF%BC%9A"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">框架的组成部分：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%EF%BC%88%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%EF%BC%89"><span class="nav-number">1.2.5.</span> <span class="nav-text">Netty开发框架（网络传输）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#netty%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">netty介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">传输实体类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">1.2.5.4.</span> <span class="nav-text">服务端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E7%A0%81%E5%99%A8"><span class="nav-number">1.2.5.5.</span> <span class="nav-text">编码器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%86%99rpc%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%EF%BC%88%E5%88%86%E6%A8%A1%E5%9D%97%EF%BC%89"><span class="nav-number">1.2.6.</span> <span class="nav-text">手写rpc源码分析（分模块）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E6%A8%A1%E5%9D%97%EF%BC%88serialize%E5%8C%85%EF%BC%89"><span class="nav-number">1.2.6.1.</span> <span class="nav-text">序列化模块（serialize包）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%A8%A1%E5%9D%97-loadbalance%E5%8C%85"><span class="nav-number">1.2.6.2.</span> <span class="nav-text">负载均衡模块(loadbalance包)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E6%A8%A1%E5%9D%97%EF%BC%88registry%E5%8C%85%EF%BC%89"><span class="nav-number">1.2.6.3.</span> <span class="nav-text">注册中心模块（registry包）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E6%A8%A1%E5%9D%97-provider%E5%8C%85"><span class="nav-number">1.2.6.4.</span> <span class="nav-text">服务提供模块(provider包)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spring%E5%AE%B9%E5%99%A8%E6%A8%A1%E5%9D%97-spring%EF%BC%8Cannotation%E5%8C%85"><span class="nav-number">1.2.6.5.</span> <span class="nav-text">spring容器模块(spring，annotation包)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E6%A8%A1%E5%9D%97-remote%E5%8C%85"><span class="nav-number">1.2.6.6.</span> <span class="nav-text">网络传输模块(remote包)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E6%A8%A1%E5%9D%97-proxy%E5%8C%85"><span class="nav-number">1.2.6.7.</span> <span class="nav-text">客户端动态代理模块(proxy包)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E8%AE%BE%E7%BD%AE%E6%A8%A1%E5%9D%97-config%E5%8C%85"><span class="nav-number">1.2.6.8.</span> <span class="nav-text">通用设置模块(config包)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E6%A8%A1%E5%9D%97"><span class="nav-number">1.2.6.9.</span> <span class="nav-text">通用模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%A8%A1%E5%9D%97"><span class="nav-number">1.2.6.10.</span> <span class="nav-text">测试模块</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#service-api"><span class="nav-number">1.2.6.10.1.</span> <span class="nav-text">service-api:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#client"><span class="nav-number">1.2.6.10.2.</span> <span class="nav-text">client:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#server"><span class="nav-number">1.2.6.10.3.</span> <span class="nav-text">server:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86"><span class="nav-number">1.2.6.11.</span> <span class="nav-text">动态代理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%88%E5%B8%8C%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.6.12.</span> <span class="nav-text">哈希一致性算法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%99%AE%E9%80%9Ahash%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.6.12.1.</span> <span class="nav-text">普通hash算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95"><span class="nav-number">1.2.6.12.2.</span> <span class="nav-text">一致性哈希算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE-Dubbo%E5%93%88%E5%B8%8C%E4%B8%80%E8%87%B4%E6%80%A7%E6%BA%90%E7%A0%81"><span class="nav-number">1.2.6.12.3.</span> <span class="nav-text">项目&#x2F;Dubbo哈希一致性源码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">1.2.6.13.</span> <span class="nav-text">问题：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E8%8A%82%E7%82%B9%E7%9B%B4%E6%8E%A5%E5%AE%95%E6%9C%BA%E4%BA%86%E6%88%96%E8%80%85%E7%BD%91%E7%BB%9C%E6%96%AD%E4%BA%86%EF%BC%8C%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%80%8E%E4%B9%88%E6%84%9F%E7%9F%A5%E5%91%A2%EF%BC%9F"><span class="nav-number">1.2.6.14.</span> <span class="nav-text">如果你节点直接宕机了或者网络断了，客户端怎么感知呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E6%98%AF%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E7%9A%84"><span class="nav-number">1.2.6.15.</span> <span class="nav-text">协议是如何设计的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E6%96%B9%E6%B3%95%E5%8E%BB%E6%8F%90%E9%AB%98%E6%A1%86%E6%9E%B6%E7%9A%84%E6%80%A7%E8%83%BD"><span class="nav-number">1.2.6.16.</span> <span class="nav-text">使用了哪些方法去提高框架的性能</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">248k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:45</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

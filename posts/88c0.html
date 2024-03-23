@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="TCP 三次握手与四次挥手面试题TCP&#x2F;UDP 基础知识TCP 头格式原端口号,目标端口号,序列号(seq)，确认应答号，窗口大小，控制位(ACK,RST,SYN,FIN)，首部长度，校验和 序列号：在建立连接时由计算机生成的随机数作为其初始值，通过 SYN 包传给接收端主机，每发送一次数据，就「累加」一次该「数据字节数」的大小。用来解决网络包乱序问题。 确认应答号：指下一次「期望」收到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023-07-04-计算机网络1">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/88c0.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="TCP 三次握手与四次挥手面试题TCP&#x2F;UDP 基础知识TCP 头格式原端口号,目标端口号,序列号(seq)，确认应答号，窗口大小，控制位(ACK,RST,SYN,FIN)，首部长度，校验和 序列号：在建立连接时由计算机生成的随机数作为其初始值，通过 SYN 包传给接收端主机，每发送一次数据，就「累加」一次该「数据字节数」的大小。用来解决网络包乱序问题。 确认应答号：指下一次「期望」收到">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230411095601676.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230322160617686.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230322191814903.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230411110031393.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230322195004982.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230322212803400.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323101253162.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323101258804.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323110234948.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323114300340.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323114336256.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323120316069.png">
+<meta property="article:published_time" content="2023-07-04T06:26:35.000Z">
+<meta property="article:modified_time" content="2024-03-21T09:35:36.932Z">
+<meta property="article:author" content="yebin">
+<meta property="article:tag" content="计算机基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230411095601676.png">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/88c0.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2023-07-04-计算机网络1 | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/88c0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023-07-04-计算机网络1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-04 14:26:35" itemprop="dateCreated datePublished" datetime="2023-07-04T14:26:35+08:00">2023-07-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 17:35:36" itemprop="dateModified" datetime="2024-03-21T17:35:36+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">计算机基础</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="TCP-三次握手与四次挥手面试题"><a href="#TCP-三次握手与四次挥手面试题" class="headerlink" title="TCP 三次握手与四次挥手面试题"></a>TCP 三次握手与四次挥手面试题</h2><h3 id="TCP-UDP-基础知识"><a href="#TCP-UDP-基础知识" class="headerlink" title="TCP&#x2F;UDP 基础知识"></a>TCP&#x2F;UDP 基础知识</h3><h4 id="TCP-头格式"><a href="#TCP-头格式" class="headerlink" title="TCP 头格式"></a>TCP 头格式</h4><p>原端口号,目标端口号,<strong>序列号(seq)，确认应答号，窗口大小，控制位</strong>(ACK,RST,SYN,FIN)，首部长度，校验和</p>
+<p>序列号：在建立连接时由计算机生成的<strong>随机数</strong>作为其初始值，通过 SYN 包传给接收端主机，每发送一次数据，就「累加」一次该「数据字节数」的大小。<strong>用来解决网络包乱序问题。</strong></p>
+<p>确认应答号：指下一次「期望」收到的数据的序列号，发送端收到这个确认应答以后可以认为在这个序号以前的数据都已经被正常接收。<strong>用来解决丢包的问题。</strong></p>
+<ul>
+<li><em>ACK</em>：该位为 <code>1</code> 时，「确认应答」的字段变为有效，TCP 规定除了最初建立连接时的 <code>SYN</code> 包之外该位必须设置为 <code>1</code> 。</li>
+<li><em>RST</em>：该位为 <code>1</code> 时，表示 TCP 连接中出现异常必须强制断开连接。</li>
+<li><em>SYN</em>：该位为 <code>1</code> 时，表示希望建立连接，并在其「序列号」的字段进行序列号初始值的设定。</li>
+<li><em>FIN</em>：该位为 <code>1</code> 时，表示今后不会再有数据发送，希望断开连接。当通信结束希望断开连接时，通信双方的主机之间就可以相互交换 <code>FIN</code> 位为 1 的 TCP 段。</li>
+</ul>
+ <span id="more"></span>
+
+<h4 id="TCP-协议"><a href="#TCP-协议" class="headerlink" title="TCP 协议"></a>TCP 协议</h4><p><code>IP</code> 层是不可靠的,无连接的，如果需要保障网络数据包的可靠性，那么就需要由上层（<strong>传输层</strong>）的 <code>TCP</code> 协议来负责。</p>
+<p>TCP 是<strong>面向连接</strong>的(一对一)、<strong>可靠的</strong>(保证每一个报文一定送到)、<strong>基于字节流</strong>的传输层通信协议。</p>
+<ul>
+<li><strong>字节流</strong>：用户消息通过 TCP 协议传输时，消息可能会被操作系统「分组」成多个的 TCP 报文，如果接收方的程序如果不知道「<strong>消息的边界</strong>」，是无法读出一个有效的用户消息的。并且 TCP 报文是「<strong>有序的</strong>」，当「前一个」TCP 报文没有收到的时候，即使它先收到了后面的 TCP 报文，那么也不能扔给应用层去处理，同时对「重复」的 TCP 报文会自动丢弃。</li>
+</ul>
+<p>连接的定义：</p>
+<ul>
+<li>源地址，源端口，目的地址，目的端口TCP 四元组可以唯一的确定一个连接。</li>
+<li>建立一个 TCP 连接是需要客户端与服务端达成三个信息的共识。<ul>
+<li><strong>Socket</strong>：由 IP 地址和端口号组成</li>
+<li><strong>序列号</strong>：用来解决乱序问题等</li>
+<li><strong>窗口大小</strong>：用来做流量控制</li>
+</ul>
+</li>
+</ul>
+<h4 id="粘包问题与解决方法"><a href="#粘包问题与解决方法" class="headerlink" title="粘包问题与解决方法"></a>粘包问题与解决方法</h4><p>TCP传输协议是面向流的，就是没有界限的一串数据。它会根据TCP缓冲区的实际情况进行包的划分，所以在业务上认为，一个完整的包可能会被TCP拆分成多个包就行发送，也有可能把多个小的包封装成一个大的数据包发送，这就是所谓的TCP拆包和粘包问题。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230411095601676.png" alt="image-20230411095601676" style="zoom: 50%;" />
+
+
+
+<p><strong>消息定长</strong>：例如每个报文的大小为固定长度200字节，如果不够，空位补空格。</p>
+<p><strong>在包尾添加特定分隔符</strong>：对于分隔符的选择一定要避免和消息体中字符相同，以免冲突。</p>
+<p><strong>将消息分为消息头和消息体，消息头中包含表示消息总长度</strong></p>
+<h4 id="UDP-和-TCP-有什么区别呢？"><a href="#UDP-和-TCP-有什么区别呢？" class="headerlink" title="UDP 和 TCP 有什么区别呢？"></a>UDP 和 TCP 有什么区别呢？</h4><p>UDP头格式：目标和源端口，包长度，校验和</p>
+<p>UDP协议：UDP协议就是没有协议，完全依靠无连接，不可靠ip协议发送数据</p>
+<p>TCP 和 UDP 区别：</p>
+<ol>
+<li><p>连接：面向连接,传输数据前先要建立连接；不需要连接，即刻传输数据。</p>
+</li>
+<li><p>服务对象：TCP 是一对一；UDP 支持一对一、一对多、多对多的交互通信</p>
+</li>
+<li><p>可靠性:可靠交付，无差错、不丢失、不重复、按序到达；尽最大努力交付</p>
+</li>
+<li><p>拥塞控制、流量控制：UDP 没有，即使网络非常拥堵了，也不会影响 UDP 的发送速率。</p>
+</li>
+<li><p>首部开销：TCP 首部长度较长，而且是变长的；UDP 首部只有 8 个字节，并且是固定不变的</p>
+</li>
+<li><p>传输方式：TCP 是流式传输，没有边界，但保证顺序和可靠；UDP 是一个包一个包的发送，是有边界的，但可能会丢包和乱序。</p>
+</li>
+<li><p>分片不同:</p>
+<ul>
+<li>TCP是按MSS 大小分片的，在传输层进行分片，在传输层组装</li>
+<li>UDP是按MTU大小分片的，在 IP 层进行分片，在 IP 层组装完数据，接着再传给传输层。</li>
+</ul>
+<p>注：IP协议除了具有路由寻址功能外，另一个重要的功能就是IP数据包的分片处理。路由器时会被拒绝转发MTU过大的包。</p>
+<p>TCP协议在建立连接的时候通常要协商双方的MSS值，这个值TCP协议在实现的时候往往用MTU值代替（需要减去IP数据包包头的大小20Bytes和TCP数据段的包头20Bytes）所以往往MSS为1460。</p>
+</li>
+</ol>
+<p>TCP 和 UDP 应用场景：</p>
+<ul>
+<li>TCP：<code>FTP</code> 文件传输；HTTP &#x2F; HTTPS；</li>
+<li>UDP：包总量较少的通信，如 <code>DNS</code> 、<code>SNMP</code> 等；视频、音频等多媒体通信；广播通信；</li>
+</ul>
+<h4 id="TCP-和-UDP-可以使用同一个端口吗？"><a href="#TCP-和-UDP-可以使用同一个端口吗？" class="headerlink" title="TCP 和 UDP 可以使用同一个端口吗？"></a>TCP 和 UDP 可以使用同一个端口吗？</h4><p>可以。TCP 和 UDP可以看成内核中是两个完全独立的软件模块，IP 包头的「协议号」字段知道该数据包是 TCP&#x2F;UDP，所以可以根据这个信息确定送给哪个模块。在应用程序中需要定义从协议栈的哪个协议哪个端口获取数据。</p>
+<h3 id="TCP-连接建立"><a href="#TCP-连接建立" class="headerlink" title="TCP 连接建立"></a>TCP 连接建立</h3><p>注意每次“握手时”状态的变化</p>
+<h4 id="TCP-三次握手过程"><a href="#TCP-三次握手过程" class="headerlink" title="TCP 三次握手过程"></a>TCP 三次握手过程</h4><p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230322160617686.png" alt="image-20230322160617686"></p>
+<p>注：<strong>第三次握手是可以携带数据的，前两次握手是不可以携带数据的</strong></p>
+<p>客户端收到ACK后就说明服务端已经同步了客户端的序列号，客户开启连接状态，可以开始发送数据，在这之前需要发送确认服务端SYN报文的确认报文。当服务端收到ACK报文后，表示连接已经建立，双方都可以发送数据</p>
+<h4 id="为什么是三次握手？不是两次、四次？"><a href="#为什么是三次握手？不是两次、四次？" class="headerlink" title="为什么是三次握手？不是两次、四次？"></a>为什么是三次握手？不是两次、四次？</h4><p>三次握手的原因（主要与两次连接对比）</p>
+<p>首先三次握手就能搞定的事情，使用四次握手就会增加通信负担。然后两次握手指。。。。</p>
+<p>两次握手：客户端发送SYN，服务端收到后建立连接发送数据，并发送ack</p>
+<ul>
+<li><p>主要原因：<strong>三次握手可以防止「历史连接」初始化了连接。</strong></p>
+<p>假设场景：客户端先发送了一个SYN报文请求连接，然后由于网络阻塞触发超时重传，新发送了一个SYN报文，但是旧的SYN报文比新的SYN报文先到了，此时应该抛弃旧的。</p>
+<p>三次握手的情况如下所示</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230322191814903.png" alt="image-20230322191814903" style="zoom:67%;" />
+
+<p>二次握手下：服务端获得旧的SYN就会创建连接并发送数据，但是等客户端发送RST报文时，已经发送了一部分数据了。</p>
+</li>
+<li><p>次要原因</p>
+<ul>
+<li><p><em>同步双方初始序列号</em></p>
+<p>二次握手下，只保证了一方的初始序列号能被对方成功接收</p>
+<p>三次握手下，相当于双方都给对方一个初始化序号，并得到了对方的确认，保证了同步</p>
+</li>
+<li><p><em>避免资源浪费</em></p>
+<p>二次握手下，服务端收到客户端的SYN报文后，就可以建立连接了，但是如果客户端收不到服务端的ack报文，就会触发超时重传机制，发送多个SYN报文，这意味着服务端会创建多个连接</p>
+<p>三次握手下，需要收到客户端的ack报文才能建立连接</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>结论：</p>
+<ul>
+<li>「两次握手」：无法防止历史连接的建立，会造成双方资源的浪费，也无法可靠的同步双方序列号；</li>
+<li>「四次握手」：三次握手就已经理论上最少可靠连接建立，所以不需要使用更多的通信次数。</li>
+</ul>
+<h4 id="为什么每次建立-TCP-连接时，初始化的序列号都要求不一样呢？"><a href="#为什么每次建立-TCP-连接时，初始化的序列号都要求不一样呢？" class="headerlink" title="为什么每次建立 TCP 连接时，初始化的序列号都要求不一样呢？"></a>为什么每次建立 TCP 连接时，初始化的序列号都要求不一样呢？</h4><ul>
+<li><p>为了防止历史报文被下一个连接接收（主要方面）；</p>
+<p>如果上一次发出的SYN序列号和下一次发出的SYN序列号相同，那么上一次连接中发送的数据可以会因为阻塞的原因，在下一次的连接中被服务端收到。</p>
+</li>
+<li><p>为了安全性，防止黑客伪造的相同序列号的 TCP 报文被对方接收；</p>
+</li>
+</ul>
+<h4 id="既然-IP-层会分片（MTU），为什么-TCP-层还需要-MSS-呢？"><a href="#既然-IP-层会分片（MTU），为什么-TCP-层还需要-MSS-呢？" class="headerlink" title="既然 IP 层会分片（MTU），为什么 TCP 层还需要 MSS 呢？"></a>既然 IP 层会分片（MTU），为什么 TCP 层还需要 MSS 呢？</h4><p>首先TCP是传输层协议，IP层对TCP报文分片TCP协议是不知道的，即使IP层把一整个TCP报文分片成多个数据包发送，当其中某个数据包丢失时，也相当于整个报文都丢了，需要再重传整个报文，降低了效率。如果使用TCP先使用MSS分片，那么就只需要重传丢失的包即可</p>
+<p>一般来说，TCP为了避免报文在IP层被分片，MSS的大小会小于MTU</p>
+<h4 id="连接丢失的处理原则"><a href="#连接丢失的处理原则" class="headerlink" title="连接丢失的处理原则*"></a>连接丢失的处理原则*</h4><ul>
+<li>这里我们假设重传机制为超时重传</li>
+<li>重传的 SYN 报文的序列号都是一样的。</li>
+<li>每次超时的时间是上一次的 2 倍,重传有次数上限，如果超过次数，则关闭连接。</li>
+<li>达到最大重传次数就会断开连接，给断开连接的端发送报文都会收到RST</li>
+<li><strong>ACK 报文是不会有重传的，当 ACK 丢失了，就由对方重传对应的SYN 报文。</strong></li>
+</ul>
+<h4 id="第一次握手丢失了，会发生什么？"><a href="#第一次握手丢失了，会发生什么？" class="headerlink" title="第一次握手丢失了，会发生什么？"></a>第一次握手丢失了，会发生什么？</h4><p>客户端：SYN_SEND -SYN 报文-&gt; CLOSE		服务端：LISTEN</p>
+<h4 id="第二次握手丢失了，会发生什么？"><a href="#第二次握手丢失了，会发生什么？" class="headerlink" title="第二次握手丢失了，会发生什么？"></a>第二次握手丢失了，会发生什么？</h4><p>客户端：SYN_SEND -SYN 报文&gt;CLOSE 		服务端：SYN_RECIVE -SYN-ACK 报文&gt; CLOSE</p>
+<h4 id="第三次握手丢失了，会发生什么？"><a href="#第三次握手丢失了，会发生什么？" class="headerlink" title="第三次握手丢失了，会发生什么？"></a>第三次握手丢失了，会发生什么？</h4><p>客户端：ESTABLISHED		服务端：SYN_RECIVE -SYN-ACK 报文&gt; CLOSE</p>
+<h2 id="TCP-连接断开"><a href="#TCP-连接断开" class="headerlink" title="TCP 连接断开"></a>TCP 连接断开</h2><p>注意每次“挥手时”状态的变化</p>
+<h4 id="TCP-四次挥手"><a href="#TCP-四次挥手" class="headerlink" title="TCP 四次挥手"></a>TCP 四次挥手</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230411110031393.png" alt="image-20230411110031393" style="zoom:80%;" />
+
+<p>注：<strong>主动关闭连接的，才有 TIME_WAIT 状态。</strong></p>
+<h4 id="为什么挥手需要四次"><a href="#为什么挥手需要四次" class="headerlink" title="为什么挥手需要四次"></a>为什么挥手需要四次</h4><ul>
+<li>关闭连接时，客户端向服务端发送 <code>FIN</code> 时，仅仅表示客户端不再发送数据了但是还能接收数据。</li>
+<li>服务端收到客户端的 <code>FIN</code> 报文时，先回一个 <code>ACK</code> 应答报文，而服务端可能还有数据需要处理和发送，等服务端不再发送数据时，才发送 <code>FIN</code> 报文给客户端来表示同意现在关闭连接。</li>
+</ul>
+<h4 id="为什么TCP创建连接是三次握手，释放连接是四次握手？"><a href="#为什么TCP创建连接是三次握手，释放连接是四次握手？" class="headerlink" title="为什么TCP创建连接是三次握手，释放连接是四次握手？"></a>为什么TCP创建连接是三次握手，释放连接是四次握手？</h4><p>事实上，创建的第二次握手把SYN和ACK一起发送了才少了一次握手；而释放的第二和第三次握手之间是可以发送数据的，所以需要分开发送。因此，当释放的时候，在close_wait阶段没有数据发送并且开启了 TCP 延迟确认机制是可以将第二和第三次握手合并的，所以<strong>在一些情况下， TCP 四次挥手是可以变成 TCP 三次挥手的</strong>。</p>
+<h4 id="连接丢失的处理原则-见上"><a href="#连接丢失的处理原则-见上" class="headerlink" title="连接丢失的处理原则(见上)"></a>连接丢失的处理原则(见上)</h4><ul>
+<li><p>在挥手时，客户端发送FIN只是说明客户端不在发送数据了，但是可以接受数据</p>
+</li>
+<li><p>当客户端收到服务端的FIN时才表明不需要接受数据了，进入TIME_WAIT阶段</p>
+</li>
+<li><p>对于调用 close 关闭的连接，如果<strong>在 60 秒后还没有收到 FIN 报文，客户端（主动关闭方）的连接就会直接关闭</strong></p>
+<p>如果主动关闭方使用 shutdown 函数关闭连接，指定了只关闭发送方向，而接收方向并没有关闭，那么意味着主动关闭方还是可以接收数据的。</p>
+<p>下面假设都是close()关闭</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230322195004982.png" alt="image-20230322195004982" style="zoom:80%;" /></li>
+</ul>
+<h4 id="第一次挥手丢失了，会发生什么？"><a href="#第一次挥手丢失了，会发生什么？" class="headerlink" title="第一次挥手丢失了，会发生什么？"></a>第一次挥手丢失了，会发生什么？</h4><p>FIN_WAIT_1-FIN报文&gt; CLOSE(次数)		ESTABLISH  </p>
+<h4 id="第二次挥手丢失了，会发生什么？"><a href="#第二次挥手丢失了，会发生什么？" class="headerlink" title="第二次挥手丢失了，会发生什么？"></a>第二次挥手丢失了，会发生什么？</h4><p>FIN_WAIT_1-FIN报文&gt; CLOSE(次数)		CLOSE_WAIT</p>
+<h4 id="第三次挥手丢失了，会发生什么？"><a href="#第三次挥手丢失了，会发生什么？" class="headerlink" title="第三次挥手丢失了，会发生什么？"></a>第三次挥手丢失了，会发生什么？</h4><p>FIN_WAIT_2-&gt;CLOSE(60s)		LAST_ACK-FIN报文&gt;CLOSE(次数)</p>
+<h4 id="第四次挥手丢失了，会发生什么？"><a href="#第四次挥手丢失了，会发生什么？" class="headerlink" title="第四次挥手丢失了，会发生什么？"></a>第四次挥手丢失了，会发生什么？</h4><p>TIME_WAIT(2MSL)		LAST_ACK-&gt;CLOSE(次数)</p>
+<ul>
+<li>客户端在收到第三次挥手后，就会进入 TIME_WAIT 状态，开启时长为 2MSL 的定时器，如果途中再次收到第三次挥手（FIN 报文）后，就会重置定时器，当等待 2MSL 时长后，客户端就会断开连接。</li>
+</ul>
+<h4 id="为什么需要-TIME-WAIT-状态"><a href="#为什么需要-TIME-WAIT-状态" class="headerlink" title="为什么需要 TIME_WAIT 状态"></a>为什么需要 TIME_WAIT 状态</h4><ul>
+<li><p>客户端需要等待2MSL后才能建立新的连接，主要是防止历史连接中的数据，被后面相同四元组的连接错误的接收；</p>
+<p>序列号和初始化序列号并不是无限递增的，会发生回绕为初始值的情况，这意味着无法根据序列号来判断新老数据。</p>
+<p><code>2MSL</code> 时长，这个时间足以让两个方向上的数据包都被丢弃，使得原来连接的数据包在网络中都自然消失，此时再建立连接就不会收到旧连接的数据了</p>
+</li>
+<li><p>保证「被动关闭连接」的一方，能被正确的关闭；</p>
+<p>就是确保客户端的ACK可以到达服务端。当ACK丢失时，留给服务端充足的时长重传FIN</p>
+</li>
+</ul>
+<h4 id="为什么-TIME-WAIT-等待的时间是-2MSL"><a href="#为什么-TIME-WAIT-等待的时间是-2MSL" class="headerlink" title="为什么 TIME_WAIT 等待的时间是 2MSL"></a>为什么 TIME_WAIT 等待的时间是 2MSL</h4><p><code>MSL</code> 是 Maximum Segment Lifetime，<strong>报文最大生存时间</strong>，它是任何报文在网络上存在的最长时间，超过这个时间报文将被丢弃。</p>
+<p>2MSL时长 这其实是相当于至少允许报文丢失一次。TIME_WAIT在收到FIN起开始发送ACK，并开始计时，ACK应该在一个 MSL 内到达服务端。如果此时ACK丢失了，最多只花费了一个 MSL，重传的FIN报文也可以在第2个MSL内到达。</p>
+<h4 id="TIME-WAIT-状态的危害。服务器出现大量-TIME-WAIT-状态的原因有哪些"><a href="#TIME-WAIT-状态的危害。服务器出现大量-TIME-WAIT-状态的原因有哪些" class="headerlink" title="TIME_WAIT 状态的危害。服务器出现大量 TIME_WAIT 状态的原因有哪些"></a>TIME_WAIT 状态的危害。服务器出现大量 TIME_WAIT 状态的原因有哪些</h4><p>危害：占用系统资源，占用端口资源</p>
+<p>如果服务端要避免过多的 TIME_WAIT 状态的连接，就永远不要主动断开连接，让客户端去断开，由分布在各处的客户端去承受 TIME_WAIT。</p>
+<p>原因：HTTP 没有使用长连接</p>
+<p>无论是客户端还是服务端哪一方没有开启长链接，都是服务端主动断开连接</p>
+<h4 id="如果已经建立了连接，但是主机突然出现故障了怎么办？"><a href="#如果已经建立了连接，但是主机突然出现故障了怎么办？" class="headerlink" title="如果已经建立了连接，但是主机突然出现故障了怎么办？"></a>如果已经建立了连接，但是主机突然出现故障了怎么办？</h4><p>TCP保活机制：定义一个时间段，在这个时间段(2小时)内，如果没有任何连接相关的活动，每隔一个时间间隔(75秒)，发送一个探测报文，该探测报文包含的数据非常少，如果连续几个探测报文（9）都没有得到响应，则认为当前的 TCP 连接已经死亡。</p>
+<ul>
+<li>第一种，对端程序是正常工作的。当 TCP 保活的探测报文发送给对端, 对端会正常响应，这样 TCP 保活时间会被重置，等待下一个 TCP 保活时间的到来。</li>
+<li>第二种，对端主机宕机并重启。当 TCP 保活的探测报文发送给对端后，对端是可以响应的，但由于没有该连接的有效信息，<strong>会产生一个 RST 报文</strong>，这样很快就会发现 TCP 连接已经被重置。</li>
+<li>第三种，是对端主机宕机（<em>注意不是进程崩溃</em>），或对端由于其他原因导致报文不可达。当 TCP 保活的探测报文发送给对端后，石沉大海，没有响应，连续几次，达到保活探测次数后，<strong>TCP 会报告该 TCP 连接已经死亡</strong>。</li>
+</ul>
+<p>缺陷：检测的时间有点长，可以自己在应用层实现一个心跳机制。</p>
+<h4 id="如果已经建立了连接，但是进程崩溃会发生什么？"><a href="#如果已经建立了连接，但是进程崩溃会发生什么？" class="headerlink" title="如果已经建立了连接，但是进程崩溃会发生什么？"></a>如果已经建立了连接，但是进程崩溃会发生什么？</h4><p>TCP 的连接信息是由内核维护的，所以当服务端的进程崩溃后，内核会发送第一次挥手 FIN 报文，后续的挥手过程也都是在内核完成，并不需要进程的参与，所以即使服务端的进程退出了，还是能与客户端完成 TCP 四次挥手的过程。kill同理。</p>
+<h2 id="TCP-重传、滑动窗口、流量控制、拥塞控制"><a href="#TCP-重传、滑动窗口、流量控制、拥塞控制" class="headerlink" title="TCP 重传、滑动窗口、流量控制、拥塞控制*"></a>TCP 重传、滑动窗口、流量控制、拥塞控制*</h2><h3 id="重传机制"><a href="#重传机制" class="headerlink" title="重传机制"></a>重传机制</h3><h4 id="超时重传"><a href="#超时重传" class="headerlink" title="超时重传"></a>超时重传</h4><p><code>RTT</code> 指的是数据发送时刻到接收到确认的时刻的差值，也就是包的往返时间。</p>
+<p>发送数据时，设定一个定时器，当超过指定的时间后，没有收到对方的 <code>ACK</code> 确认应答报文，就会重发该数据，也就是我们常说的超时重传。</p>
+<p>注意ACK报文(不携带数据的那种)丢失是不会触发超时重传的</p>
+<h4 id="快速重传"><a href="#快速重传" class="headerlink" title="快速重传"></a>快速重传</h4><p>快速重传（Fast Retransmit）机制，它不以时间为驱动，而是以数据驱动重传。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230322212803400.png" alt="image-20230322212803400" style="zoom:80%;" />
+
+<ul>
+<li>因为每次ACK会发送这个丢失数据的序列号，快速重传的工作方式是当收到三个相同的 ACK 报文时，会在定时器过期之前，重传丢失的报文段。</li>
+</ul>
+<h4 id="SACK-方法"><a href="#SACK-方法" class="headerlink" title="SACK 方法"></a>SACK 方法</h4><p>快速重传机制只解决了一个问题，就是超时时间的问题，但是它依然面临着另外一个问题。就是重传的时候，是重传一个，还是重传所有的问题。</p>
+<p><code>SACK</code>（ Selective Acknowledgment）， 选择性确认。</p>
+<p>这种方式需要在 TCP 头部「选项」字段里加一个 <code>SACK</code> 的东西，它可以将已收到的数据的信息发送给「发送方」，这样发送方就可以知道哪些数据收到了，哪些数据没收到，知道了这些信息，就可以只重传丢失的数据。</p>
+<p><strong>注：这三个重传机制互补的，不是选择关系。</strong></p>
+<h3 id="滑动窗口"><a href="#滑动窗口" class="headerlink" title="滑动窗口"></a>滑动窗口</h3><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323101253162.png" alt="image-20230323101253162" style="zoom:80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323101258804.png" alt="image-20230323101258804" style="zoom:80%;" />
+
+<p>注：</p>
+<ol>
+<li><strong>一个 TCP 连接的双端（客户端和服务端）都有各自的接收方和发送方窗口。</strong></li>
+<li>发送窗口的大小由接收窗口决定（相等），接收窗口变化时会通过window告诉发送方</li>
+<li>发送窗口比接受窗口复杂，发送窗口会包含已发送部分和未发送(可用窗口)部分，只有得到确认时才会整体移动窗口，发送数据只会移动SND.NXT内部指针；接收窗口只有未接收部分，因为接收窗口接收数据时就会移动整个窗口RCV.NXT。</li>
+<li>修正：当服务器不能及时处理读取的数据时，就不会移动整个窗口了，但是会移动RCV.NXT，表现为接受窗口缩小了。</li>
+</ol>
+<h4 id="滑动窗口的作用："><a href="#滑动窗口的作用：" class="headerlink" title="滑动窗口的作用："></a>滑动窗口的作用：</h4><ul>
+<li>同时发送多个数据，然后一起应答，提高通信效率</li>
+<li>流量控制（见下）</li>
+</ul>
+<p>窗口的实现实际上是操作系统开辟的一个缓存空间，发送方主机在等到确认应答返回之前，必须在缓冲区中保留已发送的数据。如果按期收到确认应答，此时数据就可以从缓存区清除。</p>
+<p>使用滑动窗口后，只需要ACK返回最后一个序号的报文就说明前面的报文已经收到了。这个模式就叫累计确认或者累计应答。</p>
+<h4 id="窗口大小由哪一方决定？"><a href="#窗口大小由哪一方决定？" class="headerlink" title="窗口大小由哪一方决定？"></a>窗口大小由哪一方决定？</h4><p>通常窗口的大小是由接收方的窗口大小来决定的。</p>
+<p>发送方发送的数据大小不能超过接收方的窗口大小，否则接收方就无法正常接收到数据。</p>
+<h4 id="接收窗口和发送窗口的大小是相等的吗？"><a href="#接收窗口和发送窗口的大小是相等的吗？" class="headerlink" title="接收窗口和发送窗口的大小是相等的吗？"></a>接收窗口和发送窗口的大小是相等的吗？</h4><p>一端的接收窗口是约等于另一端的发送窗口的。因为滑动窗口并不是一成不变的，接受窗口的大小会被操作系统调整，通过发送 TCP 报文的 Windows 字段来告诉发送方。那么这个传输过程是存在时延的，所以接收窗口和发送窗口是约等于的关系。</p>
+<h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><h4 id="如何实现流量控制"><a href="#如何实现流量控制" class="headerlink" title="如何实现流量控制"></a>如何实现流量控制</h4><ul>
+<li>发送方的发送数据受发送窗口限制，不能发送比发送窗口中可用窗口大的数据</li>
+<li>接受窗口决定发送窗口的大小，接受方时刻告诉发送方自己的窗口大小，保持约等于状态</li>
+</ul>
+<h4 id="操作系统缓冲区与滑动窗口的关系"><a href="#操作系统缓冲区与滑动窗口的关系" class="headerlink" title="操作系统缓冲区与滑动窗口的关系"></a>操作系统缓冲区与滑动窗口的关系</h4><ul>
+<li><p>当服务端非常的繁忙，应用层不能及时读取数据时，服务端会缩小窗口，只移动RCV.NXT指针，并通过TCP报文的window字段告诉发送方，导致发送方窗口变小。</p>
+</li>
+<li><p>当服务端系统资源非常紧张的时候，操作系统可能会直接减少了接收缓冲区大小，此时接受窗口变小了，但是没有来得及告诉发送方，发送方发送了超出接受范围的数据过来就会出现丢包。</p>
+<p>因此，<strong>TCP 规定是不允许同时减少缓存又收缩窗口的，而是采用先收缩窗口，过段时间再减少缓存，这样就可以避免了丢包情况。</strong></p>
+</li>
+</ul>
+<h3 id="窗口关闭"><a href="#窗口关闭" class="headerlink" title="窗口关闭"></a>窗口关闭</h3><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323110234948.png" alt="image-20230323110234948" style="zoom:80%;" />
+
+<p>如果窗口大小为 0 时，就会阻止发送方给接收方传递数据，直到窗口变为非 0 为止，这就是窗口关闭。</p>
+<p>问题：假设接受方的向发送方通告一个窗口非 0 的 ACK 报文，它只是一个ACK报文不携带数据，那么当这个包丢失时，不会触发重传机制，此时发送方一直等待接受方的非0通知，而接受方也一直等待发送方的数据，导致死锁。</p>
+<p>解决方法：只要 TCP 连接一方收到对方的零窗口通知，就启动持续计时器。如果持续计时器超时，就会发送窗口探测 ( Window probe ) 报文，而对方在确认这个探测报文时，给出自己现在的接收窗口大小。</p>
+<h2 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h2><h4 id="拥塞控制的定义和流量控制的区别："><a href="#拥塞控制的定义和流量控制的区别：" class="headerlink" title="拥塞控制的定义和流量控制的区别："></a>拥塞控制的定义和流量控制的区别：</h4><ul>
+<li><p>在网络出现拥堵时，如果继续发送大量数据包，可能会导致数据包时延、丢失等，这时 TCP 就会重传数据，但是一重传就会导致网络的负担更重，于是会导致更大的延迟以及更多的丢包，这个情况就会进入恶性循环被不断地放大….</p>
+</li>
+<li><p>拥塞控制的目的是避免「发送方」的数据填满整个网络。</p>
+</li>
+<li><p>流量控制是避免「发送方」的数据填满「接收方」的缓存，但是并不知道网络的中发生了什么。</p>
+</li>
+</ul>
+<h4 id="什么是拥塞窗口"><a href="#什么是拥塞窗口" class="headerlink" title="什么是拥塞窗口"></a>什么是拥塞窗口</h4><ul>
+<li>拥塞窗口 cwnd是发送方维护的一个的状态变量，它会根据网络的拥塞程度动态变化的。</li>
+<li>加入了拥塞窗口后，发送窗口的值是swnd &#x3D; min(cwnd, rwnd)，也就是拥塞窗口和接收窗口中的最小值。</li>
+</ul>
+<h4 id="怎么知道当前网络是否出现了拥塞"><a href="#怎么知道当前网络是否出现了拥塞" class="headerlink" title="怎么知道当前网络是否出现了拥塞"></a>怎么知道当前网络是否出现了拥塞</h4><p>只要「发送方」没有在规定时间内接收到 ACK 应答报文，也就是发生了超时重传，就会认为网络出现了拥塞。</p>
+<h4 id="拥塞控制的算法："><a href="#拥塞控制的算法：" class="headerlink" title="拥塞控制的算法："></a>拥塞控制的算法：</h4><p>拥塞窗口 <code>cwnd</code> 变化的规则：只要网络中没有出现拥塞，<code>cwnd</code> 就会增大；但网络中出现了拥塞，<code>cwnd</code> 就减少；</p>
+<ul>
+<li><p>慢启动</p>
+<p>规则：当发送方每收到一个 ACK，拥塞窗口 cwnd 的大小就会加 1。指数级增长。</p>
+</li>
+</ul>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323114300340.png" alt="image-20230323114300340" style="zoom:80%;" />
+
+<p>​		有一个叫慢启动门限 <code>ssthresh</code> （slow start threshold）状态变量。</p>
+<p>​		当 <code>cwnd</code> &lt; <code>ssthresh</code> 时，使用慢启动算法。</p>
+<p>​		当 <code>cwnd</code> &gt;&#x3D; <code>ssthresh</code> 时，就会使用「拥塞避免算法」。</p>
+<h4 id="拥塞避免算法"><a href="#拥塞避免算法" class="headerlink" title="拥塞避免算法"></a>拥塞避免算法</h4><ul>
+<li><p>拥塞避免算法</p>
+<p>规则：每当收到一个 ACK 时，cwnd 增加 1&#x2F;cwnd。线性增长</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323114336256.png" alt="image-20230323114336256" style="zoom:80%;" />
+
+<p>一直增长着后，网络就会慢慢进入了拥塞的状况了，于是就会出现丢包现象，这时就需要对丢失的数据包进行重传。</p>
+<p>当触发了重传机制，也就进入了「拥塞发生算法」。</p>
+</li>
+<li><p>拥塞发生</p>
+<p>拥塞发生算法会根据重传机制的不同而不同：</p>
+<ul>
+<li><p>当重传机制为<strong>超时重传</strong>时：</p>
+<ul>
+<li><code>ssthresh</code> 设为 <code>cwnd/2</code>，</li>
+<li><code>cwnd</code> 重置为 <code>1</code> （是恢复为 cwnd 初始化值，我这里假定 cwnd 初始化值 1）</li>
+<li>继续慢启动算法</li>
+</ul>
+</li>
+<li><p>当重传机制为<strong>快速重传</strong>时：</p>
+<ul>
+<li><code>cwnd = cwnd/2</code> ，也就是设置为原来的一半;</li>
+<li><code>ssthresh = cwnd</code>;</li>
+<li>进入快速恢复算法</li>
+</ul>
+</li>
+<li><p>区别：</p>
+<p>超时重传会一下子突然减少数据流，会造成网络卡顿。适合拥塞比较严重的情况</p>
+<p>快速重传的机制为当接收方发现丢了一个中间包的时候（通过发送三个后面的包确认），发送三次前一个包的 ACK，于是发送端就会快速地重传，不必等待超时再重传。</p>
+<p>快速恢复算法是认为，你还能收到 3 个重复 ACK 说明网络也不那么糟糕，所以没有必要像 <code>RTO</code> 超时那么强烈。</p>
+</li>
+</ul>
+</li>
+<li><p>快速恢复（面试时往简单的将）</p>
+<p>快速重传和快速恢复算法一般同时使用</p>
+<p>快速恢复算法如下：</p>
+<ol>
+<li>拥塞窗口 <code>cwnd = ssthresh + 3</code> （ 3 的意思是确认有 3 个数据包被收到了）；</li>
+<li>重传丢失的数据包；</li>
+<li>如果再收到重复的 ACK，那么 cwnd 增加 1；</li>
+<li>如果收到新数据的 ACK 后，把 cwnd 设置为第一步中的 ssthresh 的值，原因是该 ACK 确认了新的数据，说明从 duplicated ACK 时的数据都已收到，该恢复过程已经结束，可以回到恢复之前的状态了，也即再次进入拥塞避免状态；</li>
+<li>如果收不到新数据的 ACK，那么就会触发超时重传了。</li>
+</ol>
+</li>
+</ul>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230323120316069.png" alt="image-20230323120316069" style="zoom:80%;" />
+
+<p>过程3为了尽快将丢失的数据包发给目标，从而解决拥塞的根本问题（三次相同的 ACK 导致的快速重传，能收到ACK说明不是很拥塞，可能是别的原因造成丢失），所以这一过程中 cwnd 反而是逐渐增大的。</p>
+<p>快速恢复是拥塞发生后慢启动的优化，其首要目的仍然是降低 cwnd 来减缓拥塞，所以必然会出现 cwnd 从大到小的改变。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="tag"># 计算机基础</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/71e8.html" rel="prev" title="2023-07-04-数据库(MySQL)">
+      <i class="fa fa-chevron-left"></i> 2023-07-04-数据库(MySQL)
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/8980.html" rel="next" title="2023-07-04-计算机网络2">
+      2023-07-04-计算机网络2 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">TCP 三次握手与四次挥手面试题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-UDP-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">TCP&#x2F;UDP 基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-%E5%A4%B4%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.1.1.</span> <span class="nav-text">TCP 头格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.1.2.</span> <span class="nav-text">TCP 协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B2%98%E5%8C%85%E9%97%AE%E9%A2%98%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.1.3.</span> <span class="nav-text">粘包问题与解决方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#UDP-%E5%92%8C-TCP-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%E5%91%A2%EF%BC%9F"><span class="nav-number">1.1.4.</span> <span class="nav-text">UDP 和 TCP 有什么区别呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-%E5%92%8C-UDP-%E5%8F%AF%E4%BB%A5%E4%BD%BF%E7%94%A8%E5%90%8C%E4%B8%80%E4%B8%AA%E7%AB%AF%E5%8F%A3%E5%90%97%EF%BC%9F"><span class="nav-number">1.1.5.</span> <span class="nav-text">TCP 和 UDP 可以使用同一个端口吗？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-%E8%BF%9E%E6%8E%A5%E5%BB%BA%E7%AB%8B"><span class="nav-number">1.2.</span> <span class="nav-text">TCP 连接建立</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E8%BF%87%E7%A8%8B"><span class="nav-number">1.2.1.</span> <span class="nav-text">TCP 三次握手过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%9F%E4%B8%8D%E6%98%AF%E4%B8%A4%E6%AC%A1%E3%80%81%E5%9B%9B%E6%AC%A1%EF%BC%9F"><span class="nav-number">1.2.2.</span> <span class="nav-text">为什么是三次握手？不是两次、四次？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%AF%8F%E6%AC%A1%E5%BB%BA%E7%AB%8B-TCP-%E8%BF%9E%E6%8E%A5%E6%97%B6%EF%BC%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E7%9A%84%E5%BA%8F%E5%88%97%E5%8F%B7%E9%83%BD%E8%A6%81%E6%B1%82%E4%B8%8D%E4%B8%80%E6%A0%B7%E5%91%A2%EF%BC%9F"><span class="nav-number">1.2.3.</span> <span class="nav-text">为什么每次建立 TCP 连接时，初始化的序列号都要求不一样呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A2%E7%84%B6-IP-%E5%B1%82%E4%BC%9A%E5%88%86%E7%89%87%EF%BC%88MTU%EF%BC%89%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88-TCP-%E5%B1%82%E8%BF%98%E9%9C%80%E8%A6%81-MSS-%E5%91%A2%EF%BC%9F"><span class="nav-number">1.2.4.</span> <span class="nav-text">既然 IP 层会分片（MTU），为什么 TCP 层还需要 MSS 呢？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E4%B8%A2%E5%A4%B1%E7%9A%84%E5%A4%84%E7%90%86%E5%8E%9F%E5%88%99"><span class="nav-number">1.2.5.</span> <span class="nav-text">连接丢失的处理原则*</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%A2%E5%A4%B1%E4%BA%86%EF%BC%8C%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.2.6.</span> <span class="nav-text">第一次握手丢失了，会发生什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%A2%E5%A4%B1%E4%BA%86%EF%BC%8C%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.2.7.</span> <span class="nav-text">第二次握手丢失了，会发生什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%A2%E5%A4%B1%E4%BA%86%EF%BC%8C%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.2.8.</span> <span class="nav-text">第三次握手丢失了，会发生什么？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E8%BF%9E%E6%8E%A5%E6%96%AD%E5%BC%80"><span class="nav-number">2.</span> <span class="nav-text">TCP 连接断开</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">2.0.1.</span> <span class="nav-text">TCP 四次挥手</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%8C%A5%E6%89%8B%E9%9C%80%E8%A6%81%E5%9B%9B%E6%AC%A1"><span class="nav-number">2.0.2.</span> <span class="nav-text">为什么挥手需要四次</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88TCP%E5%88%9B%E5%BB%BA%E8%BF%9E%E6%8E%A5%E6%98%AF%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%8C%E9%87%8A%E6%94%BE%E8%BF%9E%E6%8E%A5%E6%98%AF%E5%9B%9B%E6%AC%A1%E6%8F%A1%E6%89%8B%EF%BC%9F"><span class="nav-number">2.0.3.</span> <span class="nav-text">为什么TCP创建连接是三次握手，释放连接是四次握手？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E4%B8%A2%E5%A4%B1%E7%9A%84%E5%A4%84%E7%90%86%E5%8E%9F%E5%88%99-%E8%A7%81%E4%B8%8A"><span class="nav-number">2.0.4.</span> <span class="nav-text">连接丢失的处理原则(见上)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E6%8C%A5%E6%89%8B%E4%B8%A2%E5%A4%B1%E4%BA%86%EF%BC%8C%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.0.5.</span> <span class="nav-text">第一次挥手丢失了，会发生什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8C%A5%E6%89%8B%E4%B8%A2%E5%A4%B1%E4%BA%86%EF%BC%8C%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.0.6.</span> <span class="nav-text">第二次挥手丢失了，会发生什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AC%A1%E6%8C%A5%E6%89%8B%E4%B8%A2%E5%A4%B1%E4%BA%86%EF%BC%8C%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.0.7.</span> <span class="nav-text">第三次挥手丢失了，会发生什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E4%B8%A2%E5%A4%B1%E4%BA%86%EF%BC%8C%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.0.8.</span> <span class="nav-text">第四次挥手丢失了，会发生什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-TIME-WAIT-%E7%8A%B6%E6%80%81"><span class="nav-number">2.0.9.</span> <span class="nav-text">为什么需要 TIME_WAIT 状态</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-TIME-WAIT-%E7%AD%89%E5%BE%85%E7%9A%84%E6%97%B6%E9%97%B4%E6%98%AF-2MSL"><span class="nav-number">2.0.10.</span> <span class="nav-text">为什么 TIME_WAIT 等待的时间是 2MSL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TIME-WAIT-%E7%8A%B6%E6%80%81%E7%9A%84%E5%8D%B1%E5%AE%B3%E3%80%82%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%87%BA%E7%8E%B0%E5%A4%A7%E9%87%8F-TIME-WAIT-%E7%8A%B6%E6%80%81%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">2.0.11.</span> <span class="nav-text">TIME_WAIT 状态的危害。服务器出现大量 TIME_WAIT 状态的原因有哪些</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%B7%B2%E7%BB%8F%E5%BB%BA%E7%AB%8B%E4%BA%86%E8%BF%9E%E6%8E%A5%EF%BC%8C%E4%BD%86%E6%98%AF%E4%B8%BB%E6%9C%BA%E7%AA%81%E7%84%B6%E5%87%BA%E7%8E%B0%E6%95%85%E9%9A%9C%E4%BA%86%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">2.0.12.</span> <span class="nav-text">如果已经建立了连接，但是主机突然出现故障了怎么办？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%B7%B2%E7%BB%8F%E5%BB%BA%E7%AB%8B%E4%BA%86%E8%BF%9E%E6%8E%A5%EF%BC%8C%E4%BD%86%E6%98%AF%E8%BF%9B%E7%A8%8B%E5%B4%A9%E6%BA%83%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">2.0.13.</span> <span class="nav-text">如果已经建立了连接，但是进程崩溃会发生什么？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-%E9%87%8D%E4%BC%A0%E3%80%81%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E3%80%81%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E3%80%81%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">TCP 重传、滑动窗口、流量控制、拥塞控制*</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E4%BC%A0%E6%9C%BA%E5%88%B6"><span class="nav-number">3.1.</span> <span class="nav-text">重传机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B6%85%E6%97%B6%E9%87%8D%E4%BC%A0"><span class="nav-number">3.1.1.</span> <span class="nav-text">超时重传</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E9%87%8D%E4%BC%A0"><span class="nav-number">3.1.2.</span> <span class="nav-text">快速重传</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SACK-%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.3.</span> <span class="nav-text">SACK 方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3"><span class="nav-number">3.2.</span> <span class="nav-text">滑动窗口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9A"><span class="nav-number">3.2.1.</span> <span class="nav-text">滑动窗口的作用：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AA%97%E5%8F%A3%E5%A4%A7%E5%B0%8F%E7%94%B1%E5%93%AA%E4%B8%80%E6%96%B9%E5%86%B3%E5%AE%9A%EF%BC%9F"><span class="nav-number">3.2.2.</span> <span class="nav-text">窗口大小由哪一方决定？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%A5%E6%94%B6%E7%AA%97%E5%8F%A3%E5%92%8C%E5%8F%91%E9%80%81%E7%AA%97%E5%8F%A3%E7%9A%84%E5%A4%A7%E5%B0%8F%E6%98%AF%E7%9B%B8%E7%AD%89%E7%9A%84%E5%90%97%EF%BC%9F"><span class="nav-number">3.2.3.</span> <span class="nav-text">接收窗口和发送窗口的大小是相等的吗？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="nav-number">3.3.</span> <span class="nav-text">流量控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="nav-number">3.3.1.</span> <span class="nav-text">如何实现流量控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%BC%93%E5%86%B2%E5%8C%BA%E4%B8%8E%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">3.3.2.</span> <span class="nav-text">操作系统缓冲区与滑动窗口的关系</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AA%97%E5%8F%A3%E5%85%B3%E9%97%AD"><span class="nav-number">3.4.</span> <span class="nav-text">窗口关闭</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">拥塞控制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%9A%84%E5%AE%9A%E4%B9%89%E5%92%8C%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9A"><span class="nav-number">4.0.1.</span> <span class="nav-text">拥塞控制的定义和流量控制的区别：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%8B%A5%E5%A1%9E%E7%AA%97%E5%8F%A3"><span class="nav-number">4.0.2.</span> <span class="nav-text">什么是拥塞窗口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E5%BD%93%E5%89%8D%E7%BD%91%E7%BB%9C%E6%98%AF%E5%90%A6%E5%87%BA%E7%8E%B0%E4%BA%86%E6%8B%A5%E5%A1%9E"><span class="nav-number">4.0.3.</span> <span class="nav-text">怎么知道当前网络是否出现了拥塞</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6%E7%9A%84%E7%AE%97%E6%B3%95%EF%BC%9A"><span class="nav-number">4.0.4.</span> <span class="nav-text">拥塞控制的算法：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8B%A5%E5%A1%9E%E9%81%BF%E5%85%8D%E7%AE%97%E6%B3%95"><span class="nav-number">4.0.5.</span> <span class="nav-text">拥塞避免算法</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">248k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:45</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

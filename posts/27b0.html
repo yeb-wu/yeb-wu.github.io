@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="二.kafkahttps:&#x2F;&#x2F;javaguide.cn&#x2F;high-performance&#x2F;message-queue&#x2F;kafka-questions-01.html https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;6850418106372882446 简介：Kafka是一款分布式的、可分区和具有复制备份的（Replicated）、基于ZooKeeper协调管理的分布式流处理平台。作为一个流式处理平">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023-03-30-Kafka">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/27b0.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="二.kafkahttps:&#x2F;&#x2F;javaguide.cn&#x2F;high-performance&#x2F;message-queue&#x2F;kafka-questions-01.html https:&#x2F;&#x2F;juejin.cn&#x2F;post&#x2F;6850418106372882446 简介：Kafka是一款分布式的、可分区和具有复制备份的（Replicated）、基于ZooKeeper协调管理的分布式流处理平台。作为一个流式处理平">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/17351239f4db4a2ctplv-t2oaga2asx-zoom-in-crop-mark4536000.webp">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230413192304591.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230314154632803.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230523131221899.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/KafkaTopicPartionsLayout.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/kafka-offset.jpg">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230319135324679.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzk1ODM1OA==,size_16,color_FFFFFF,t_70.png">
+<meta property="article:published_time" content="2023-03-30T06:26:10.000Z">
+<meta property="article:modified_time" content="2024-03-21T09:32:33.346Z">
+<meta property="article:author" content="yebin">
+<meta property="article:tag" content="Java Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/17351239f4db4a2ctplv-t2oaga2asx-zoom-in-crop-mark4536000.webp">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/27b0.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2023-03-30-Kafka | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/27b0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023-03-30-Kafka
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-30 14:26:10" itemprop="dateCreated datePublished" datetime="2023-03-30T14:26:10+08:00">2023-03-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 17:32:33" itemprop="dateModified" datetime="2024-03-21T17:32:33+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Web/" itemprop="url" rel="index"><span itemprop="name">Java Web</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="二-kafka"><a href="#二-kafka" class="headerlink" title="二.kafka"></a>二.kafka</h2><p><a target="_blank" rel="noopener" href="https://javaguide.cn/high-performance/message-queue/kafka-questions-01.html">https://javaguide.cn/high-performance/message-queue/kafka-questions-01.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6850418106372882446">https://juejin.cn/post/6850418106372882446</a></p>
+<h3 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h3><p>Kafka是一款分布式的、可分区和具有复制备份的（Replicated）、基于ZooKeeper协调管理的分布式流处理平台。作为一个流式处理平台，kafka具备以下3个关键特性。</p>
+<p>（1）能够允许发布和订阅流数据。这个功能类似于消息队列，这也是 Kafka 也被归类为消息队列的原因。</p>
+<p>（2）存储流数据时提供相应的容错机制。Kafka 提供分布式复制备份的功能，有效避免了消息丢失的风险。</p>
+<p>（3）当流数据到达时能够被及时处理。与其他的消息队列相比，主打一个高性能。</p>
+ <span id="more"></span>
+
+<h3 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h3><p><strong>异步处理</strong>：将用户的请求数据存储到消息队列之后就立即返回结果。随后，系统再对消息进行消费。</p>
+<p><strong>服务解耦</strong>：生产者负责往消息队列里发布消息，消费者负责从消息队列里拉取消息，生产者没有直接调用消费者，这样就可以方便的扩展生产者或者消费者的功能。</p>
+<p><strong>削峰&#x2F;限流</strong>：先将短时间高并发产生的消息存储在消息队列中，然后后端服务再慢慢根据自己的能力去消费这些消息。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/17351239f4db4a2ctplv-t2oaga2asx-zoom-in-crop-mark4536000.webp" alt="img"></p>
+<h3 id="Kafka-架构"><a href="#Kafka-架构" class="headerlink" title="Kafka 架构"></a>Kafka 架构</h3><h4 id="什么是Broker，Producer、Consumer、Topic、Partition"><a href="#什么是Broker，Producer、Consumer、Topic、Partition" class="headerlink" title="什么是Broker，Producer、Consumer、Topic、Partition"></a>什么是Broker，Producer、Consumer、Topic、Partition</h4><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230413192304591.png" alt="image-20230413192304591" style="zoom:80%;" />
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230314154632803.png" alt="image-20230314154632803" style="zoom:80%;" />
+
+<p><strong>Kafka 中没有队列这个概念，与之对应的是 Partition（分区）</strong></p>
+<ul>
+<li><p>Broker</p>
+<p>消息队列的处理结点，一个kafka节点就是一个broker，多个broker可以组成一个kafka集群。<del>同一个topic的多个partition可以分布在不同的Broker上，可以提高整个消息队列的性能。</del></p>
+</li>
+<li><p>Producer</p>
+<p>发送消息的程序，Producer可以指定往哪个Topic哪个partition发送消息</p>
+</li>
+<li><p>Consumer</p>
+<p>消费消息的程序，consumer是通过主动拉取自己感兴趣的topic的消息来消费。</p>
+</li>
+<li><p>Topic</p>
+<p>kafka根据topic对消息进行归类，发布到kafka集群的每条消息都需要指定一个topic</p>
+</li>
+<li><p><strong>Partition（分区）</strong> : </p>
+<p>同一个topic的多个partition可以分布在不同的Broker上，实现了分布式储存。通过在消费者组中定义多个消费者，每个消费者消费一个Partition的消息，从宏观上看就相当于有多个消费者在消费一个Topic，提高了消费效率。</p>
+</li>
+<li><p>Consumer Groups</p>
+<p>消费者组，消费者组内的每个消费者负责消费不同分区的数据，提高消费能力。</p>
+<p>由于一个partition只能被同组的一个consumer消费，所以可以通过创建多个消费者组来达到多个消费者消费同一个partition的目的。</p>
+<p>（注：一个partition只能被一个consumer消费，但是一个consumer可以消费多个partition）</p>
+</li>
+<li><p>Offsets</p>
+<p>记录消费者在消费某个partition的位置信息，每次从队列中获取消息消费时，都要提交offset，kafka内部使用了一个topic来专门保存消费者的offset信息。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230523131221899.png" alt="image-20230523131221899"></p>
+<p>ISR<br>Kafka在ZooKeeper中动态维护了一个ISR（In-Sync Replica），即保存同步的副本列表，该列表中保存的是与Leader副本保持消息同步的所有副本对应的代理节点ID。若一个Follower副本宕机或落后太多，则该Follower副本节点将从ISR列表中移除。*</p>
+</li>
+</ul>
+<h3 id="单播与多播"><a href="#单播与多播" class="headerlink" title="单播与多播"></a><strong>单播与多播</strong></h3><p>单播：一个topic中的某个partition只能被同组的一个consumer消费，可以实现一条消息被一个消费者消费。</p>
+<p>多播：一个topic中的某个partition可以被不同组的多个consumer消费，可以实现一条消息被多个消费者消费。</p>
+<h3 id="Zookeeper-在-Kafka-中的作用知道吗？"><a href="#Zookeeper-在-Kafka-中的作用知道吗？" class="headerlink" title="Zookeeper 在 Kafka 中的作用知道吗？"></a>Zookeeper 在 Kafka 中的作用知道吗？</h3><p><strong>Broker 注册</strong> ：Kafka的每个broker启动时，都会到zookeeper中进行注册，告诉zookeeper其broker.id。Kafka将元数据信息（topic，partition信息等）保存在Zookeeper中（但是发送给Topic本身的数据是不会发到Zk上的）。</p>
+<p><strong>Topic 注册</strong> ： 在 Kafka 中，同一个Topic 的消息会被分成多个partition并将其分布在多个 Broker 上，这些partition信息及与 Broker 的对应关系也都是由 Zookeeper 在维护。</p>
+<p><strong>负载均衡</strong>：对于同一个 Topic 的不同 Partition，Kafka 会尽力将这些 Partition 分布到不同的 Broker 服务器上，当生产者产生消息后也会尽量投递到不同 Broker 的 Partition 里面。当 Consumer 消费的时候，Zookeeper 可以根据当前的 Partition 数量以及 Consumer 数量来实现动态负载均衡。</p>
+<h3 id="Kafka-如何保证消息的消费顺序"><a href="#Kafka-如何保证消息的消费顺序" class="headerlink" title="Kafka 如何保证消息的消费顺序"></a>Kafka 如何保证消息的消费顺序</h3><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/KafkaTopicPartionsLayout.png" alt="img" style="zoom:80%;" />
+
+<p>为什么需要保证消息的消费顺序？</p>
+<p>首先，同一个<strong>Partition</strong>是有序的消息在被追加到 Partition(分区)的时候都会分配一个特定的偏移量（offset）。Kafka 通过偏移量（offset）来保证消息在分区内的顺序性。</p>
+<p>然而，Kafka不能保证同一个topic中多个partition中保证总的消费顺序。一个消费者可以消费多个partition</p>
+<p>假设有生成订单和支付订单操作它们都同属于结账topic。生产者在对该topic发送消息，topic中的消息会均匀的分发到每个partition上，也就是说同一个partition存在两种操作，那先后顺序就不能通过offset来比较了，就会造成乱序问题。</p>
+<ol>
+<li>(使用) 1 个 Topic 只对应一个 Partition。</li>
+<li>（推荐）发送消息的时候指定 key&#x2F;Partition。</li>
+</ol>
+<p>因此，kafka的顺序消费会牺牲性能</p>
+<h3 id="Kafka-如何保证消息不丢失"><a href="#Kafka-如何保证消息不丢失" class="headerlink" title="Kafka 如何保证消息不丢失"></a>Kafka 如何保证消息不丢失</h3><h4 id="生产消息时丢失"><a href="#生产消息时丢失" class="headerlink" title="生产消息时丢失"></a><strong>生产消息时丢失</strong></h4><p>生产者(Producer) 调用<code>send</code>方法发送消息之后，消息可能因为网络问题并没有发送过去。所以不能默认在调用<code>send</code>方法发送消息之后消息发送成功了。而是要通过消息发送的结果来判断是否成功。</p>
+<p>kafka中有两种方法可以获取发送的结果。一种是get()方法，但是这种方法是同步阻塞的，一般不推荐使用；另一种是使用回调函数的方式，当线程发送消息后，会把结果传给回调函数，并调用回调函数的逻辑，因此可以在回调函数中定义重新发送的逻辑即可。</p>
+<h4 id="消费消息时丢失"><a href="#消费消息时丢失" class="headerlink" title="消费消息时丢失"></a>消费消息时丢失</h4><p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/kafka-offset.jpg" alt="kafka offset"></p>
+<p>当消费者拉取到了分区的某个消息之后，消费者会自动提交了 offset。自动提交的话会有一个问题，试想一下，当消费者刚拿到这个消息准备进行真正消费的时候，突然挂掉了，消息实际上并没有被消费，但是 offset 却被自动提交了。</p>
+<p><strong>解决办法也比较粗暴，我们手动关闭自动提交 offset，每次在真正消费完消息之后再自己手动提交 offset 。</strong> 但是，细心的朋友一定会发现，这样会带来消息被重新消费的问题。比如你刚刚消费完消息之后，还没提交 offset，结果自己挂掉了，那么这个消息理论上就会被消费两次。</p>
+<h4 id="储存消息时丢失"><a href="#储存消息时丢失" class="headerlink" title="储存消息时丢失"></a>储存消息时丢失</h4><p>针对多集群下，某个broker宕机的情况。</p>
+<p>在kafka中可以为topic设置多个副本解决服务器宕机问题，topic会为每个partition都创建副本，并把这些partition副本部署在不同的broker上。其中partition可以分为leader 副本和follower 副本。</p>
+<p>我们发送的消息会被发送到 leader 副本，leader 处理 partition 的所有读写请求，与此同时，follower会被动定期地去复制leader上的数据。生产者和消费者只与 leader 副本交互。你可以理解为其他副本只是 leader 副本的拷贝，它们的存在只是为了保证消息存储的安全性。</p>
+<p> 如下图所示，红色的为 leader，绿色的为 follower，leader复制自己到其他 Broker 中：</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230319135324679.png" alt="image-20230319135324679"></p>
+<p> 如果leader发生故障或挂掉，如果挂掉的不是leader 副本所在的 broker ，那么就不会出现丢失。</p>
+<p>一种情况是：有follower完全同步了leader，那么一个新leader被选举并接收客户端的消息。Kafka确保从同步副本列表中选举一个副本为 leader。</p>
+<p>另一种情况是： leader 的数据还有一些没有被 follower 副本的同步的话，就会造成消息丢失。解决方法如下：</p>
+<p>设置 <strong>acks &#x3D; all</strong>，当我们配置 <strong>acks &#x3D; all</strong> 表示只有所有 ISR 列表的副本全部收到消息时，生产者才会接收到来自服务器的响应. 这种模式是最高级别的，也是最安全的，可以确保不止一个 Broker 接收到了消息. 该模式的延迟会很高.</p>
+<ul>
+<li>（ 1 ）acks&#x3D;0： 表示producer不需要等待任何broker确认收到消息的回复，就可以继续发送下一条消息。性能最高，但是最容易丢消息。</li>
+<li>（ 2 ）(默认)acks&#x3D;1： 至少要等待leader已经成功将数据写入本地log，但是不需要等待所有follower是否成功写入。就可以继续发送下一条消息。这种情况下，如果follower没有成功备份数据，而此时leader又挂掉，则消息会丢失。</li>
+</ul>
+<p>其他设置 replication.factor &gt;&#x3D; 3  保证每个 分区(partition) 至少有 3 个副本，</p>
+<p>设置 min.insync.replicas &gt; 1，代表消息至少要被写入到 2 个副本才算是被成功发送。</p>
+<p>推荐设置replication.factor &#x3D; min.insync.replicas + 1</p>
+<h3 id="Kafka-如何保证消息不重复消费"><a href="#Kafka-如何保证消息不重复消费" class="headerlink" title="Kafka 如何保证消息不重复消费"></a>Kafka 如何保证消息不重复消费</h3><ul>
+<li>消费消息服务做幂等校验，比如 Redis 的set、MySQL 的主键等天然的幂等功能。这种方法最有效。</li>
+</ul>
+<p>redis幂等校验：</p>
+<ol>
+<li>客户端先请求服务端，会拿到一个能代表这次请求业务的唯一字段</li>
+<li>将该字段以 SETNX 的方式存入 redis 中</li>
+<li>如果设置成功，证明这是第一次请求，则执行后续的业务逻辑</li>
+<li>如果设置失败，则代表已经执行过当前请求，直接返回</li>
+</ol>
+<p>数据库幂等操作：</p>
+<p>创建一个唯一索引的表来实现幂等性。</p>
+<p>因为唯一字段就是业务的 ID，因此如果重复插入的话会触发唯一约束而导致插入失败。</p>
+<h3 id="Rebalance机制"><a href="#Rebalance机制" class="headerlink" title="Rebalance机制"></a>Rebalance机制</h3><p>rebalance只针对subscribe这种不指定分区消费的情况，如果消费方式指定了分区，kafka不会进行rebanlance。</p>
+<p>消费者没有指明分区消费。当消费组里消费者和分区的关系发生变化（消费能力过低(两次拉取消息之间的时间间隔超过30s)或者挂掉(心跳检测)），那么就会触发rebalance机制。</p>
+<p>这个机制会重新调整消费者消费哪个分区。</p>
+<ul>
+<li>range：通过公式来计算某个消费者消费哪个分区</li>
+<li>轮询：大家轮着消费</li>
+<li>sticky：在触发了rebalance后，在消费者消费的原分区不变的基础上进行调整。</li>
+</ul>
+<h3 id="高水位"><a href="#高水位" class="headerlink" title="高水位"></a>高水位</h3><p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80Mzk1ODM1OA==,size_16,color_FFFFFF,t_70.png" alt="在这里插入图片描述"></p>
+<p>kafka中HW（High Watermark）</p>
+<p>用来表示哪些消息可以被消费者消费，相当于分界线。leader的高水位取决于副本中最小的offset，因此高水位后面的属于未提交数据。也就是说，对于leader新写入的消息，consumer不能立刻消费，leader会等待该消息被所有ISR中的replicas同步后更新HW，此时消息才能被consumer消费。这样做可以保证消息的一致性。</p>
+<h3 id="消息积压问题"><a href="#消息积压问题" class="headerlink" title="消息积压问题"></a>消息积压问题</h3><p>消息积压：消息队列中的消息越来越多，会导致磁盘被打满</p>
+<p>消息积压的原因：</p>
+<p>（1）consumer消费能力不足：可以考虑增加topic的partition的个数，同时增加消费者组的消费者的数量。</p>
+<p>（2）消费能力弱的consumer被移除：在kafka中默认最大可以拉取500条消息消费，如果这500条消息不能再30s内被消费完(拉取的最大间隔为30s)，kafka就会认为这个consumer消费能力弱，会被移除触发Rebalance机制，Rebalance过程中是不能消费的，就会导致消息积压。可以考虑调整最大拉取数和最大拉取间隔时间的关系，避免消费者被频繁踢出消费组导致Rebalance。</p>
+<h3 id="延迟队列"><a href="#延迟队列" class="headerlink" title="延迟队列"></a>延迟队列</h3><ul>
+<li>Kafka 如何实现延时队列<ul>
+<li>首先，先讲一个常见的业务场景吧，我们对这个场景进行扩展。比如，一个订单场景，一个用户下单后，如果超过30分钟后还没付款，那么我们就要取消这个订单，这时候就可以用延时队列了。</li>
+<li>方案一：<ul>
+<li>订单服务，用户下单就会生成一个新订单，然后把订单发送给kafka，因为kafka不支持延时队列，所以，我们自己做一个延迟服务，把kafka的订单消息发送给延时服务。</li>
+<li>这个延时服务，过了30分钟后就要把这个订单消息发送kafka，然后订单服务消费这个延迟消息，再做业务处理（判断用户是否付款，如果没有付款就取消订单）。</li>
+<li>至于这个延时服务，我们可以用Java的延时队列来做。</li>
+<li>需要注意的是，我们需要保证延时服务的相对的可靠性，需要做：<ul>
+<li>延迟消息的消费者手动提交offset</li>
+<li>延迟消息的消费者要做幂等性处理（根据业务需要）</li>
+<li>延时服务做 集群</li>
+</ul>
+</li>
+<li><strong>问题</strong>：如果延时服务挂了，那么将会丢掉消息，即使做集群，也会丢失。比如，消息A发送给节点A，节点A挂了，消息A的数据就丢了。后续流量都打到节点B，也就是集群只是保证后续消息的可靠性。</li>
+<li>思考：如果一定要用这种方案，如何优化呢？<ul>
+<li>前端上做文章，比如，前端也搞个计时器，如果超过30分钟，那么订单页面就不要显示。（虽然前端防君子不防小人，但是99.99%的用户都是君子，前端还是有用的）</li>
+<li>人工补偿，运维定时去扫描订单表，如果订单有些因为上诉问题带来未及时关闭的问题，那么运维可以手动关闭。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>方案二：<ul>
+<li>不要延时服务，订单服务发送一个消息，发送一个消息给kafka，这个消息要添加时间信息：30分钟的时间戳。为了保证顺序性，指定一个key，这样能保证所有消息在同一个partition（同一partition有序）。</li>
+<li>然后订单服务，开启一个线程，一直轮询kafka，如果系统当前时间大于第一个消息的时间戳，那么就可以消费了。</li>
+<li>问题：<ul>
+<li>带来消息的积压，压力来到kafka这边。</li>
+<li>而且要轮询，消费者也要牺牲一点轮询的性能。</li>
+<li>降低吞吐量，因为指定了key，只使用了一个partition（为了保证消息在kafka内部的有序）。</li>
+</ul>
+</li>
+<li>好处：解决了方案一的问题。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>事实上，一般不使用kafka来做延迟队列。</p>
+<h3 id="死信队列"><a href="#死信队列" class="headerlink" title="死信队列"></a>死信队列</h3><p>死信队列是概念上的东西，本质就是一个保存消息的队列。Spring-kafka内部封装了可重试消费消息的方法，也就是可以设置为当消费数据出现异常时，重试这个消息。而且可以设置重试达到多少次后，让消息进入预定好的Topic。这个topic就是死信队列。</p>
+<h4 id="nginx的作用"><a href="#nginx的作用" class="headerlink" title="nginx的作用"></a>nginx的作用</h4><p>1、静态HTTP服务器</p>
+<p>首先，Nginx是一个HTTP服务器，可以将服务器上的静态文件（如HTML、图片）通过HTTP协议展现给客户端。</p>
+<p>2、反向代理服务器</p>
+<p>反向代理的作用处理解决跨域，还有负载均衡和虚拟主机的作用。</p>
+<p>有的网站访问量大，需要负载均衡。然而并不是所有网站都如此出色，有的网站，由于访问量太小，需要节省成本，将多个网站部署在同一台服务器上。</p>
+<p>例如将<a href="https://link.zhihu.com/?target=http://www.aaa.com">http://www.aaa.com</a>和<a href="https://link.zhihu.com/?target=http://www.bbb.com">http://www.bbb.com</a>两个网站部署在同一台服务器上，两个域名解析到同一个IP地址，但是用户通过两个域名却可以打开两个完全不同的网站，互相不影响，就像访问两个服务器一样，所以叫两个虚拟主机。</p>
+<h3 id="面试题"><a href="#面试题" class="headerlink" title="面试题"></a>面试题</h3><h4 id="1-kafka的多次提交和一次提交-kafka发送端3种不同的发送模式"><a href="#1-kafka的多次提交和一次提交-kafka发送端3种不同的发送模式" class="headerlink" title="1.kafka的多次提交和一次提交-kafka发送端3种不同的发送模式"></a>1.kafka的多次提交和一次提交-kafka发送端3种不同的发送模式</h4><p>Fire-and-forget</p>
+<p>只发送消息，不关心消息是否发送成功。本质上也是一种异步发送的方式，消息先存储在缓冲区中，达到设定条件后批量发送。当然这是kafka吞吐量最高的一种方式,并配合参数acks&#x3D;0，这样生产者不需要等待服务器的响应，以网络能支持的最大速度发送消息。但是也是消息最不可靠的一种方式，因为对于发送失败的消息没有做任何处理。</p>
+<p>Synchronous send</p>
+<p>同步发送，send()方法会返回Futrue对象，通过调用Futrue对象的get()方法，等待直到结果返回，根据返回的结果可以判断是否发送成功。如果业务要求消息必须是按顺序发送的，那么可以使用同步的方式，并且只能在一个partation上，结合参数设置retries的值让发送失败时重试，设置max_in_flight_requests_per_connection&#x3D;1，可以控制生产者在收到服务器晌应之前只能发送1个消息，在消息发送成功后立刻flush，从而控制消息顺序发送。<br>在调用send()方法后再调用get()方法等待结果返回。如果发送失败会抛出异常，如果发送成功会返回一个RecordMetadata对象，然后可以调用offset()方法获取该消息在当前分区的偏移量。</p>
+<p>KafkaProducer有两种类型的异常，</p>
+<p>第一种是可以重试的Retriable，该类异常可以通过重新发送消息解决。例如是连接异常后重新连接、“no leader”异常后重新选取新的leader。KafkaProducer可以配置为遇到该类异常后自动重新发送消息直到超过重试次数。</p>
+<p>第二类是不可重试的，例如是“message size too large”（消息太大），该类异常会马上返回错误。</p>
+<p>Asynchronous send</p>
+<p>异步发送，在调用send()方法的时候指定一个callback函数，当broker接收到返回的时候，该callback函数会被触发执行。如果业务需要知道消息发送是否成功，并且对消息的顺序不关心，那么可以用异步+回调的方式来发送消息，配合参数retries&#x3D;0，并将发送失败的消息记录到日志文件中；要使用callback函数，先要实现org.apache.kafka.clients.producer.Callback接口，该接口只有一个onCompletion方法。如果发送异常，onCompletion的参数Exception e会为非空。</p>
+<p>异步发送相关参数<br>异步发送时，kafka会先把消息存储在缓冲池中，当到达设定条件触发缓冲池消息发送。</p>
+<p>（1）消息缓存达到batch.size；</p>
+<p>（2）距离上一次消息发送时间间隔linger.ms；</p>
+<p>（3）调用flush（）方法，会立刻触发发送，并阻塞到当前缓冲区发送完毕；</p>
+<p>（4）调用close（），触发发送，完毕后关闭。</p>
+<h4 id="2-kafka的消费方式"><a href="#2-kafka的消费方式" class="headerlink" title="2.kafka的消费方式"></a>2.kafka的消费方式</h4><p>subscribe()与assign()</p>
+<p>1、KafkaConsumer.subscribe()：为consumer自动分配partition，有内部算法保证topic-partition以最优的方式均匀分配给相同group下的不同consumer。</p>
+<p>2、KafkaConsumer.assign()：为consumer手动、显示的指定需要消费的topic-partitions，不会被消费者的组管理功能管理的，不受group.id限制，相当与指定的group无效</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java-Web/" rel="tag"># Java Web</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/e3ac.html" rel="prev" title="2023-03-30-二叉树">
+      <i class="fa fa-chevron-left"></i> 2023-03-30-二叉树
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/fd5f.html" rel="next" title="2023-04-10-回溯">
+      2023-04-10-回溯 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-kafka"><span class="nav-number">1.</span> <span class="nav-text">二.kafka</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">简介：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%82%B9%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">优点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka-%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">Kafka 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFBroker%EF%BC%8CProducer%E3%80%81Consumer%E3%80%81Topic%E3%80%81Partition"><span class="nav-number">1.3.1.</span> <span class="nav-text">什么是Broker，Producer、Consumer、Topic、Partition</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E6%92%AD%E4%B8%8E%E5%A4%9A%E6%92%AD"><span class="nav-number">1.4.</span> <span class="nav-text">单播与多播</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper-%E5%9C%A8-Kafka-%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E7%9F%A5%E9%81%93%E5%90%97%EF%BC%9F"><span class="nav-number">1.5.</span> <span class="nav-text">Zookeeper 在 Kafka 中的作用知道吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka-%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%B6%88%E6%81%AF%E7%9A%84%E6%B6%88%E8%B4%B9%E9%A1%BA%E5%BA%8F"><span class="nav-number">1.6.</span> <span class="nav-text">Kafka 如何保证消息的消费顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka-%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%B6%88%E6%81%AF%E4%B8%8D%E4%B8%A2%E5%A4%B1"><span class="nav-number">1.7.</span> <span class="nav-text">Kafka 如何保证消息不丢失</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E6%B6%88%E6%81%AF%E6%97%B6%E4%B8%A2%E5%A4%B1"><span class="nav-number">1.7.1.</span> <span class="nav-text">生产消息时丢失</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E8%B4%B9%E6%B6%88%E6%81%AF%E6%97%B6%E4%B8%A2%E5%A4%B1"><span class="nav-number">1.7.2.</span> <span class="nav-text">消费消息时丢失</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%82%A8%E5%AD%98%E6%B6%88%E6%81%AF%E6%97%B6%E4%B8%A2%E5%A4%B1"><span class="nav-number">1.7.3.</span> <span class="nav-text">储存消息时丢失</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka-%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%B6%88%E6%81%AF%E4%B8%8D%E9%87%8D%E5%A4%8D%E6%B6%88%E8%B4%B9"><span class="nav-number">1.8.</span> <span class="nav-text">Kafka 如何保证消息不重复消费</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rebalance%E6%9C%BA%E5%88%B6"><span class="nav-number">1.9.</span> <span class="nav-text">Rebalance机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E6%B0%B4%E4%BD%8D"><span class="nav-number">1.10.</span> <span class="nav-text">高水位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E7%A7%AF%E5%8E%8B%E9%97%AE%E9%A2%98"><span class="nav-number">1.11.</span> <span class="nav-text">消息积压问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97"><span class="nav-number">1.12.</span> <span class="nav-text">延迟队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%BB%E4%BF%A1%E9%98%9F%E5%88%97"><span class="nav-number">1.13.</span> <span class="nav-text">死信队列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#nginx%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.13.1.</span> <span class="nav-text">nginx的作用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">1.14.</span> <span class="nav-text">面试题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-kafka%E7%9A%84%E5%A4%9A%E6%AC%A1%E6%8F%90%E4%BA%A4%E5%92%8C%E4%B8%80%E6%AC%A1%E6%8F%90%E4%BA%A4-kafka%E5%8F%91%E9%80%81%E7%AB%AF3%E7%A7%8D%E4%B8%8D%E5%90%8C%E7%9A%84%E5%8F%91%E9%80%81%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.14.1.</span> <span class="nav-text">1.kafka的多次提交和一次提交-kafka发送端3种不同的发送模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-kafka%E7%9A%84%E6%B6%88%E8%B4%B9%E6%96%B9%E5%BC%8F"><span class="nav-number">1.14.2.</span> <span class="nav-text">2.kafka的消费方式</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">248k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:45</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

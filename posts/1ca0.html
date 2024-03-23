@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="二分查找一.不能排序的数组使用二分查找 对于一个旋转数组我们可以使用二分查找会得出以下规律： 每一次二分都会把数组分为有序的一半和无序的一半。判断有序的方法是最右元素&gt;&#x3D;最左元素，反之则无序。 先判断左右哪边有序，在根据情况进行二分。nums[right] &lt; nums[mid]]就是判断左边有序的。 显然，在对无序部分进行二分的过程中，最后所查找的元素一定在有序数组部分（极">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023-03-18-二分查找">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/1ca0.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="二分查找一.不能排序的数组使用二分查找 对于一个旋转数组我们可以使用二分查找会得出以下规律： 每一次二分都会把数组分为有序的一半和无序的一半。判断有序的方法是最右元素&gt;&#x3D;最左元素，反之则无序。 先判断左右哪边有序，在根据情况进行二分。nums[right] &lt; nums[mid]]就是判断左边有序的。 显然，在对无序部分进行二分的过程中，最后所查找的元素一定在有序数组部分（极">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-18T06:23:23.000Z">
+<meta property="article:modified_time" content="2024-03-21T09:31:59.647Z">
+<meta property="article:author" content="yebin">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/1ca0.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2023-03-18-二分查找 | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/1ca0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023-03-18-二分查找
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-03-18 14:23:23" itemprop="dateCreated datePublished" datetime="2023-03-18T14:23:23+08:00">2023-03-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 17:31:59" itemprop="dateModified" datetime="2024-03-21T17:31:59+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="二分查找"><a href="#二分查找" class="headerlink" title="二分查找"></a>二分查找</h1><h2 id="一-不能排序的数组使用二分查找"><a href="#一-不能排序的数组使用二分查找" class="headerlink" title="一.不能排序的数组使用二分查找"></a>一.不能排序的数组使用二分查找</h2><ol>
+<li>对于一个旋转数组我们可以使用二分查找会得出以下规律：<ul>
+<li>每一次二分都会把数组分为有序的一半和无序的一半。判断有序的方法是最右元素&gt;&#x3D;最左元素，反之则无序。</li>
+<li>先判断左右哪边有序，在根据情况进行二分。nums[right] &lt; nums[mid]]就是判断左边有序的。</li>
+<li>显然，在对无序部分进行二分的过程中，最后所查找的元素一定在有序数组部分（极限为数组只有一个元素）</li>
+</ul>
+</li>
+<li>有些数组本身不是有序的，但是其前缀和一定是有序的。</li>
+</ol>
+ <span id="more"></span>
+
+<p><strong>先判断左右哪边有序，在根据情况进行二分</strong></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/search-in-rotated-sorted-array/">33. 搜索旋转排序数组</a> 解旋转数组的关键是，target比mid的小时，不一定是在左边；同理大时。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/search-in-rotated-sorted-array-ii/">81. 搜索旋转排序数组 II</a> 有重复元素 √</p>
+<p><strong>最小值一定在无序的一边</strong></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array/">153. 寻找旋转排序数组中的最小值</a> </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(nums[mid]&gt;nums[hi])&#123;</span><br><span class="line">    lo = mid + <span class="number">1</span>;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    hi = mid;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-minimum-in-rotated-sorted-array-ii/">154. 寻找旋转排序数组中的最小值 II </a>有重复元素</p>
+<p>当旋转数组中出现重复值时，会出现无法判断左右有序的情况，即nums[mid]&#x3D;&#x3D;nums[left]&amp;&amp;nums[mid]&#x3D;&#x3D;nums[right]。解决重复元素的方法是，让right-1&#x2F;(left+1)，从而改变mid的值</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-peak-element/">162. 寻找峰值</a> 爬坡法</p>
+<p>在比较值时，我们习惯使用a1-a2正数还是负数来判断，但是需要注意如果a的值存在相加溢出就不能使用。</p>
+<h2 id="二-二分查找的变形"><a href="#二-二分查找的变形" class="headerlink" title="二.二分查找的变形"></a>二.二分查找的变形</h2><p>事实上，二分查找的形式主要有两种，一种是查找中途就可以得到确切答案的，另一种是只有到最后一刻才能得到答案，思想和排除法差不多。他们的代码区别如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//形式一</span></span><br><span class="line"><span class="keyword">while</span>(lo &lt;= hi)&#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> lo + (hi - lo)/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(nums[mid] &gt; target) lo = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &lt; target) hi = mid - <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">return</span> mid;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//形式二</span></span><br><span class="line"><span class="keyword">while</span>(lo &lt; hi)&#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> lo + (hi - lo)/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(nums[mid] &gt; target) lo = mid + <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &lt; target) hi = mid;</span><br><span class="line">    <span class="keyword">else</span> hi = mid;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> right;</span><br></pre></td></tr></table></figure>
+
+<h2 id="三-存在重复值的二分查找"><a href="#三-存在重复值的二分查找" class="headerlink" title="三.存在重复值的二分查找"></a>三.存在重复值的二分查找</h2><p>思考两个问题：找第一个数还是最后一个数(取哪一半)，right可能为哪些数(补丁)</p>
+<ol>
+<li><p>找到第一个为target的数,如果不存在target返回floor(target)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test01</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">int</span>[] nums = &#123;<span class="number">5</span>,<span class="number">7</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">8</span>,<span class="number">10</span>&#125;;</span><br><span class="line">    <span class="type">int</span> <span class="variable">target</span> <span class="operator">=</span> <span class="number">8</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> nums.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> left + (right - left)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums[mid] == target)&#123;</span><br><span class="line">            right = mid;<span class="comment">//在第一个数还是最后一个数</span></span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &gt; target)&#123;</span><br><span class="line">            right = mid;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &lt; target)&#123;</span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//补丁</span></span><br><span class="line">    <span class="type">int</span> ans ;</span><br><span class="line">    <span class="keyword">if</span>(nums[right] &lt;= target) ans = right;</span><br><span class="line">    <span class="keyword">else</span> ans = right - <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//**总结：使用该模板(不考虑补丁)，如果数组中存在target的重复值，那么right会返回target的左边第一个索引；如果数组中不存在target，那么right会返回&gt;target的第一个数的索引，不需要补丁**</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>找到最后一个target的数，如果不存在target返回celling(target)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test02</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">int</span>[] nums = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line">    <span class="type">int</span> <span class="variable">target</span> <span class="operator">=</span> <span class="number">2</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> nums.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> left + (right - left)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(nums[mid] == target)&#123;</span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &gt; target)&#123;</span><br><span class="line">            right = mid;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(nums[mid] &lt; target)&#123;</span><br><span class="line">            left = mid + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//补丁</span></span><br><span class="line">    <span class="type">int</span> ans ;</span><br><span class="line">    <span class="keyword">if</span>(nums[right - <span class="number">1</span>] == target) ans = right - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">else</span> ans = right;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//**总结：使用该模板(不考虑补丁)，无论数组中是否包含target，right都会返回大于target的第一个数。需要补丁，如果数组中不存在大于target的数，那么就会返回最右边的数。**</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>深入理解：</p>
+<ul>
+<li><p>约定：1. left &#x3D; 0，right &#x3D; nums.length - 1，即left，right一定是要在闭区间内的 </p>
+<p>​			2. 统一使用right作为我们要查找的元素。</p>
+</li>
+<li><p>代码理解：</p>
+<ol>
+<li>left  &lt; right 与 left &lt;&#x3D; right 的区别：<br>当循环条件变成left &lt; right 时，循环体处理不了left&#x3D;&#x3D;right的情况，因此就需要打补丁，处理结束条件left &#x3D;&#x3D; right</li>
+<li>a[mid] &#x3D;&#x3D; target 方法不是return语句的作用：<br>当满足target的条件值很多，且要执行到最后只剩一个元素时，就不能简单的使用return了。这时就需要分情况：1.当target很多时，找到最左边的那个，对应语句为right &#x3D; mid - 1&#x2F;right &#x3D; mid；2.找到最右边的那个，对应语句为left &#x3D; mid +1<br>注：这里有两个坑，一是单纯的加一条语句不一定能达到想要的结果；<strong>二是left&#x3D;mid是不被允许的。</strong></li>
+<li>a[mid] &#x3D;&#x3D; target right &#x3D; mid - 1&#x2F;left &#x3D; mid +1的副作用：<br>会影响结束时的结果，详情见上面的版本一和二的代码注释</li>
+<li>关于打补丁：打补丁是一种思想，不一定需要。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>总结：</p>
+<ul>
+<li>二分查找如果循环不处理left &#x3D;&#x3D; right 一定要加补丁，因为用例复杂时，很难确定right的取值</li>
+<li>二分查找的定义：nums[right] &gt;&#x3D; target &gt;&#x3D;nums[left] (有重复值) ；<br>nums[right] &gt; target &gt;&#x3D; nums[left] （无重复值）</li>
+</ul>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-first-and-last-position-of-element-in-sorted-array/">34. 在排序数组中查找元素的第一个和最后一个位置</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-the-duplicate-number/">287. 寻找重复数</a></p>
+<h2 id="四-找到y-f-x-的最优解"><a href="#四-找到y-f-x-的最优解" class="headerlink" title="四.找到y&#x3D;f(x)的最优解"></a>四.找到y&#x3D;f(x)的最优解</h2><p>1.二分查找的形式不是num[i]形式，而是f(x)形式</p>
+<p>定义：f(x)为单调函数，定义域和值域有界，那么可以通过二分查找找到值为y的自变量x为多少。</p>
+<p>步骤：</p>
+<ul>
+<li>给出y&#x3D;f(x)的函数关系，写出相关函数</li>
+<li>给出x的取值范围</li>
+<li>如果相同的y的值有多个，需要根据条件判断是给出x最小的还是x最大的。</li>
+</ul>
+<p><strong>画图</strong>：需要根据定义正确分析出定义域和值域，并分析出函数是单调递增还是递减。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数 f 是关于自变量 x 的单调函数</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">f</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主函数，在 f(x) == target 的约束下求 x 的最值</span></span><br><span class="line"><span class="type">int</span> <span class="title function_">solution</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> target)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (nums.length == <span class="number">0</span>) <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="comment">// 问自己：自变量 x 的最小值是多少？</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">left</span> <span class="operator">=</span> ...;</span><br><span class="line">    <span class="comment">// 问自己：自变量 x 的最大值是多少？</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">right</span> <span class="operator">=</span> ... + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">mid</span> <span class="operator">=</span> left + (right - left) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (f(mid) == target) &#123;</span><br><span class="line">            <span class="comment">// 问自己：题目是求左边界还是右边界？</span></span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (f(mid) &lt; target) &#123;</span><br><span class="line">            <span class="comment">// 问自己：怎么让 f(x) 大一点？</span></span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (f(mid) &gt; target) &#123;</span><br><span class="line">            <span class="comment">// 问自己：怎么让 f(x) 小一点？</span></span><br><span class="line">            <span class="comment">// ...</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/sqrtx/">69. x 的平方根 </a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/split-array-largest-sum/">410. 分割数组的最大值</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/koko-eating-bananas/">875. 爱吃香蕉的珂珂</a></p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/capacity-to-ship-packages-within-d-days/">1011. 在 D 天内送达包裹的能力</a></p>
+<p>2.f(x)的f函数在求解固定的x时比较容易，但需要求解满足y的最小&#x2F;大x，就可使用二分查找，给定某个x。</p>
+<p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/fair-distribution-of-cookies/">2305. 公平分发饼干</a> 二分查找 + 回溯</p>
+<p>二，三的万法归一：</p>
+<ol>
+<li>保证值有序，无论是大到小还是小到大</li>
+<li>在存在重复值的二分查找中，<strong>只有两种缩小方法</strong>，hi&#x3D;mid（值在左边）和lo&#x3D;mid+1（值在右边）</li>
+<li>问自己三个问题，值相等时在哪边，值偏大时在哪边，值偏小时在哪边。</li>
+<li><strong>最后的值中我们只返回hi</strong>，至于hi最终哪里需要根据条件判断，必要是加补丁</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/299c.html" rel="prev" title="2023-03-12-链表类算法">
+      <i class="fa fa-chevron-left"></i> 2023-03-12-链表类算法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/b44d.html" rel="next" title="2023-03-20-Redis">
+      2023-03-20-Redis <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">1.</span> <span class="nav-text">二分查找</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E4%B8%8D%E8%83%BD%E6%8E%92%E5%BA%8F%E7%9A%84%E6%95%B0%E7%BB%84%E4%BD%BF%E7%94%A8%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">1.1.</span> <span class="nav-text">一.不能排序的数组使用二分查找</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E7%9A%84%E5%8F%98%E5%BD%A2"><span class="nav-number">1.2.</span> <span class="nav-text">二.二分查找的变形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E5%AD%98%E5%9C%A8%E9%87%8D%E5%A4%8D%E5%80%BC%E7%9A%84%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE"><span class="nav-number">1.3.</span> <span class="nav-text">三.存在重复值的二分查找</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B-%E6%89%BE%E5%88%B0y-f-x-%E7%9A%84%E6%9C%80%E4%BC%98%E8%A7%A3"><span class="nav-number">1.4.</span> <span class="nav-text">四.找到y&#x3D;f(x)的最优解</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">248k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:45</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

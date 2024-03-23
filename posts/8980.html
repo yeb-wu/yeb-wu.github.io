@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="计网（小林coding）1.当键入网址后，到网页显示，其间发生了什么http 首先浏览器做的第一步工作就是要对 URL 进行解析，从而生成发送给 Web 服务器的请求信息。 dns 由于大多数网址都使用的是域名，因此在发送之前需要查询服务器域名对应的 IP 地址。 协议栈 通过 DNS 获取到 IP 后，浏览器委托协议栈进行http请求消息的传输工作。 tcp HTTP是基于TCP的，所以在协议栈">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2023-07-04-计算机网络2">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/8980.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="计网（小林coding）1.当键入网址后，到网页显示，其间发生了什么http 首先浏览器做的第一步工作就是要对 URL 进行解析，从而生成发送给 Web 服务器的请求信息。 dns 由于大多数网址都使用的是域名，因此在发送之前需要查询服务器域名对应的 IP 地址。 协议栈 通过 DNS 获取到 IP 后，浏览器委托协议栈进行http请求消息的传输工作。 tcp HTTP是基于TCP的，所以在协议栈">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/6-%E4%BA%94%E5%A4%A7%E7%B1%BBHTTP%E7%8A%B6%E6%80%81%E7%A0%81.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230321120004463.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230321165140044.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230924213740956.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230321191249314.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230321193835214.png">
+<meta property="article:published_time" content="2023-07-04T06:26:42.000Z">
+<meta property="article:modified_time" content="2024-03-21T09:35:50.216Z">
+<meta property="article:author" content="yebin">
+<meta property="article:tag" content="计算机基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/6-%E4%BA%94%E5%A4%A7%E7%B1%BBHTTP%E7%8A%B6%E6%80%81%E7%A0%81.png">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/8980.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2023-07-04-计算机网络2 | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/8980.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2023-07-04-计算机网络2
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-07-04 14:26:42" itemprop="dateCreated datePublished" datetime="2023-07-04T14:26:42+08:00">2023-07-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-03-21 17:35:50" itemprop="dateModified" datetime="2024-03-21T17:35:50+08:00">2024-03-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" itemprop="url" rel="index"><span itemprop="name">计算机基础</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="计网（小林coding）"><a href="#计网（小林coding）" class="headerlink" title="计网（小林coding）"></a>计网（小林coding）</h1><h2 id="1-当键入网址后，到网页显示，其间发生了什么"><a href="#1-当键入网址后，到网页显示，其间发生了什么" class="headerlink" title="1.当键入网址后，到网页显示，其间发生了什么"></a>1.当键入网址后，到网页显示，其间发生了什么</h2><p>http</p>
+<p>首先浏览器做的第一步工作就是要对 <code>URL</code> 进行解析，从而生成发送给 <code>Web</code> 服务器的请求信息。</p>
+<p>dns</p>
+<p>由于大多数网址都使用的是域名，因此在发送之前需要查询服务器域名对应的 IP 地址。</p>
+<p>协议栈</p>
+<p>通过 DNS 获取到 IP 后，浏览器委托协议栈进行http请求消息的传输工作。</p>
+<p>tcp</p>
+<p>HTTP是基于TCP的，所以在协议栈会使用TCP协议，在HTTP请求中添加TCP报文头部。TCP是面向连接的，所以在开始发送数据之前，需要通过三次握手来建立连接，然后才能发送数据。</p>
+<p>ip</p>
+<p>TCP报文中在添加IP头部，用于在网络层中寻找目的地址的网络。</p>
+<p>mac</p>
+<p>然后在IP报文中添加MAC头部，用于在以太网中传输数据。</p>
+<p>最后将这个封装了TCP头部，IP头部，和MAC头部的HTTPx消息交由</p>
+<p>网卡发送出去，中间会使用路由器通过ip地址转发，使用交换机通过mac地址转发，最后到达服务器设备。</p>
+<p>服务器的网卡收到数据包后，通过层层拆包，最后在TCP 头部端口号中发现某个HTTP 的服务器正在监听这个端口号</p>
+<p>于是交由这个HTTP进程处理，发现这个请求是要访问一个页面，于是就把这个网页封装在 HTTP 响应报文里。</p>
+<p>http套上tcp，ip，mac头部，然后发送出去。客户端收到该报文后，解析出http响应报文后，浏览器渲染页面并显示。</p>
+ <span id="more"></span>
+
+<p>mac地址和ip地址的作用区别</p>
+<ul>
+<li>mac地址是以太网中使用的，在网络传输过程中ip地址是不会该改变的，但是mac地址会不断变化</li>
+<li>路由器与路由器之间可能存在交换机，而交换机值工作在mac层，只能识别mac地址。</li>
+<li>mac地址表示发送的下一个设备的地址，ip地址表示的是目的地址，即最终地址，通过路由器的路由表确定ip数据包的下一跳。</li>
+<li>MAC 的作用则是实现「直连」的两个设备之间通信，而 IP 则负责在「没有直连」的两个网络之间进行通信传输。</li>
+</ul>
+<h2 id="HTTP常见面试题"><a href="#HTTP常见面试题" class="headerlink" title="HTTP常见面试题"></a>HTTP常见面试题</h2><h3 id="一-HTTP-基本概念"><a href="#一-HTTP-基本概念" class="headerlink" title="一. HTTP 基本概念"></a>一. HTTP 基本概念</h3><h4 id="HTTP是什么"><a href="#HTTP是什么" class="headerlink" title="HTTP是什么"></a>HTTP是什么</h4><p>HTTP 是一个在计算机世界里专门在「两点」之间「传输」文字、图片、音频、视频等「超文本」数据的「约定和规范」。</p>
+<h4 id="HTTP报文的格式"><a href="#HTTP报文的格式" class="headerlink" title="HTTP报文的格式"></a>HTTP报文的格式</h4><p>请求报文：请求行，请求头，请求体</p>
+<p>请求行：请求方法，URL，HTTP协议版本</p>
+<p>响应报文：响应行，响应头，响应体</p>
+<p>响应行：状态码，状态消息(ok，redirect)，HTTP协议版本</p>
+<h4 id="HTTP常见的状态码有哪些？"><a href="#HTTP常见的状态码有哪些？" class="headerlink" title="HTTP常见的状态码有哪些？"></a>HTTP常见的状态码有哪些？</h4><p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/6-%E4%BA%94%E5%A4%A7%E7%B1%BBHTTP%E7%8A%B6%E6%80%81%E7%A0%81.png" alt=" 五大类 HTTP 状态码 "></p>
+<p>301 和 302 都会在响应头里使用字段 <code>Location</code>，指明后续要跳转的 URL，浏览器会自动重定向新的 URL。</p>
+<p>304 Not Modified不具有跳转的含义，表示资源未修改，重定向已存在的缓冲文件，也称缓存重定向，也就是告诉客户端可以继续使用缓存资源，用于缓存控制。</p>
+<h4 id="HTTP常见字段有哪些？"><a href="#HTTP常见字段有哪些？" class="headerlink" title="HTTP常见字段有哪些？"></a>HTTP常见字段有哪些？</h4><p><em>Host</em> 字段：客户端发送请求时，用来指定服务器的域名。</p>
+<p><em>Content-Length 字段</em>：</p>
+<ul>
+<li>表明本次回应的数据长度，后面的字节就属于下一个回应了。</li>
+<li>HTTP 协议通过设置回车符、换行符作为 HTTP header 的边界，通过 Content-Length 字段作为 HTTP body 的边界，这两个方式都是为了解决“粘包”的问题。</li>
+</ul>
+<p><em>Connection 字段</em>：Keep-Alive</p>
+<ul>
+<li>用于客户端要求服务器使用「HTTP 长连接」机制，以便其他请求复用。</li>
+<li>开启了 HTTP Keep-Alive 机制后， 连接就不会中断，而是保持连接。当客户端发送另一个请求时，它会使用同一个连接，一直持续到客户端或服务器端提出断开连接。</li>
+<li>HTTP&#x2F;1.1 版本的默认连接都是长连接</li>
+</ul>
+<p><em>Content-Type 字段</em>：text&#x2F;html; Charset&#x3D;utf-8</p>
+<ul>
+<li><code>Content-Type</code> 字段用于服务器回应时，告诉客户端，本次数据是什么格式。</li>
+</ul>
+<p><code>Accept</code> 字段：声明自己可以接受哪些数据格式。</p>
+<p><em>Content-Encoding 字段</em>：说明数据的压缩方法。表示服务器返回的数据使用了什么压缩格式</p>
+<h3 id="二-Get-与-Post"><a href="#二-Get-与-Post" class="headerlink" title="二. Get 与 Post"></a>二. Get 与 Post</h3><h5 id="GET-和-POST-有什么区别？"><a href="#GET-和-POST-有什么区别？" class="headerlink" title="GET 和 POST 有什么区别？"></a>GET 和 POST 有什么区别？</h5><ul>
+<li><strong>GET 的语义是从服务器获取指定的资源</strong>，这个资源可以是静态的文本、页面、图片视频等。<strong>GET 请求的参数位置一般是写在 URL 中</strong>，URL 规定只能支持 ASCII，所以 GET 请求的参数只允许 ASCII 字符 ，而且<strong>浏览器会对 URL 的长度有限制</strong></li>
+<li><strong>POST 的语义是根据请求负荷（报文body）对指定的资源做出处理</strong>，具体的处理方式视资源类型而不同。POST 请求<strong>携带数据的位置一般是写在报文 body</strong> 中，body 中的数据可以是任意格式的数据，只要客户端与服务端协商好即可，而且<strong>浏览器不会对 body 大小做限制</strong>。</li>
+</ul>
+<h5 id="GET-和-POST-方法都是安全和幂等的吗？"><a href="#GET-和-POST-方法都是安全和幂等的吗？" class="headerlink" title="GET 和 POST 方法都是安全和幂等的吗？"></a>GET 和 POST 方法都是安全和幂等的吗？</h5><p>安全：指请求方法不会「破坏」服务器上的资源。</p>
+<p>幂等：意思是多次执行相同的操作，结果都是「相同」的。</p>
+<p>GET 方法是安全、幂等、可被缓存的。</p>
+<p>POST 不安全，不幂等，（大部分实现）不可缓存。</p>
+<p>事实上，上面的结论是在遵守规范的前提下的，get和post是否安全，幂等主要看程序员如何使用，如果程序员使用get来删除数据那就是不安全，不幂等的。</p>
+<h5 id="GET-请求可以带-body-吗？"><a href="#GET-请求可以带-body-吗？" class="headerlink" title="GET 请求可以带 body 吗？"></a>GET 请求可以带 body 吗？</h5><p>理论上，任何请求都可以带 body 的。只是因为 RFC 规范定义的 GET 请求是获取资源，所以根据这个语义不需要用到 body。另外，URL 中的查询&#x3D; 参数也不是 GET 所独有的，POST 请求的 URL 中也可以有参数的。</p>
+<h5 id="body中的数据一定是不可见的吗？"><a href="#body中的数据一定是不可见的吗？" class="headerlink" title="body中的数据一定是不可见的吗？"></a>body中的数据一定是不可见的吗？</h5><ul>
+<li>GET 用 URL 传输数据，请求会显示地址栏中；POST 用 body 传输数据</li>
+<li>HTTP 传输的内容都是明文的，虽然在浏览器地址拦看不到 POST 提交的 body 数据，但是只要抓个包就都能看到了。</li>
+<li>使用HTTPS 协议，所有 HTTP 的数据都会被加密传输。</li>
+</ul>
+<h3 id="三-HTTP-缓存技术"><a href="#三-HTTP-缓存技术" class="headerlink" title="三. HTTP 缓存技术"></a>三. HTTP 缓存技术</h3><p>什么是缓存技术</p>
+<p>对于一些具有重复性的 HTTP 请求，比如每次请求得到的数据都一样的，我们可以把这对「请求-响应」的数据都<strong>缓存在本地</strong>，那么下次就直接读取本地的数据</p>
+<p>注：HTTP 中协商缓存与强制缓存并没有互斥性，这两套机制是并行工作的，譬如，<strong>当强制缓存存在时，直接从强制缓存中返回资源，无须进行变动检查；而当强制缓存超过时效，协商缓存仍可以正常地工作。</strong></p>
+<p>强制缓存</p>
+<p>强制缓存在浏览器的地址输入、页面链接跳转、新开窗口、前进和后退中均可生效，但在用户主动刷新页面时应当自动失效</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230321120004463.png" alt="image-20230321120004463" style="zoom: 50%;" />
+
+<ul>
+<li>强缓存指的是只要浏览器判断缓存没有过期，则直接使用浏览器的本地缓存，决定是否使用缓存的主动性在于浏览器这边。</li>
+<li>实现原理：<ul>
+<li>当浏览器第一次请求访问服务器资源时，服务器会在返回这个资源的同时，在 Response 头部加上 Cache-Control，Cache-Control 中设置了过期时间大小；</li>
+<li>浏览器再次请求访问服务器中的该资源时，会先<strong>通过请求资源的时间与 Cache-Control 中设置的过期时间大小，来计算出该资源是否过期</strong>，如果没有，则使用该缓存，否则重新请求服务器；</li>
+<li>服务器再次收到请求后，会再次更新 Response 头部的 Cache-Control</li>
+</ul>
+</li>
+</ul>
+<p>协商缓存</p>
+<ul>
+<li><p>请求的响应码是 <code>304</code>，这个是告诉浏览器可以使用本地缓存的资源，通常这种通过服务端告知客户端是否可以使用本地缓存的方式被称为协商缓存。</p>
+</li>
+<li><p>原理：</p>
+<p>协商缓存有两种变动检查机制，分别是根据资源的修改时间进行检查，以及根据资源唯一标识是否发生变化来进行检查，它们都是靠一组成对出现的请求、响应 Header 来实现的</p>
+<p><strong>Last-Modified 和 If-Modified-Since</strong>：</p>
+<p>Last-Modified 是服务器的响应 Header，用于告诉客户端这个资源的最后修改时间。对于带有这个 Header 的资源，当客户端需要再次请求时，会通过 If-Modified-Since 把之前收到的资源最后修改时间发送回服务端。</p>
+<p>如果此时服务端发现资源在该时间后没有被修改过，就只要返回一个 304&#x2F;Not Modified 的响应，无须附带消息体</p>
+<p>如果此时服务端发现资源在该时间之后有变动，就会返回 200&#x2F;OK 的完整响应，在消息体中包含最新的资源</p>
+<p><strong>Etag 和 If-None-Match</strong>：</p>
+<p>Etag 是服务器的响应 Header，用于告诉客户端这个资源的唯一标识。Etag 值默认是对文件的索引节点（INode），大小和最后修改时间进行哈希计算后得到的。对于带有这个 Header 的资源，当客户端需要再次请求时，会通过 If-None-Match 把之前收到的资源唯一标识发送回服务端。</p>
+<p>如果此时服务端计算后发现资源的唯一标识与上传回来的一致，说明资源没有被修改过，就只要返回一个 304&#x2F;Not Modified 的响应即可，无须附带消息体</p>
+<p>如果此时服务端发现资源的唯一标识有变动，就会返回 200&#x2F;OK 的完整响应，在消息体中包含最新的资源</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.xiaolincoding.com/network/2_http/http_interview.html#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98">https://www.xiaolincoding.com/network/2_http/http_interview.html#%E4%BB%80%E4%B9%88%E6%98%AF%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98</a></p>
+<h3 id="四-HTTP-特性"><a href="#四-HTTP-特性" class="headerlink" title="四. HTTP 特性"></a>四. HTTP 特性</h3><h4 id="HTTP-1-1-的优点"><a href="#HTTP-1-1-的优点" class="headerlink" title="HTTP&#x2F;1.1 的优点"></a>HTTP&#x2F;1.1 的优点</h4><ol>
+<li><em>简单</em>：报文格式header+body，头部信息key-value</li>
+<li><em>灵活和易于扩展</em>：HTTP 协议里的各类请求方法、URI&#x2F;URL、状态码、头字段等每个组成要求都没有被固定死，都允许开发人员<strong>自定义和扩充</strong>。</li>
+<li>支持长链接<ul>
+<li>在HTTP1.0中，每发起一个请求，都要新建一次 TCP 连接；在HTTP&#x2F;1.1 中，提出了<strong>长连接</strong>的通信方式，只要任意一端没有明确提出断开连接，则保持 TCP 连接状态。</li>
+<li>注：长链接只是实现了一次TCP可以发送多次请求，但是这些请求仍然是串行的。</li>
+</ul>
+</li>
+</ol>
+<h4 id="HTTP-1-1-的缺点"><a href="#HTTP-1-1-的缺点" class="headerlink" title="HTTP&#x2F;1.1 的缺点"></a>HTTP&#x2F;1.1 的缺点</h4><ol>
+<li>无状态 : 既然服务器没有记忆能力，它在完成有关联性的操作时会非常麻烦。比较简单的方式用 <strong>Cookie</strong> 技术。但是使用Cookies如果是前后端项目会出现跨域问题</li>
+<li>不安全：<ul>
+<li>通信使用明文（不加密），内容可能会被窃听。</li>
+<li>不验证通信方的身份，因此有可能遭遇伪装。</li>
+<li>无法证明报文的完整性，所以有可能已遭篡改。</li>
+<li>HTTP 的安全问题，可以用 HTTPS 的方式解决，也就是通过引入 SSL&#x2F;TLS 层，使得在安全上达到了极致。</li>
+</ul>
+</li>
+<li>队头阻塞：在请求 - 应答模式下，如果一个请求没有得到应答，那么下一个请求也会被阻塞。<ul>
+<li>在请求 - 应答模式下，如果一个请求没有得到应答，那么下一个请求也会被阻塞。</li>
+<li>因此，HTTP1中如果要实现真正的并发，只能通过增加TCP连接数</li>
+</ul>
+</li>
+</ol>
+<h4 id="HTTP-1-1-的性能"><a href="#HTTP-1-1-的性能" class="headerlink" title="HTTP&#x2F;1.1 的性能"></a>HTTP&#x2F;1.1 的性能</h4><p><em>1. 长连接</em></p>
+<p>2.<em>管道网络传输</em>：</p>
+<ul>
+<li><p>HTTP&#x2F;1.1 采用了长连接的方式，这使得管道（pipeline）网络传输成为了可能。</p>
+</li>
+<li><p>使用管道可以实现只要第一个请求发出去了，不必等其回来，就可以发第二个请求出去</p>
+</li>
+<li><p>服务器必须按照接收请求的顺序发送对这些管道化请求的响应。</p>
+</li>
+<li><p>HTTP&#x2F;1.1 管道解决了请求的队头阻塞，但是没有解决响应的队头阻塞。</p>
+</li>
+<li><h5 id="HTTP-1-1-管道化技术不是默认开启，而且浏览器基本都没有支持"><a href="#HTTP-1-1-管道化技术不是默认开启，而且浏览器基本都没有支持" class="headerlink" title="HTTP&#x2F;1.1 管道化技术不是默认开启，而且浏览器基本都没有支持"></a>HTTP&#x2F;1.1 管道化技术不是默认开启，而且浏览器基本都没有支持</h5></li>
+</ul>
+<p>3.<em>队头阻塞</em></p>
+<h3 id="五-HTTPS-与-HTTP"><a href="#五-HTTPS-与-HTTP" class="headerlink" title="五. HTTPS 与 HTTP"></a>五. HTTPS 与 HTTP</h3><h4 id="HTTP-与-HTTPS-有哪些区别"><a href="#HTTP-与-HTTPS-有哪些区别" class="headerlink" title="HTTP 与 HTTPS 有哪些区别"></a>HTTP 与 HTTPS 有哪些区别</h4><ul>
+<li>HTTP明文传输；HTTPS在 TCP 和 HTTP 网络层之间加入了 SSL&#x2F;TLS 安全协议，使得报文能够加密传输。（注SSL和TLS是一个东西）</li>
+<li>HTTP  TCP 三次握手；HTTPS  TCP 三次握手 + SSL&#x2F;TLS 的握手</li>
+<li>HTTP 默认端口号是 80，HTTPS 默认端口号是 443。</li>
+<li>HTTPS 协议需要向 CA（证书权威机构）申请数字证书</li>
+</ul>
+<h4 id="HTTPS-解决了-HTTP-的哪些问题"><a href="#HTTPS-解决了-HTTP-的哪些问题" class="headerlink" title="HTTPS 解决了 HTTP 的哪些问题"></a>HTTPS 解决了 HTTP 的哪些问题</h4><ul>
+<li><strong>信息加密</strong>：交互信息无法被窃取 -&gt;<strong>混合加密</strong></li>
+<li><strong>校验机制</strong>：无法篡改通信内容，篡改了就不能正常显示 -&gt;<strong>摘要算法</strong>实现<strong>完整性</strong></li>
+<li><strong>身份证书</strong>：证明淘宝是真的淘宝网 -&gt;将服务器公钥放入到<strong>数字证书</strong>中</li>
+</ul>
+<p>​	非对称加密的用途：</p>
+<ul>
+<li>公钥加密，私钥解密。这个目的是为了保证内容传输的安全，因为被公钥加密的内容，其他人是无法解密的，只有持有私钥的人，才能解密出实际的内容</li>
+<li>私钥加密，公钥解密。这个目的是为了保证消息不会被冒充，因为私钥是不可泄露的，如果公钥能正常解密出私钥加密的内容，就能证明这个消息是来源于持有私钥身份的人发送的。</li>
+</ul>
+<ol>
+<li><p>混合加密</p>
+<ul>
+<li>在通信建立前采用<strong>非对称加密</strong>的方式交换「会话秘钥」，后续就不再使用非对称加密。因为非对称加密可以解决密钥交换问题，公钥可以任意分发而私钥保密</li>
+<li>在通信过程中全部使用<strong>对称加密</strong>的「会话秘钥」的方式加密明文数据。因为对称加密的速度快</li>
+</ul>
+</li>
+<li><p><em>摘要算法 + 数字签名</em></p>
+<ul>
+<li>通过「私钥加密，公钥解密」的方式，来确认消息的身份</li>
+<li>私钥加密内容不是内容本身，而是对内容的哈希值加密，哈希值是通过hash(内容)计算的。摘要算法指hash函数，数字签名指私钥加密哈希值</li>
+<li>如果客户端使用hash(内容)计算出来的哈希值和通过公钥解密的哈希值不同，说明内容被修改了。</li>
+</ul>
+</li>
+<li><p>数字证书</p>
+<ul>
+<li><p>防止伪造公钥的秘诀在于，将服务器公钥放在数字证书中，数字证书统一交由数字证书认证机构颁发</p>
+</li>
+<li><p>伪造的数字证书是不能通过CA的公钥解密的。（过程类似于数字签名，最后比较 H1 和 H2，如果值相同，则为可信赖的证书，否则则认为证书不可信。）</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230321165140044.png" alt="image-20230321165140044" style="zoom:80%;" /></li>
+</ul>
+</li>
+</ol>
+<h4 id="证书信任链"><a href="#证书信任链" class="headerlink" title="证书信任链"></a><strong>证书信任链</strong></h4><p>根据信任链，可以大致将证书分为根证书，中间证书，服务器证书</p>
+<p>一开始，客户端只信任根证书，根证书是内置在操作系统中的。所谓的信任链，就是根证书信任中间证书，中间证书信任服务器证书，也就是说如果操作系统中只有根证书的话，是无法直接验证服务器证书的，因为服务器证书不是它颁发的。</p>
+<p>客户端会根据服务器证书中的签发者，找到该证书的颁发机构是，然后向 CA 请求该中间证书。这样信任链就完整了。</p>
+<h4 id="HTTPS-是如何建立连接的？其间交互了什么？"><a href="#HTTPS-是如何建立连接的？其间交互了什么？" class="headerlink" title="HTTPS 是如何建立连接的？其间交互了什么？"></a>HTTPS 是如何建立连接的？其间交互了什么？</h4><ul>
+<li>客户端获取公钥：TLS 证书部署服务端时，证书文件其实就是服务端的公钥，服务端的私钥则一直留在服务端，证书文件会在 TLS 握手阶段传递给客户端，客户端通过浏览器或者操作系统中的 CA 公钥，确认服务器的证书的真实性。如果证书没有问题，客户端会<strong>从证书中取出服务器的公钥</strong></li>
+<li>协商密钥：服务端的私钥则一直留在服务端，可以用来解密公钥加密的数据。由客户端会生成随机密钥，并使用服务端的公钥加密后再传给服务端。之后发送的内容就是用同一个密钥加密解密。</li>
+</ul>
+<h4 id="HTTPS-的应用数据是如何保证完整性的"><a href="#HTTPS-的应用数据是如何保证完整性的" class="headerlink" title="HTTPS 的应用数据是如何保证完整性的"></a>HTTPS 的应用数据是如何保证完整性的</h4><ul>
+<li><em>摘要算法 + 数字签名</em></li>
+</ul>
+<h4 id="HTTPS-一定安全可靠吗"><a href="#HTTPS-一定安全可靠吗" class="headerlink" title="HTTPS 一定安全可靠吗"></a>HTTPS 一定安全可靠吗</h4><ul>
+<li>HTTPS 协议本身到目前为止还是没有任何漏洞的</li>
+<li>不安全的原因：用户信任该网站的数字证书或者在浏览器中被恶意导入伪造的CA公钥</li>
+</ul>
+<h3 id="六-HTTP-1-1、HTTP-2、HTTP-3-演变"><a href="#六-HTTP-1-1、HTTP-2、HTTP-3-演变" class="headerlink" title="六. HTTP&#x2F;1.1、HTTP&#x2F;2、HTTP&#x2F;3 演变"></a>六. HTTP&#x2F;1.1、HTTP&#x2F;2、HTTP&#x2F;3 演变</h3><h4 id="HTTP-2-的优势"><a href="#HTTP-2-的优势" class="headerlink" title="HTTP&#x2F;2 的优势"></a>HTTP&#x2F;2 的优势</h4><ul>
+<li><p>头部压缩</p>
+<p>在客户端和服务器同时维护一张头信息表，所有字段都会存入这个表，生成一个索引号，以后就不发送同样字段了，只发送索引号</p>
+</li>
+<li><p>二进制格式</p>
+<p>HTTP&#x2F;2 不再像 HTTP&#x2F;1.1 里的纯文本形式的报文，而是全面采用了<strong>二进制格式</strong>，头信息和数据体都是二进制</p>
+<p>比如状态码 200 ，在 HTTP&#x2F;1.1 是用 ‘2’’0’’0’ 三个字符来表示（二进制：00110010 00110000 00110000），共用了 3 个字节；在 HTTP&#x2F;2 对于状态码 200 的二进制编码是 10001000，只用了 1 字节</p>
+</li>
+<li><p>多路复用（HTTP&#x2F;2 Multiplexing）技术</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230924213740956.png" alt="image-20230924213740956" style="zoom:80%;" />
+
+<p>HTTP2可以在一条TCP连接中同时创建多个stream，同一个HTTP请求与响应都是跑在同一个stream中的，将多个请求跑在多个stream就实现了并发发送请求和响应了。</p>
+<p>同一个连接中的 Stream ID 是不能复用的，只能顺序递增，所以当 Stream ID 耗尽时，需要发一个控制帧 <code>GOAWAY</code>，用来关闭 TCP 连接。</p>
+<p>注：在 Nginx 中，可以通过 <code>http2_max_concurrent_Streams</code> 配置来设置 Stream 的上限，默认是 128 个。浏览器对每个域名最多 6 个连接数限制</p>
+</li>
+<li><p>服务器主动推送资源</p>
+<p>服务端不再是被动地响应，可以主动向客户端发送消息。</p>
+<p>客户端和服务器双方都可以建立 Stream， Stream ID 也是有区别的，客户端建立的 Stream 必须是奇数号，而服务器建立的 Stream 必须是偶数号。</p>
+</li>
+</ul>
+<h4 id="HTTP-2-有什么缺陷"><a href="#HTTP-2-有什么缺陷" class="headerlink" title="HTTP&#x2F;2 有什么缺陷"></a>HTTP&#x2F;2 有什么缺陷</h4><p>HTTP&#x2F;2 通过 Stream 的并发能力，解决了 HTTP&#x2F;1 队头阻塞的问题（可以连续发送多个请求或者响应），但是 HTTP&#x2F;2 还是存在“队头阻塞”的问题，只不过问题不是在 HTTP 这一层面，而是在 TCP 这一层。</p>
+<p>HTTP&#x2F;2 是基于 TCP 协议来传输数据的，TCP 是字节流协议，TCP 层必须保证收到的字节数据是完整且连续的，这样内核才会将缓冲区里的数据返回给 HTTP 应用，那么当「前 1 个字节数据」没有到达时，后收到的字节数据只能存放在内核缓冲区里，只有等到这 1 个字节数据到达时，HTTP&#x2F;2 应用层才能从内核中拿到数据，这就是 HTTP&#x2F;2 队头阻塞问题。</p>
+<p>一旦发生了丢包现象，就会触发 TCP 的重传机制，这样在一个 TCP 连接中的所有的 HTTP 请求都必须等待这个丢了的包被重传回来。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230321191249314.png" alt="image-20230321191249314" style="zoom:80%;" />
+
+<h4 id="HTTP-3"><a href="#HTTP-3" class="headerlink" title="HTTP&#x2F;3"></a>HTTP&#x2F;3</h4><ul>
+<li><p>队头阻塞的问题</p>
+<ul>
+<li>HTTP&#x2F;1.1 中的管道（ pipeline）虽然解决了请求的队头阻塞，但是<strong>没有解决响应的队头阻塞</strong>，因为服务端需要按顺序响应收到的请求，如果服务端处理某个请求消耗的时间比较长，那么只能等响应完这个请求后， 才能处理下一个请求，这属于 HTTP 层队头阻塞。</li>
+<li>HTTP&#x2F;2 虽然通过多个请求复用一个 TCP 连接解决了 HTTP 的队头阻塞 ，但是<strong>一旦发生丢包，就会阻塞住所有的 HTTP 请求</strong>，这属于 TCP 层队头阻塞。</li>
+<li>HTTP&#x2F;2 队头阻塞的问题是因为 TCP，所以 <strong>HTTP&#x2F;3 把 HTTP 下层的 TCP 协议改成了 UDP！</strong></li>
+<li>UDP 发送是不管顺序，也不管丢包的，所以不会出现像 HTTP&#x2F;2 队头阻塞的问题。大家都知道 UDP 是不可靠传输的，但基于 UDP 的 <strong>QUIC 协议</strong> 可以实现类似 TCP 的可靠性传输。</li>
+</ul>
+</li>
+<li><p>QUIC 协议 </p>
+<ul>
+<li><p><em>无队头阻塞</em>：QUIC 连接上的多个 Stream 之间并没有依赖，都是独立的，某个流发生丢包了，只会影响该流，其他流不受影响。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230321193835214.png" alt="image-20230321193835214" style="zoom:80%;" />
+</li>
+<li><p>更快的连接建立：</p>
+<ul>
+<li>HTTP&#x2F;1 和 HTTP&#x2F;2 协议中，TCP 和 TLS 是分层的，需要分批次来握手，先 TCP 握手，再 TLS 握手。HTTP&#x2F;3 QUIC 内部包含了 TLS，可以同时建立连接。</li>
+<li>QUIC 握手的目的是为确认双方的「连接 ID」所以很快</li>
+</ul>
+</li>
+<li><p>连接迁移：</p>
+<ul>
+<li>在TCP协议中，源 IP、源端口、目的 IP、目的端口确定一条TCP连接，当切换网络时<strong>IP 地址变化了，那么就必须要断开连接，然后重新建立连接</strong>。</li>
+<li>QUIC 协议通过<strong>连接 ID</strong> 来标记通信的两个端点，即使移动设备的网络变化后，导致 IP 地址变化了，只要仍保有连接 ID等信息，就可以“无缝”地复用原连接</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="各种ip协议"><a href="#各种ip协议" class="headerlink" title="各种ip协议"></a>各种ip协议</h2><h3 id="DNS-域名解析"><a href="#DNS-域名解析" class="headerlink" title="DNS 域名解析"></a>DNS 域名解析</h3><p>DNS服务器：用来将域名地址转化为实际ip地址</p>
+<p>在查询dns服务器之前，为先看浏览器的缓存，操作系统的缓存，本地文件中的hosts文件，如果这些都没有才会去访问本地的DNS服务器。</p>
+<p>DNS服务器工作流程：以<a target="_blank" rel="noopener" href="http://www.baidu.com为例/">www.baidu.com为例</a></p>
+<p>客户端首先会给本地 DNS 服务器发出一个 DNS 请求，查询 <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a> 的 IP</p>
+<p>本地域名服务器收到客户端的请求后，如果缓存里的表格能找到 <a target="_blank" rel="noopener" href="http://www.baidu.com,则它直接返回/">www.baidu.com，则它直接返回</a> IP 地址。如果没有，本地 DNS 会去问它的根域名服务器</p>
+<p>1.访问根域名服务器，获得.com域名服务器地址</p>
+<p>2.访问.com域名服务器地址，获得baidu.com域名服务器地址</p>
+<p>3.最后访问baidu.com域名服务器地址，获得ip地址。</p>
+<h3 id="ARP-与-RARP-协议"><a href="#ARP-与-RARP-协议" class="headerlink" title="ARP 与 RARP 协议"></a>ARP 与 RARP 协议</h3><p>从主机发送一个ip数据报到目的主机的传输过程可以分为两种，直接交付和间接交付。</p>
+<p>间接交付：指下一跳ip地址为路由器地址。直接交付：指下一跳ip地址为主机地址。</p>
+<p>如果是间接交付，那么主机或路由器可以通过路由表查到下一跳ip地址；如果是直接交付，那么路由器中的路由表中是没有下一跳的地址，因为ip数据报的目的地址就是该网络的某个主机。</p>
+<p>主机—–路由器—–路由器—–路由器—–主机。</p>
+<p>ARP协议：根据ip地址查询mac地址。</p>
+<p>主机或路由器会广播发送 ARP 请求，这个包中包含了想要知道的 MAC 地址的主机 IP 地址。</p>
+<p>如果 ARP 请求包中的目标 IP 地址与自己的 IP 地址一致，那么这个设备就将自己的 MAC 地址塞入 ARP 响应包返回给主机。</p>
+<h3 id="DHCP-动态获取-IP-地址"><a href="#DHCP-动态获取-IP-地址" class="headerlink" title="DHCP 动态获取 IP 地址"></a>DHCP 动态获取 IP 地址</h3><p>DHCP 服务器以实现统一分配和管理IP地址。</p>
+<h3 id="NAT-网络地址转换"><a href="#NAT-网络地址转换" class="headerlink" title="NAT 网络地址转换"></a>NAT 网络地址转换</h3><h3 id="ICMP-互联网控制报文协议"><a href="#ICMP-互联网控制报文协议" class="headerlink" title="ICMP 互联网控制报文协议*"></a>ICMP 互联网控制报文协议*</h3><p>ping 命令就是使用ICMP协议。</p>
+<h3 id="IGMP-因特网组管理协议"><a href="#IGMP-因特网组管理协议" class="headerlink" title="IGMP 因特网组管理协议*"></a>IGMP 因特网组管理协议*</h3><h3 id="ping-127-0-0-1和本机地址和localhost和0-0-0-0有区别吗？"><a href="#ping-127-0-0-1和本机地址和localhost和0-0-0-0有区别吗？" class="headerlink" title="ping 127.0.0.1和本机地址和localhost和0.0.0.0有区别吗？"></a>ping 127.0.0.1和本机地址和localhost和0.0.0.0有区别吗？</h3><p>断网时：</p>
+<h5 id="ping-127-0-0-1和本机地址和localhost是可以ping的通的，可以认为是一个东西"><a href="#ping-127-0-0-1和本机地址和localhost是可以ping的通的，可以认为是一个东西" class="headerlink" title="ping 127.0.0.1和本机地址和localhost是可以ping的通的，可以认为是一个东西"></a>ping 127.0.0.1和本机地址和localhost是可以ping的通的，可以认为是一个东西</h5><p>localhost不叫ip，他是一个域名，相当于baidu.com，系统默认解析为127.0.0.1</p>
+<p>以上三个地址在使用ping命令时，都是通过本地网卡发出去的，本地网卡不会把数据发出去，而是顺着数据链路层，网络层等传回给本机。ping 回环地址和通过TCP等各种协议发送数据到回环地址都是走这条路径。</p>
+<h5 id="ping-0-0-0-0是不可以ping通的，因为它在IPV4中表示的是无效的目标地址。"><a href="#ping-0-0-0-0是不可以ping通的，因为它在IPV4中表示的是无效的目标地址。" class="headerlink" title="ping 0.0.0.0是不可以ping通的，因为它在IPV4中表示的是无效的目标地址。"></a>ping 0.0.0.0是不可以ping通的，因为它在<code>IPV4</code>中表示的是无效的目标地址。</h5><p>0.0.0.0一般作为监听地址使用，表示本机上的所有IPV4地址，包括127.0.0.1和本机地址。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" rel="tag"># 计算机基础</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/88c0.html" rel="prev" title="2023-07-04-计算机网络1">
+      <i class="fa fa-chevron-left"></i> 2023-07-04-计算机网络1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/posts/e6af.html" rel="next" title="2023-07-06-Lottery抽奖系统">
+      2023-07-06-Lottery抽奖系统 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%BD%91%EF%BC%88%E5%B0%8F%E6%9E%97coding%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">计网（小林coding）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%BD%93%E9%94%AE%E5%85%A5%E7%BD%91%E5%9D%80%E5%90%8E%EF%BC%8C%E5%88%B0%E7%BD%91%E9%A1%B5%E6%98%BE%E7%A4%BA%EF%BC%8C%E5%85%B6%E9%97%B4%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.</span> <span class="nav-text">1.当键入网址后，到网页显示，其间发生了什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP%E5%B8%B8%E8%A7%81%E9%9D%A2%E8%AF%95%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">HTTP常见面试题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80-HTTP-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.2.1.</span> <span class="nav-text">一. HTTP 基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">HTTP是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E6%8A%A5%E6%96%87%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">HTTP报文的格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E5%B8%B8%E8%A7%81%E7%9A%84%E7%8A%B6%E6%80%81%E7%A0%81%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">HTTP常见的状态码有哪些？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP%E5%B8%B8%E8%A7%81%E5%AD%97%E6%AE%B5%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">HTTP常见字段有哪些？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C-Get-%E4%B8%8E-Post"><span class="nav-number">1.2.2.</span> <span class="nav-text">二. Get 与 Post</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#GET-%E5%92%8C-POST-%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="nav-number">1.2.2.0.1.</span> <span class="nav-text">GET 和 POST 有什么区别？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GET-%E5%92%8C-POST-%E6%96%B9%E6%B3%95%E9%83%BD%E6%98%AF%E5%AE%89%E5%85%A8%E5%92%8C%E5%B9%82%E7%AD%89%E7%9A%84%E5%90%97%EF%BC%9F"><span class="nav-number">1.2.2.0.2.</span> <span class="nav-text">GET 和 POST 方法都是安全和幂等的吗？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GET-%E8%AF%B7%E6%B1%82%E5%8F%AF%E4%BB%A5%E5%B8%A6-body-%E5%90%97%EF%BC%9F"><span class="nav-number">1.2.2.0.3.</span> <span class="nav-text">GET 请求可以带 body 吗？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#body%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E4%B8%80%E5%AE%9A%E6%98%AF%E4%B8%8D%E5%8F%AF%E8%A7%81%E7%9A%84%E5%90%97%EF%BC%9F"><span class="nav-number">1.2.2.0.4.</span> <span class="nav-text">body中的数据一定是不可见的吗？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89-HTTP-%E7%BC%93%E5%AD%98%E6%8A%80%E6%9C%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">三. HTTP 缓存技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B-HTTP-%E7%89%B9%E6%80%A7"><span class="nav-number">1.2.4.</span> <span class="nav-text">四. HTTP 特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP-1-1-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">HTTP&#x2F;1.1 的优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP-1-1-%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">1.2.4.2.</span> <span class="nav-text">HTTP&#x2F;1.1 的缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP-1-1-%E7%9A%84%E6%80%A7%E8%83%BD"><span class="nav-number">1.2.4.3.</span> <span class="nav-text">HTTP&#x2F;1.1 的性能</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#HTTP-1-1-%E7%AE%A1%E9%81%93%E5%8C%96%E6%8A%80%E6%9C%AF%E4%B8%8D%E6%98%AF%E9%BB%98%E8%AE%A4%E5%BC%80%E5%90%AF%EF%BC%8C%E8%80%8C%E4%B8%94%E6%B5%8F%E8%A7%88%E5%99%A8%E5%9F%BA%E6%9C%AC%E9%83%BD%E6%B2%A1%E6%9C%89%E6%94%AF%E6%8C%81"><span class="nav-number">1.2.4.3.1.</span> <span class="nav-text">HTTP&#x2F;1.1 管道化技术不是默认开启，而且浏览器基本都没有支持</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%94-HTTPS-%E4%B8%8E-HTTP"><span class="nav-number">1.2.5.</span> <span class="nav-text">五. HTTPS 与 HTTP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP-%E4%B8%8E-HTTPS-%E6%9C%89%E5%93%AA%E4%BA%9B%E5%8C%BA%E5%88%AB"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">HTTP 与 HTTPS 有哪些区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTPS-%E8%A7%A3%E5%86%B3%E4%BA%86-HTTP-%E7%9A%84%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">HTTPS 解决了 HTTP 的哪些问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6%E4%BF%A1%E4%BB%BB%E9%93%BE"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">证书信任链</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTPS-%E6%98%AF%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E8%BF%9E%E6%8E%A5%E7%9A%84%EF%BC%9F%E5%85%B6%E9%97%B4%E4%BA%A4%E4%BA%92%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.2.5.4.</span> <span class="nav-text">HTTPS 是如何建立连接的？其间交互了什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTPS-%E7%9A%84%E5%BA%94%E7%94%A8%E6%95%B0%E6%8D%AE%E6%98%AF%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%AE%8C%E6%95%B4%E6%80%A7%E7%9A%84"><span class="nav-number">1.2.5.5.</span> <span class="nav-text">HTTPS 的应用数据是如何保证完整性的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTPS-%E4%B8%80%E5%AE%9A%E5%AE%89%E5%85%A8%E5%8F%AF%E9%9D%A0%E5%90%97"><span class="nav-number">1.2.5.6.</span> <span class="nav-text">HTTPS 一定安全可靠吗</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AD-HTTP-1-1%E3%80%81HTTP-2%E3%80%81HTTP-3-%E6%BC%94%E5%8F%98"><span class="nav-number">1.2.6.</span> <span class="nav-text">六. HTTP&#x2F;1.1、HTTP&#x2F;2、HTTP&#x2F;3 演变</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP-2-%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="nav-number">1.2.6.1.</span> <span class="nav-text">HTTP&#x2F;2 的优势</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP-2-%E6%9C%89%E4%BB%80%E4%B9%88%E7%BC%BA%E9%99%B7"><span class="nav-number">1.2.6.2.</span> <span class="nav-text">HTTP&#x2F;2 有什么缺陷</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HTTP-3"><span class="nav-number">1.2.6.3.</span> <span class="nav-text">HTTP&#x2F;3</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%84%E7%A7%8Dip%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.3.</span> <span class="nav-text">各种ip协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS-%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">DNS 域名解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARP-%E4%B8%8E-RARP-%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.3.2.</span> <span class="nav-text">ARP 与 RARP 协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DHCP-%E5%8A%A8%E6%80%81%E8%8E%B7%E5%8F%96-IP-%E5%9C%B0%E5%9D%80"><span class="nav-number">1.3.3.</span> <span class="nav-text">DHCP 动态获取 IP 地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NAT-%E7%BD%91%E7%BB%9C%E5%9C%B0%E5%9D%80%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.3.4.</span> <span class="nav-text">NAT 网络地址转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ICMP-%E4%BA%92%E8%81%94%E7%BD%91%E6%8E%A7%E5%88%B6%E6%8A%A5%E6%96%87%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.3.5.</span> <span class="nav-text">ICMP 互联网控制报文协议*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IGMP-%E5%9B%A0%E7%89%B9%E7%BD%91%E7%BB%84%E7%AE%A1%E7%90%86%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.3.6.</span> <span class="nav-text">IGMP 因特网组管理协议*</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ping-127-0-0-1%E5%92%8C%E6%9C%AC%E6%9C%BA%E5%9C%B0%E5%9D%80%E5%92%8Clocalhost%E5%92%8C0-0-0-0%E6%9C%89%E5%8C%BA%E5%88%AB%E5%90%97%EF%BC%9F"><span class="nav-number">1.3.7.</span> <span class="nav-text">ping 127.0.0.1和本机地址和localhost和0.0.0.0有区别吗？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ping-127-0-0-1%E5%92%8C%E6%9C%AC%E6%9C%BA%E5%9C%B0%E5%9D%80%E5%92%8Clocalhost%E6%98%AF%E5%8F%AF%E4%BB%A5ping%E7%9A%84%E9%80%9A%E7%9A%84%EF%BC%8C%E5%8F%AF%E4%BB%A5%E8%AE%A4%E4%B8%BA%E6%98%AF%E4%B8%80%E4%B8%AA%E4%B8%9C%E8%A5%BF"><span class="nav-number">1.3.7.0.1.</span> <span class="nav-text">ping 127.0.0.1和本机地址和localhost是可以ping的通的，可以认为是一个东西</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ping-0-0-0-0%E6%98%AF%E4%B8%8D%E5%8F%AF%E4%BB%A5ping%E9%80%9A%E7%9A%84%EF%BC%8C%E5%9B%A0%E4%B8%BA%E5%AE%83%E5%9C%A8IPV4%E4%B8%AD%E8%A1%A8%E7%A4%BA%E7%9A%84%E6%98%AF%E6%97%A0%E6%95%88%E7%9A%84%E7%9B%AE%E6%A0%87%E5%9C%B0%E5%9D%80%E3%80%82"><span class="nav-number">1.3.7.0.2.</span> <span class="nav-text">ping 0.0.0.0是不可以ping通的，因为它在IPV4中表示的是无效的目标地址。</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">248k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">3:45</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
