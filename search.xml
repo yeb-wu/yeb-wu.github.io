@@ -655,6 +655,64 @@
       </tags>
   </entry>
   <entry>
+    <title>2023-03-12-链表类算法</title>
+    <url>/posts/299c.html</url>
+    <content><![CDATA[<h1 id="链表类算法"><a href="#链表类算法" class="headerlink" title="链表类算法"></a>链表类算法</h1><h2 id="一-链表基础"><a href="#一-链表基础" class="headerlink" title="一.链表基础"></a>一.链表基础</h2><p>注：事实上，链表题目只要肯多用变量就可以轻松解决</p>
+ <span id="more"></span>
+
+<ul>
+<li><p>单链表</p>
+<p>插入：</p>
+<p>删除：</p>
+<p><a href="https://leetcode.cn/problems/intersection-of-two-linked-lists/">160. 相交链表</a> 单链表</p>
+<p><a href="https://leetcode.cn/problems/rotate-list/">61. 旋转链表</a> 单链表</p>
+<p><a href="https://leetcode.cn/problems/add-two-numbers/">2. 两数相加</a> 单链表</p>
+<p><a href="https://leetcode.cn/problems/partition-list/">86. 分隔链表</a> 单链表dummy 插入</p>
+<p><a href="https://leetcode.cn/problems/odd-even-linked-list/">328. 奇偶链表</a> 单链表dummy 插入</p>
+<p><a href="https://leetcode.cn/problems/queue-reconstruction-by-height/">406. 根据身高重建队列</a> 单链表dummy 插入 应用 √</p>
+<p><a href="https://leetcode.cn/problems/remove-nth-node-from-end-of-list/">19. 删除链表的倒数第 N 个结点</a>  单链表 dummy 删除 快慢指针</p>
+<p><a href="https://leetcode.cn/problems/remove-duplicates-from-sorted-list/">83. 删除排序链表中的重复元素</a> 单链表 删除 快慢指针</p>
+<p>快慢指针(快&#x3D;2*慢)判断链表奇偶长度，快指针最后停在fast.next&#x3D;&#x3D;null为奇数，停在fast&#x3D;&#x3D;null为偶数</p>
+</li>
+<li><p>双链表</p>
+<p>插入：</p>
+<p>删除：</p>
+</li>
+<li><p>循环链表</p>
+<p><a href="https://leetcode.cn/problems/lru-cache/">146. LRU 缓存</a> （这部分放到常用数据结构）</p>
+<p>循环链表加虚拟指针的好处，避免null值，不需要维护尾指针。因为链表为空是，dummy结点自己指向自己。</p>
+<p>什么时候需要双向循环链表，在无法获取某个结点的前驱结点时删除该结点。</p>
+</li>
+</ul>
+<h2 id="二-虚拟dummy结点"><a href="#二-虚拟dummy结点" class="headerlink" title="二.虚拟dummy结点"></a>二.虚拟dummy结点</h2><p>一般来说，在链表操作需要前驱结点(如：删除，插入)可以使用虚拟dummy结点来统一操作。当然可以自行灵活判断，当你觉得加虚拟dummy结点可以简化操作时，就可以加。</p>
+<h2 id="三-链表的for循环方式"><a href="#三-链表的for循环方式" class="headerlink" title="三.链表的for循环方式"></a>三.链表的for循环方式</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">Node</span> <span class="variable">p</span> <span class="operator">=</span> head;p != <span class="literal">null</span>;p = p.next)&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="四-链表的高级特性：递归"><a href="#四-链表的高级特性：递归" class="headerlink" title="四.链表的高级特性：递归"></a>四.链表的高级特性：递归</h2><p><a href="https://leetcode.cn/problems/reverse-nodes-in-k-group/">25. K 个一组翻转链表 </a>单链表 递归 √</p>
+<p><a href="https://leetcode.cn/problems/reverse-linked-list-ii/">92. 反转链表 II</a> 单链表 递归</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//head每组的开头结点，n为剩余的结点个数</span></span><br><span class="line"><span class="keyword">private</span> ListNode <span class="title function_">reverseBetween</span><span class="params">(ListNode cur,<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span>) <span class="keyword">return</span> cur;</span><br><span class="line">    <span class="type">ListNode</span> <span class="variable">newFirst</span> <span class="operator">=</span> reverseBetween(cur.next,n-<span class="number">1</span>);</span><br><span class="line">    <span class="type">ListNode</span> <span class="variable">post</span> <span class="operator">=</span> cur.next.next;</span><br><span class="line">    cur.next.next = cur;</span><br><span class="line">    cur.next = post;</span><br><span class="line">    <span class="keyword">return</span> newFirst;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://leetcode.cn/problems/flatten-a-multilevel-doubly-linked-list/">430. 扁平化多级双向链表</a> 双链表 递归</p>
+<h2 id="五-链表算法"><a href="#五-链表算法" class="headerlink" title="五.链表算法"></a>五.链表算法</h2><ul>
+<li><p>环形链表</p>
+</li>
+<li><p>排序：链表只有一种排序那就是归并排序</p>
+<p><a href="https://leetcode.cn/problems/sort-list/">148. 排序链表</a> 单链表 归并排序√</p>
+</li>
+<li><p>链表+哈希表</p>
+<p><a href="https://leetcode.cn/problems/copy-list-with-random-pointer/">138. 复制带随机指针的链表</a> 单链表 哈希表</p>
+<p><a href="https://leetcode.cn/problems/lru-cache/">146. LRU 缓存</a> 双向循环链表 哈希表（这部分放到常用数据结构）</p>
+</li>
+</ul>
+<p>LinkedHashSet是链表和哈希集合的结合体。链表不能快速访问链表节点，但是插入元素具有时序；哈希集合中的元素无序，但是可以对元素进行快速的访问和删除。那么，它俩结合起来就兼具了哈希集合和链表的特性，既可以在 O(1) 时间内访问或删除其中的元素，又可以保持插入的时序</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>2023-03-10-集合类常用函数</title>
     <url>/posts/cb72.html</url>
     <content><![CDATA[<h1 id="集合类常用函数"><a href="#集合类常用函数" class="headerlink" title="集合类常用函数"></a>集合类常用函数</h1><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20230331135001067.png" alt="image-20230331135001067" style="zoom:80%;" />
@@ -754,64 +812,6 @@
 <p>Map.Entry&lt;K,V&gt; <code>lastEntry()</code>  返回与该地图中最大关键字关联的键值映射，如果地图为空，则返回 <code>null</code> 。 </p>
 <p>Map.Entry&lt;K,V&gt; <code>pollFirstEntry()</code>  删除并返回与该地图中的最小键相关联的键值映射，如果地图为空，则返回 <code>null</code> 。 </p>
 <p>Map.Entry&lt;K,V&gt; <code>pollLastEntry()</code>  删除并返回与该地图中最大密钥相关联的键值映射，如果地图为空，则返回 <code>null</code> 。</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>2023-03-12-链表类算法</title>
-    <url>/posts/299c.html</url>
-    <content><![CDATA[<h1 id="链表类算法"><a href="#链表类算法" class="headerlink" title="链表类算法"></a>链表类算法</h1><h2 id="一-链表基础"><a href="#一-链表基础" class="headerlink" title="一.链表基础"></a>一.链表基础</h2><p>注：事实上，链表题目只要肯多用变量就可以轻松解决</p>
- <span id="more"></span>
-
-<ul>
-<li><p>单链表</p>
-<p>插入：</p>
-<p>删除：</p>
-<p><a href="https://leetcode.cn/problems/intersection-of-two-linked-lists/">160. 相交链表</a> 单链表</p>
-<p><a href="https://leetcode.cn/problems/rotate-list/">61. 旋转链表</a> 单链表</p>
-<p><a href="https://leetcode.cn/problems/add-two-numbers/">2. 两数相加</a> 单链表</p>
-<p><a href="https://leetcode.cn/problems/partition-list/">86. 分隔链表</a> 单链表dummy 插入</p>
-<p><a href="https://leetcode.cn/problems/odd-even-linked-list/">328. 奇偶链表</a> 单链表dummy 插入</p>
-<p><a href="https://leetcode.cn/problems/queue-reconstruction-by-height/">406. 根据身高重建队列</a> 单链表dummy 插入 应用 √</p>
-<p><a href="https://leetcode.cn/problems/remove-nth-node-from-end-of-list/">19. 删除链表的倒数第 N 个结点</a>  单链表 dummy 删除 快慢指针</p>
-<p><a href="https://leetcode.cn/problems/remove-duplicates-from-sorted-list/">83. 删除排序链表中的重复元素</a> 单链表 删除 快慢指针</p>
-<p>快慢指针(快&#x3D;2*慢)判断链表奇偶长度，快指针最后停在fast.next&#x3D;&#x3D;null为奇数，停在fast&#x3D;&#x3D;null为偶数</p>
-</li>
-<li><p>双链表</p>
-<p>插入：</p>
-<p>删除：</p>
-</li>
-<li><p>循环链表</p>
-<p><a href="https://leetcode.cn/problems/lru-cache/">146. LRU 缓存</a> （这部分放到常用数据结构）</p>
-<p>循环链表加虚拟指针的好处，避免null值，不需要维护尾指针。因为链表为空是，dummy结点自己指向自己。</p>
-<p>什么时候需要双向循环链表，在无法获取某个结点的前驱结点时删除该结点。</p>
-</li>
-</ul>
-<h2 id="二-虚拟dummy结点"><a href="#二-虚拟dummy结点" class="headerlink" title="二.虚拟dummy结点"></a>二.虚拟dummy结点</h2><p>一般来说，在链表操作需要前驱结点(如：删除，插入)可以使用虚拟dummy结点来统一操作。当然可以自行灵活判断，当你觉得加虚拟dummy结点可以简化操作时，就可以加。</p>
-<h2 id="三-链表的for循环方式"><a href="#三-链表的for循环方式" class="headerlink" title="三.链表的for循环方式"></a>三.链表的for循环方式</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="type">Node</span> <span class="variable">p</span> <span class="operator">=</span> head;p != <span class="literal">null</span>;p = p.next)&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="四-链表的高级特性：递归"><a href="#四-链表的高级特性：递归" class="headerlink" title="四.链表的高级特性：递归"></a>四.链表的高级特性：递归</h2><p><a href="https://leetcode.cn/problems/reverse-nodes-in-k-group/">25. K 个一组翻转链表 </a>单链表 递归 √</p>
-<p><a href="https://leetcode.cn/problems/reverse-linked-list-ii/">92. 反转链表 II</a> 单链表 递归</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//head每组的开头结点，n为剩余的结点个数</span></span><br><span class="line"><span class="keyword">private</span> ListNode <span class="title function_">reverseBetween</span><span class="params">(ListNode cur,<span class="type">int</span> n)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n == <span class="number">1</span>) <span class="keyword">return</span> cur;</span><br><span class="line">    <span class="type">ListNode</span> <span class="variable">newFirst</span> <span class="operator">=</span> reverseBetween(cur.next,n-<span class="number">1</span>);</span><br><span class="line">    <span class="type">ListNode</span> <span class="variable">post</span> <span class="operator">=</span> cur.next.next;</span><br><span class="line">    cur.next.next = cur;</span><br><span class="line">    cur.next = post;</span><br><span class="line">    <span class="keyword">return</span> newFirst;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://leetcode.cn/problems/flatten-a-multilevel-doubly-linked-list/">430. 扁平化多级双向链表</a> 双链表 递归</p>
-<h2 id="五-链表算法"><a href="#五-链表算法" class="headerlink" title="五.链表算法"></a>五.链表算法</h2><ul>
-<li><p>环形链表</p>
-</li>
-<li><p>排序：链表只有一种排序那就是归并排序</p>
-<p><a href="https://leetcode.cn/problems/sort-list/">148. 排序链表</a> 单链表 归并排序√</p>
-</li>
-<li><p>链表+哈希表</p>
-<p><a href="https://leetcode.cn/problems/copy-list-with-random-pointer/">138. 复制带随机指针的链表</a> 单链表 哈希表</p>
-<p><a href="https://leetcode.cn/problems/lru-cache/">146. LRU 缓存</a> 双向循环链表 哈希表（这部分放到常用数据结构）</p>
-</li>
-</ul>
-<p>LinkedHashSet是链表和哈希集合的结合体。链表不能快速访问链表节点，但是插入元素具有时序；哈希集合中的元素无序，但是可以对元素进行快速的访问和删除。那么，它俩结合起来就兼具了哈希集合和链表的特性，既可以在 O(1) 时间内访问或删除其中的元素，又可以保持插入的时序</p>
 ]]></content>
       <categories>
         <category>算法</category>
@@ -5431,8 +5431,8 @@
       </tags>
   </entry>
   <entry>
-    <title>2023-12-11-ChatGPT</title>
-    <url>/posts/bb81.html</url>
+    <title>2024-03-10-博客2.0</title>
+    <url>/posts/758e.html</url>
     <content><![CDATA[]]></content>
       <categories>
         <category>项目实战</category>
@@ -5442,8 +5442,8 @@
       </tags>
   </entry>
   <entry>
-    <title>2024-03-10-博客2.0</title>
-    <url>/posts/758e.html</url>
+    <title>2023-12-11-ChatGPT</title>
+    <url>/posts/bb81.html</url>
     <content><![CDATA[]]></content>
       <categories>
         <category>项目实战</category>
