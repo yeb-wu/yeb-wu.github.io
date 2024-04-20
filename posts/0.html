@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon.png" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yeb-wu.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="生成式AI在生成式人工智能（Generative AI）中，”生成”一词指的是模型从学习的数据分布中生成新的数据样本或内容。这种生成并不是简单的复制粘贴，而是模型通过对数据的学习和理解，创造出新的、以前未见过的数据。 举个例子，如果是图像生成模型，生成式AI可以创造出看起来像真实照片的新图像，尽管这些图像在现实中并不存在。同样，对于文本生成模型，生成式AI可以创造出类似人类写作风格的文章，甚至可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="yeb-blog">
+<meta property="og:url" content="https://yeb-wu.github.io/posts/0.html">
+<meta property="og:site_name" content="yeb-blog">
+<meta property="og:description" content="生成式AI在生成式人工智能（Generative AI）中，”生成”一词指的是模型从学习的数据分布中生成新的数据样本或内容。这种生成并不是简单的复制粘贴，而是模型通过对数据的学习和理解，创造出新的、以前未见过的数据。 举个例子，如果是图像生成模型，生成式AI可以创造出看起来像真实照片的新图像，尽管这些图像在现实中并不存在。同样，对于文本生成模型，生成式AI可以创造出类似人类写作风格的文章，甚至可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417104636294-17135445387071.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/PEvsFT%25403x_zh-CN.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240417110157321.png">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417110204591-17135445387087.png">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417110434021-17135445387089.png">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417111748202-171354453870811.png">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417111801944-171354453870813.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240417111957024.png">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417112025882-171354453870917.png">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417112812935-171354453870919.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240417112838303.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240417120255069.png">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417120352408-171354453870925.png">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417120644329-171354453871027.png">
+<meta property="og:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240420003326013-171354457147142.png">
+<meta property="article:published_time" content="2024-04-19T16:34:58.063Z">
+<meta property="article:modified_time" content="2024-04-20T09:04:43.528Z">
+<meta property="article:author" content="yebin">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="e:\study\javawebSys\Algorithms-4th-Edition-master\%E6%88%AA%E5%9B%BE\image-20240417104636294-17135445387071.png">
+
+<link rel="canonical" href="https://yeb-wu.github.io/posts/0.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | yeb-blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">yeb-blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">主动才有故事 坚持才有未来</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yeb-wu.github.io/posts/0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="yebin">
+      <meta itemprop="description" content="Java攻城狮">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yeb-blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-04-20 00:34:58 / 修改时间：17:04:43" itemprop="dateCreated datePublished" datetime="2024-04-20T00:34:58+08:00">2024-04-20</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="生成式AI"><a href="#生成式AI" class="headerlink" title="生成式AI"></a>生成式AI</h2><p>在生成式人工智能（Generative AI）中，”生成”一词指的是模型从学习的数据分布中生成新的数据样本或内容。这种生成并不是简单的复制粘贴，而是模型通过对数据的学习和理解，创造出新的、以前未见过的数据。</p>
+<p>举个例子，如果是图像生成模型，生成式AI可以创造出看起来像真实照片的新图像，尽管这些图像在现实中并不存在。同样，对于文本生成模型，生成式AI可以创造出类似人类写作风格的文章，甚至可以编写代码或创作音乐。</p>
+<p>生成式AI的”生成”是指通过学习数据的分布、结构和模式，在没有直接输入的情况下创造出类似于原始数据的新内容。这种能力使得生成式AI在艺术创作、内容生成、创新设计等领域具有巨大的潜力和应用价值。</p>
+<p>生成式对话模型： 这类模型用于生成对话内容，例如聊天机器人。它们可以基于对话历史生成回复，通常使用循环神经网络（RNNs）或变换器（Transformers）等结构。</p>
+<h2 id="基础模型-FM-foundation-model"><a href="#基础模型-FM-foundation-model" class="headerlink" title="基础模型(FM, foundation model)"></a>基础模型(FM, foundation model)</h2><p>FM 使用深度神经网络来模拟人脑功能并处理复杂的任务。您可以对 FM 进行调整，以便用于广泛的常规任务，例如文本生成、文本总结、信息提取、图像生成、聊天机器人和问答。FM 还可以作为开发更专门化模型的起点。</p>
+<p><img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417104636294-17135445387071.png" alt="image-20240417104636294"></p>
+<p>基础模型要经过不同阶段的训练才能达到最佳效果。预训练、微调和提示工程。</p>
+<p>FM 可以分为多个类别。最常用的两种模型是文本到文本模型和文本到图像模型。</p>
+<p>文本到文本模型是大语言模型 (LLM, large language model)，这种模型经过预训练，用于处理大量文本数据和人类语言。这些大型基础模型可以总结文本、提取信息、回答问题、创建内容（例如博客或产品描述）等。大多数 LLM 都是基于 Transformer 模型的。它们接收输入，对数据进行编码，然后对数据进行解码以产生输出预测。</p>
+<p>文本到图像模型接受自然语言输入，并生成与输入文本描述相匹配的高质量图像。文本到图像模型的一些示例包括 OpenAI 推出的 DALL-E 2</p>
+<h2 id="提示工程"><a href="#提示工程" class="headerlink" title="提示工程"></a>提示工程</h2><p>提示工程是一个新兴的领域，专注于开发、设计和优化提示，以增强 LLM 的输出，从而满足您的需求。它为您提供了一种引导模型的行为从而达到您想要实现的结果的方法。</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/PEvsFT%25403x_zh-CN.png" alt="img" style="zoom: 25%;" />
+
+<p>在微调中，使用训练数据调整权重或参数，目标是优化成本函数。</p>
+<p>提示工程试图引导经过训练的 FM、LLM 或文本到图像模型给出更相关、更准确的答案。</p>
+<h2 id="提示工程的好处"><a href="#提示工程的好处" class="headerlink" title="提示工程的好处"></a>提示工程的好处</h2><p>根据您希望实现的输出的特定上下文来调整 LLM 输出行为</p>
+<p>使用领域知识和外部工具增强模型，而无需更改模型参数或进行微调。</p>
+<p>通过更高质量的输入获得更高质量的输出。</p>
+<h2 id="提示的框架"><a href="#提示的框架" class="headerlink" title="提示的框架"></a>提示的框架</h2><p><strong>指令</strong>：这是大语言模型要执行的任务。它提供模型应如何执行任务的描述或说明。</p>
+<p><strong>上下文</strong>：这是用于引导模型的外部信息。</p>
+<p><strong>输入数据</strong>：这是需要响应的输入。</p>
+<p><strong>输出指示</strong>：这是输出类型或格式。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240417110157321.png" alt="image-20240417110157321" style="zoom:50%;" /><img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417110204591-17135445387087.png" alt="image-20240417110204591" style="zoom:50%;" /></p>
+<img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417110434021-17135445387089.png" alt="image-20240417110434021" style="zoom:80%;" />
+
+
+
+<h2 id="基本提示技术"><a href="#基本提示技术" class="headerlink" title="基本提示技术"></a>基本提示技术</h2><p>零样本提示</p>
+<p>零样本提示是这样一种提示技术：用户向 LLM 提出任务，而不给模型提供进一步示例。在这种技术中，用户期望模型在没有事先理解或<em>尝试</em>任务的情况下执行任务。LLM 越大，零样本提示产生有效结果的可能性就越大，现代 LLM 表现出卓越的零样本能力。</p>
+<img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417111748202-171354453870811.png" alt="image-20240417111748202" style="zoom: 67%;" />
+
+<p>小样本提示</p>
+<p>小样本提示是这样一种提示技术：您为模型提供有关所请求执行的任务的上下文信息。在这种技术中，您同时提供任务和所需输出的示例。在提示条件中提供此上下文或<em>少量样本</em>，可以使模型严格遵循任务指导。</p>
+<img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417111801944-171354453870813.png" alt="image-20240417111801944" style="zoom: 67%;" />
+
+<p><strong>思维链提示</strong></p>
+<p>思维链 (CoT, chain-of-thought) 提示通过中间推理步骤分解复杂的推理任务。您可以将零样本提示技术和小样本提示技术与 CoT 提示结合使用。 </p>
+<p>思维链提示特定于问题类型。您可以使用短语“<strong>一步一步地思考</strong>”在机器学习模型中调用 CoT 推理。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240417111957024.png" alt="image-20240417111957024" style="zoom: 50%;" /><img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417112025882-171354453870917.png" alt="image-20240417112025882" style="zoom:50%;" /></p>
+<p>高级提示技术</p>
+<p>自洽性</p>
+<p>自洽性是一种类似于思维链提示的提示技术。然而，自洽性技术不采取明显的一步一步路径或<em>贪婪</em>路径，而是提示模型对各种推理路径进行采样。然后，模型根据来自各个路径的多个数据点聚合最终答案。根据Wang 等人撰写的文章“利用自洽性提高语言模型中的思维链推理效果”(Self-Consistency Improves Chain of Thought Reasoning in Language Models)，当用于一系列常见算术和常识推理基准时，自洽性可以改进 CoT 推理提示。</p>
+<p><img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417112812935-171354453870919.png" alt="image-20240417112812935" style="zoom: 50%;" /><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240417112838303.png" alt="image-20240417112838303" style="zoom:50%;" /></p>
+<p>ReAct 提示</p>
+<p>ReAct：语言模型中推理和动作的协同作用”(ReAct: Synergizing Reasoning and Acting in Language Models)，模型通常用于推理或动作，但并不总是能同时有效地用于这两者。</p>
+<p>借助 ReAct 框架，LLM 可以生成基于外部工具（例如维基百科页面或 SQL 数据库）的推理跟踪和特定于任务的动作。这种外部上下文可产生更准确可靠的输出。</p>
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240417120255069.png" alt="image-20240417120255069" style="zoom: 40%;" /><img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417120352408-171354453870925.png" alt="image-20240417120352408" style="zoom: 70%;" /></p>
+<img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417120644329-171354453871027.png" alt="image-20240417120644329" style="zoom:50%;" />
+
+
+
+<h2 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h2><p> <img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240420003326013-171354457147142.png" alt="image-20240420003326013"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/posts/758e.html" rel="prev" title="2024-03-10-博客2.0">
+      <i class="fa fa-chevron-left"></i> 2024-03-10-博客2.0
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E5%BC%8FAI"><span class="nav-number">1.</span> <span class="nav-text">生成式AI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B-FM-foundation-model"><span class="nav-number">2.</span> <span class="nav-text">基础模型(FM, foundation model)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">提示工程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E5%B7%A5%E7%A8%8B%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">4.</span> <span class="nav-text">提示工程的好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E7%9A%84%E6%A1%86%E6%9E%B6"><span class="nav-number">5.</span> <span class="nav-text">提示的框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%8F%90%E7%A4%BA%E6%8A%80%E6%9C%AF"><span class="nav-number">6.</span> <span class="nav-text">基本提示技术</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%81%E4%B9%A6"><span class="nav-number">7.</span> <span class="nav-text">证书</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yebin"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">yebin</p>
+  <div class="site-description" itemprop="description">Java攻城狮</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/yebbasbfa" title="GitHub → https:&#x2F;&#x2F;gitee.com&#x2F;yebbasbfa" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1364767592@qq.com" title="E-Mail → mailto:1364767592@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://leetcode.cn/u/yeb12/" title="leetcode → https:&#x2F;&#x2F;leetcode.cn&#x2F;u&#x2F;yeb12&#x2F;" rel="noopener" target="_blank"><i class="fab fa-stack-overflow fa-fw"></i>leetcode</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yebin</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">273k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">4:08</span>
+</div>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span><br></span>	
+
+<span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+</span>
+<span>总访客&nbsp<span id="busuanzi_value_site_uv"></span>&nbsp人</span>
+    <span class="post-meta-divider">|</span>
+<span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+</span>
+    <span>总访问量&nbsp<span id="busuanzi_value_site_pv"></span>&nbsp次</span>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("08/10/2023 12:00:00");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/lozad@1/dist/lozad.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
