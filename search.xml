@@ -5436,6 +5436,8 @@
     <content><![CDATA[<h1 id="Hexo安装"><a href="#Hexo安装" class="headerlink" title="Hexo安装"></a>Hexo安装</h1><p>参考<a href="https://zhuanlan.zhihu.com/p/26625249">https://zhuanlan.zhihu.com/p/26625249</a></p>
 <h2 id="1-GitHub创建个人仓库"><a href="#1-GitHub创建个人仓库" class="headerlink" title="1.GitHub创建个人仓库"></a>1.<strong>GitHub创建个人仓库</strong></h2><p><strong>github免密上传</strong></p>
 <p>如果不使用免密上传后面上传不了项目</p>
+<span id="more"></span>
+
 <p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240420170126840.png" alt="image-20240420170126840"></p>
 <p><strong>创建仓库</strong></p>
 <p>名称限制，仓库的名称会决定网站的名称。创建新仓库即可。</p>
@@ -5600,7 +5602,9 @@
   <entry>
     <title>2023-12-11-ChatGPT</title>
     <url>/posts/bb81.html</url>
-    <content><![CDATA[<h1 id="一-chatgpt-sdk项目"><a href="#一-chatgpt-sdk项目" class="headerlink" title="一.chatgpt-sdk项目"></a>一.chatgpt-sdk项目</h1><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240419233757300.png" alt="image-20240419233757300" style="zoom:80%;" />
+    <content><![CDATA[<h1 id="一-chatgpt-sdk项目"><a href="#一-chatgpt-sdk项目" class="headerlink" title="一.chatgpt-sdk项目"></a>一.chatgpt-sdk项目</h1><span id="more"></span>
+
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240419233757300.png" alt="image-20240419233757300" style="zoom:80%;" />
 
 <img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20240420174216292.png" alt="image-20240420174216292" style="zoom:80%;" />
 
@@ -5862,12 +5866,14 @@
       </tags>
   </entry>
   <entry>
-    <title></title>
-    <url>/posts/0.html</url>
+    <title>2024-04-20-GenAI提示工程</title>
+    <url>/posts/4d73.html</url>
     <content><![CDATA[<h2 id="生成式AI"><a href="#生成式AI" class="headerlink" title="生成式AI"></a>生成式AI</h2><p>在生成式人工智能（Generative AI）中，”生成”一词指的是模型从学习的数据分布中生成新的数据样本或内容。这种生成并不是简单的复制粘贴，而是模型通过对数据的学习和理解，创造出新的、以前未见过的数据。</p>
 <p>举个例子，如果是图像生成模型，生成式AI可以创造出看起来像真实照片的新图像，尽管这些图像在现实中并不存在。同样，对于文本生成模型，生成式AI可以创造出类似人类写作风格的文章，甚至可以编写代码或创作音乐。</p>
 <p>生成式AI的”生成”是指通过学习数据的分布、结构和模式，在没有直接输入的情况下创造出类似于原始数据的新内容。这种能力使得生成式AI在艺术创作、内容生成、创新设计等领域具有巨大的潜力和应用价值。</p>
 <p>生成式对话模型： 这类模型用于生成对话内容，例如聊天机器人。它们可以基于对话历史生成回复，通常使用循环神经网络（RNNs）或变换器（Transformers）等结构。</p>
+<span id="more"></span>
+
 <h2 id="基础模型-FM-foundation-model"><a href="#基础模型-FM-foundation-model" class="headerlink" title="基础模型(FM, foundation model)"></a>基础模型(FM, foundation model)</h2><p>FM 使用深度神经网络来模拟人脑功能并处理复杂的任务。您可以对 FM 进行调整，以便用于广泛的常规任务，例如文本生成、文本总结、信息提取、图像生成、聊天机器人和问答。FM 还可以作为开发更专门化模型的起点。</p>
 <p><img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240417104636294-17135445387071.png" alt="image-20240417104636294"></p>
 <p>基础模型要经过不同阶段的训练才能达到最佳效果。预训练、微调和提示工程。</p>
@@ -5917,5 +5923,11 @@
 
 <h2 id="证书"><a href="#证书" class="headerlink" title="证书"></a>证书</h2><p> <img data-src="E:\study\javawebSys\Algorithms-4th-Edition-master\截图\image-20240420003326013-171354457147142.png" alt="image-20240420003326013"></p>
 ]]></content>
+      <categories>
+        <category>OpenAI</category>
+      </categories>
+      <tags>
+        <tag>OpenAI</tag>
+      </tags>
   </entry>
 </search>
