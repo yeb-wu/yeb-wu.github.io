@@ -28,11 +28,15 @@
 <meta property="og:site_name" content="yeb-blog">
 <meta property="og:description" content="1.固定大小的优先队列 + 数据流。12345PriorityQueue&lt;ListNode&gt; pq &#x3D;new PriorityQueue&lt;&gt;(maxSize,new Comparator&lt;ListNode&gt;()&#123;    public int compare(ListNode a,ListNode b)&#123;        return a.val">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/tmpAA44-17139776465201.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/tmp2F87-17139776465322.png">
+<meta property="og:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20220316110228359-17139777013305.png">
 <meta property="article:published_time" content="2023-04-24T06:24:09.000Z">
-<meta property="article:modified_time" content="2024-03-21T09:33:55.665Z">
+<meta property="article:modified_time" content="2024-04-24T16:55:30.443Z">
 <meta property="article:author" content="yebin">
 <meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/tmpAA44-17139776465201.png">
 
 <link rel="canonical" href="https://yeb-wu.github.io/posts/f27d.html">
 
@@ -223,7 +227,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-21 17:33:55" itemprop="dateModified" datetime="2024-03-21T17:33:55+08:00">2024-03-21</time>
+                <time title="修改时间：2024-04-25 00:55:30" itemprop="dateModified" datetime="2024-04-25T00:55:30+08:00">2024-04-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -241,14 +245,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>515</span>
+              <span>3.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -285,6 +289,73 @@
 </ul>
 <p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/cheapest-flights-within-k-stops/">787. K 站中转内最便宜的航班</a> 有向加权图 Dijkstra算法&#x2F;Bellman</p>
 <p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/path-with-minimum-effort/">1631. 最小体力消耗路径</a> 矩阵 Dijkstra算法</p>
+<h2 id="3-优先队列与二叉堆"><a href="#3-优先队列与二叉堆" class="headerlink" title="3.优先队列与二叉堆"></a>3.优先队列与二叉堆</h2><p>如果你需要从 10 亿个元素中选出最大的十个，你真的想把一个 10 亿规模的数组排序吗？ 但有了优先队列，你就只用一个能存储十个元素的队列即可（10亿*log10）。在其他的例子中，我们甚至无法同时 获取所有的数据，因此只能先从优先队列中取出并处理一部分，然后再根据结果决定是否向优先队列中添加更多的数据。</p>
+<h3 id="1-优先队列API"><a href="#1-优先队列API" class="headerlink" title="1.优先队列API"></a>1.优先队列API</h3><p>定义：优先队列储存最优先的M个数，当有新的数来时，要能判断是否顶替这M个数之一。优先队列数据结构应该支持两种操作：删除最大元素和插入元素。</p>
+<p>API：优先队列最重要的操作就是删除最大元素和插入元素，如果允许重复元素，最大表示的是所有最大元素之一。</p>
+<p>注：MaxPQ中的delMax方法可以删除优先队列中最大的元素，如果MaxPQ有大小限制M，那么此时MaxPQ储存的是最小的M-1个数；反之MinPQ可以用于删除最小元素和储存最大的M-1个数。</p>
+<p>（为什么是M-1？因为当MaxPQ满时，如果要加入一个元素，一定要出队一个元素，但是这个元素可能比出去的还大，当然这是有解决方法的，那就是将要插入的元素与出队元素进行比较）</p>
+<h3 id="2-二叉堆"><a href="#2-二叉堆" class="headerlink" title="2.二叉堆"></a>2.二叉堆</h3><p>定义：每个元素都要保证 大于等于另两个特定位置的元素。相应地，这些位置的元素又至少要大于等于数组中的另两个元素， 以此类推。一棵大小为 N 的完全二叉树的 高度为 lgN。</p>
+<p>表示方法：</p>
+<ul>
+<li>指针表示：每个元素都需要三个指针来找到它的上下结点（父结点和两个子结点各需要一个）。</li>
+<li>数组表示：适用用于堆的结构是完全二叉树的情况（地由上向下、 从左至右）。在一个堆中，假设根节点为a[1]的时候，位置 k 的结点的父结点的位置为 $$\lfloor k&#x2F;2 \rfloor$$，而它的两个子结点的位置则分别为 2k 和 2k+1。</li>
+<li>通过计算数组的索引在树中上下移动：从 a[k] 向上一层 就令 k 等于 k&#x2F;2，向下一层则令 k 等于 2k 或 2k+1。</li>
+</ul>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/tmpAA44-17139776465201.png" alt="tmpAA44" style="zoom:75%;" />
+
+<h3 id="3-堆的算法（索引优先队列）："><a href="#3-堆的算法（索引优先队列）：" class="headerlink" title="3.堆的算法（索引优先队列）："></a>3.堆的算法（索引优先队列）：</h3><p>堆的有序化：打破堆的状态，然后再遍历堆并按照要求将堆的状态恢复。我们称这个过程叫做堆的有序化，即堆只会在某一处被打破平衡，其余部分仍是堆有序的。</p>
+<p>在有序化的过程中我们会遇到两种情况：</p>
+<p>当某个结点的优先级上升（或是在堆底加入一个新的元素）时，我们需要由下至上恢复堆的顺序。</p>
+<p>当某个结点的优先级下降（例如，将根结点替换为一 个较小的元素）时，我们需要由上至下恢复堆的顺序。</p>
+<ol>
+<li><p>由下至上的堆有序化（上浮）</p>
+<p>如果堆的有序状态因为某个结点变得比它的父结 点更大而被打破，那么我们就需要通过交换它和它的父结点来修复堆。交换后，这个结点仍然可能 比它现在的父结点更大。我们可以一遍遍地用同样的 办法恢复秩序，直到根节点。</p>
+<ul>
+<li>前提条件：选择一个结点，除该结点外的上部分仍然有序，对该节点进行上浮。</li>
+<li>从下往上遍历，将该节点与其父节点比较，如果该节点比父节点小，结束循环；如果该节点比父节点大，与父节点交换，并继续往上面的结点比较，直到根节点。</li>
+</ul>
+</li>
+<li><p>由上至下的堆有序化（下沉）</p>
+<p>如果堆的有序状态因为某个结点变得比它的两个子结点或是其中之一更小了而被打破了，那么，我们可以通过将它和它的两个子结点中的较大者交换来恢复堆。交换可能会在子结点处继续打破堆 的有序状态，因此我们需要不断地用相同的方式将其修复，将结点向下移动直到它的子结点都比它更小或是到达了堆的底部。</p>
+<ul>
+<li><p>前提条件：选择一个结点，除该结点外的下部分仍然有序，对该节点进行下沉。</p>
+</li>
+<li><p>从上往下遍历，如果该节点比子节点小，将该节点与两个子节点中最大的交换，并继续往下面的结点比较，直到叶子节点；反之，结束循环。</p>
+<p>注：下沉操作会涉及左右两个不同的结点，有时候右节点不一定存在。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">sink</span><span class="params">(Comparable[] pq, <span class="type">int</span> k, <span class="type">int</span> n)</span> &#123;</span><br><span class="line">		 <span class="keyword">while</span>(k&lt;=n/<span class="number">2</span>) &#123;</span><br><span class="line">			 <span class="type">int</span> <span class="variable">l_child</span> <span class="operator">=</span> <span class="number">2</span>*k;</span><br><span class="line">			 <span class="type">int</span> <span class="variable">r_child</span> <span class="operator">=</span> l_child+<span class="number">1</span>;</span><br><span class="line">			 <span class="type">int</span> <span class="variable">max_child</span> <span class="operator">=</span> <span class="number">0</span>; </span><br><span class="line">			 <span class="comment">//r_child&lt;=n是一定要判断的，因为右子节点有可能不存在，或者说已经被删去。</span></span><br><span class="line">			 <span class="keyword">if</span>(r_child&lt;=n&amp;&amp;less(pq[l_child],pq[r_child])) max_child=r_child;</span><br><span class="line">			 <span class="keyword">else</span> max_child=l_child;</span><br><span class="line">			 <span class="keyword">if</span>(less(pq[k],pq[max_child])) &#123;</span><br><span class="line">				 exch(pq, k, max_child);</span><br><span class="line">				 k = max_child;&#125;</span><br><span class="line">			 <span class="keyword">else</span> <span class="keyword">break</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/tmp2F87-17139776465322.png" alt="tmp2F87"></p>
+</li>
+</ul>
+</li>
+<li><p>基于堆的优先队列</p>
+<p>插入元素：新元素加到数组末尾，通过上浮重新调整顺序。（先调整数组大小再插入）</p>
+<p>删除最大元素：删除根节点的元素，并将最后一个元素放到根节点，通过下沉重新调整堆顺序。（先删除再数组减半）</p>
+<p>注：代码中还应该对删除的元素进行回收，并重新调整数组大小。</p>
+</li>
+</ol>
+<h4 id="4-堆排序"><a href="#4-堆排序" class="headerlink" title="4.堆排序"></a>4.堆排序</h4><p>可以把任意优先队列变成一种排序方法。将所有元素插入一个查找最小元素的优先队列， 然后再重复调用删除最小元素的操作来将它们按顺序删去。（用无序数组实现的优先队列这么做相当 于进行一次选择排序）</p>
+<p>堆排序可以分为两个阶段。在<strong>堆的构造阶段</strong>中，我们将原始数组重新组织安排进一个堆中；然后在<strong>下沉排序阶段</strong>，我们从堆中按递减顺序取出所有元素并得到排序结果。</p>
+<ol>
+<li><p>堆的构造</p>
+<p>有两种方法，这两种方法复杂度不一：</p>
+<ul>
+<li>从上到下构建（数组表示为从左至右），使用swim（），就像是在堆中插入元素一样，复杂度为$NlogN$。</li>
+<li>从下到上（数组表示为从右至左），使用sink（）。复杂度为$N$。<strong>√</strong><ol>
+<li>初始时元素已经构成完全二叉树结构，但还未满足堆的要求。</li>
+<li>从k&#x3D;n&#x2F;2开始（因为这是完全二叉树的最后一个非叶子结点），进行sink（）算法。</li>
+</ol>
+</li>
+</ul>
+<p>总结：复杂度不一的原因在于，堆的结构决定了结点个数从上往下是递增的；使用swim，树上面的结点少，而且建堆的大小也小，而树下面的结点多，而且建堆的大小也大；使用sink的情况则相反。eg：构造一个127元素的堆，会处理32个大小为3的堆，16个大小为7的堆….,1个大小为127的堆。</p>
+</li>
+<li><p>下沉排序</p>
+<p>将堆中的最大元素删除，然后放入堆缩小后数组中空出的位置。堆的构造加排序的复杂度最多为（$2NlgN+2N$）</p>
+<img data-src="https://yeb-1300251269.cos.ap-guangzhou.myqcloud.com/mytypra/image-20220316110228359-17139777013305.png" alt="image-20220316110228359" style="zoom:67%;" />
+</li>
+<li><p>先下沉后上浮*（略）</p>
+</li>
+</ol>
 
     </div>
 
@@ -368,7 +439,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97-%E6%95%B0%E6%8D%AE%E6%B5%81%E3%80%82"><span class="nav-number">1.</span> <span class="nav-text">1.固定大小的优先队列 + 数据流。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E5%B8%B8%E7%94%A8%E6%9D%A5%E5%AE%9E%E7%8E%B0%E5%8A%A0%E6%9D%83%E5%9B%BE%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">2.优先队列常用来实现加权图算法</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%9B%BA%E5%AE%9A%E5%A4%A7%E5%B0%8F%E7%9A%84%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97-%E6%95%B0%E6%8D%AE%E6%B5%81%E3%80%82"><span class="nav-number">1.</span> <span class="nav-text">1.固定大小的优先队列 + 数据流。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E5%B8%B8%E7%94%A8%E6%9D%A5%E5%AE%9E%E7%8E%B0%E5%8A%A0%E6%9D%83%E5%9B%BE%E7%AE%97%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">2.优先队列常用来实现加权图算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%E4%B8%8E%E4%BA%8C%E5%8F%89%E5%A0%86"><span class="nav-number">3.</span> <span class="nav-text">3.优先队列与二叉堆</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97API"><span class="nav-number">3.1.</span> <span class="nav-text">1.优先队列API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%BA%8C%E5%8F%89%E5%A0%86"><span class="nav-number">3.2.</span> <span class="nav-text">2.二叉堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%A0%86%E7%9A%84%E7%AE%97%E6%B3%95%EF%BC%88%E7%B4%A2%E5%BC%95%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97%EF%BC%89%EF%BC%9A"><span class="nav-number">3.3.</span> <span class="nav-text">3.堆的算法（索引优先队列）：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E5%A0%86%E6%8E%92%E5%BA%8F"><span class="nav-number">3.3.1.</span> <span class="nav-text">4.堆排序</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -449,13 +520,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">273k</span>
+    <span title="站点总字数">276k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">4:08</span>
+    <span title="站点阅读时长">4:11</span>
 </div>
 
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
